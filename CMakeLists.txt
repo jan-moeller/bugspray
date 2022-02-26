@@ -27,6 +27,7 @@ project(bugspray)
 add_library(bugspray STATIC
         include/bugspray/utility/naive_string.hpp
         include/bugspray/utility/naive_vector.hpp
+        include/bugspray/utility/string_literal.hpp
         )
 set_target_properties(bugspray PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories(bugspray PUBLIC include/)
