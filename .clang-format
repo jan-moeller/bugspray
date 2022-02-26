@@ -1,0 +1,63 @@
+﻿---
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveBitFields: Consecutive
+AlignConsecutiveDeclarations: Consecutive
+AlignOperands: true
+AlignTrailingComments: true
+AllowAllArgumentsOnNextLine: false
+AllowAllConstructorInitializersOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: InlineOnly
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: Inline
+AlwaysBreakTemplateDeclarations: Yes
+BinPackArguments: false
+BinPackParameters: false
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBraces: Allman
+BreakBeforeConceptDeclarations: true
+BreakBeforeTernaryOperators: true
+BreakConstructorInitializers: BeforeComma
+BreakInheritanceList: BeforeComma
+BreakStringLiterals: false
+ColumnLimit: 120
+CommentPragmas: '^(/<)'
+Cpp11BracedListStyle: true
+FixNamespaceComments: true
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex: "<(assert.h|complex.h|ctype.h|errno.h|fenv.h|float.h|inttypes.h|iso646.h|limits.h|locale.h|math.h|setjmp.h|signal.h|stdalign.h|stdarg.h|stdatomic.h|stdbool.h|stddef.h|stdint.h|stdio.h|stdlib.h|stdnoreturn.h|string.h|tgmath.h|threads.h|time.h|uchar.h|wchar.h|wctype.h)>"
+    Priority: 5
+  - Regex: "<cstdlib|csignal|csetjmp|cstdarg|ctime|cstddef|climits|cfloat|cstdint|cinttypes|cassert|cerrno|cctype|cwctype|cstring|cwchar|cuchar|cmath|cfenv|clocale|cstdio>"
+    Priority: 4
+  - Regex: "<(concepts|coroutine|typeinfo|typeindex|type_traits|bitset|functional|utility|chrono|initializer_list|tuple|any|optional|variant|compare|version|source_location|stacktrace|new|memory|scoped_allocator|memory_resource|limits|exception|stdexcept|system_error|string|string_view|charconv|format|array|vector|deque|list|forward_list|set|map|unordered_set|unordered_map|stack|queue|span|iterator|ranges|algorithm|execution|complex|valarray|random|numeric|ratio|bit|numbers|locale|codecvt|iosfwd|ios|istream|ostream|iostream|fstream|sstream|syncstream|strstream|iomanip|streambuf|filesystem|regex|atomic|thread|stop_token|mutex|shared_mutex|future|condition_variable|semaphore|latch|barrier)>"
+    Priority: 3
+  - Regex: '<.*>'
+    Priority: 2
+  - Regex: '.*'
+    Priority: 1
+IndentCaseLabels: false
+IndentRequires: true
+IndentWidth: 4
+Language: Cpp
+PenaltyBreakAssignment: 1000
+PenaltyBreakBeforeFirstCallParameter: 500
+PointerAlignment: Left
+SortIncludes: CaseInsensitive
+SortUsingDeclarations: true
+SpaceAfterTemplateKeyword: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCpp11BracedList: false
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeParens: ControlStatements
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceInEmptyParentheses: false
+SpacesInAngles: false
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+Standard: c++20
+...
