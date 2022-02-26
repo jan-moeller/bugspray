@@ -25,9 +25,19 @@ cmake_minimum_required(VERSION 3.20)
 project(bugspray)
 
 add_library(bugspray STATIC
+        include/bugspray/bugspray.hpp
+        include/bugspray/reporter/terminal_reporter.hpp
+        include/bugspray/section_tracker.hpp
+        include/bugspray/test_case_registry.hpp
+        include/bugspray/test_macros.hpp
+        include/bugspray/test_macros_impl.hpp
+        include/bugspray/test_run.hpp
+        include/bugspray/test_runner.hpp
         include/bugspray/utility/naive_string.hpp
         include/bugspray/utility/naive_vector.hpp
         include/bugspray/utility/string_literal.hpp
+        src/reporter/terminal_reporter.cpp
+        src/test_case_registry.cpp
         )
 set_target_properties(bugspray PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories(bugspray PUBLIC include/)
@@ -51,3 +61,5 @@ set_target_properties(bugspray PROPERTIES
         CXX_STANDARD_REQUIRED YES
         CXX_EXTENSIONS NO
         )
+
+add_subdirectory(test)
