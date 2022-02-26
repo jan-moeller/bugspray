@@ -1,0 +1,23 @@
+Checks: >
+  bugprone-*,
+  cppcoreguidelines-*,
+  clang-analyzer-*,
+  modernize-*,
+  performance-*,
+  portability-*,
+  readability-*,
+  -readability-braces-around-statements,
+  -readability-uppercase-literal-suffix,
+  -readability-identifier-length,
+  readability-identifier-naming
+
+CheckOptions:
+  - { key: readability-identifier-naming.NamespaceCase,       value: lower_case }
+  - { key: readability-identifier-naming.ClassCase,           value: lower_case }
+  - { key: readability-identifier-naming.PrivateMemberPrefix, value: m_ }
+  - { key: readability-identifier-naming.StructCase,          value: lower_case }
+  - { key: readability-identifier-naming.FunctionCase,        value: lower_case }
+  - { key: readability-identifier-naming.VariableCase,        value: lower_case }
+  - { key: readability-identifier-naming.GlobalConstantCase,  value: lower_case }
+  - { key: readability-identifier-naming.EnumCase,            value: lower_case }
+  - { key: readability-identifier-naming.EnumConstantCase,    value: lower_case }
