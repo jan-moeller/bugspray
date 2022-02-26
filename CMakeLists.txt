@@ -25,6 +25,7 @@ cmake_minimum_required(VERSION 3.20)
 project(bugspray)
 
 add_library(bugspray STATIC
+        include/bugspray/utility/naive_string.hpp
         include/bugspray/utility/naive_vector.hpp
         )
 set_target_properties(bugspray PROPERTIES LINKER_LANGUAGE CXX)
