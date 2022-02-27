@@ -25,6 +25,8 @@
 #ifndef BUGSPRAY_TEST_MACROS_IMPL_HPP
 #define BUGSPRAY_TEST_MACROS_IMPL_HPP
 
+#include "bugspray/utility/warning_suppression.hpp"
+
 #define BUGSPRAY_UNIQUE_IDENTIFIER_IMPL2(prefix, arg) prefix##_##arg
 #define BUGSPRAY_UNIQUE_IDENTIFIER_IMPL(prefix, arg) BUGSPRAY_UNIQUE_IDENTIFIER_IMPL2(prefix, arg)
 #define BUGSPRAY_UNIQUE_IDENTIFIER(prefix) BUGSPRAY_UNIQUE_IDENTIFIER_IMPL(prefix, __COUNTER__)
@@ -114,7 +116,11 @@
 #define BUGSPRAY_SECTION_NAME_QUALIFIER_IMPL(name, qualifier) BUGSPRAY_SECTION_IMPL(name, qualifier)
 #define BUGSPRAY_SECTION_MACRO_CHOOSER_IMPL(...)                                                                       \
     BUGSPRAY_GET_3RD_ARG(__VA_ARGS__, BUGSPRAY_SECTION_NAME_QUALIFIER_IMPL, BUGSPRAY_SECTION_NAME_IMPL, )
-#define BUGSPRAY_SECTION(...) BUGSPRAY_SECTION_MACRO_CHOOSER_IMPL(__VA_ARGS__)(__VA_ARGS__)
+#define BUGSPRAY_SECTION_WARNING_SUPPRESSION_ON BUGSPRAY_DISABLE_WARNING_PUSH BUGSPRAY_DISABLE_WARNING_SHADOW_LOCAL
+#define BUGSPRAY_SECTION_WARNING_SUPPRESSION_OFF BUGSPRAY_DISABLE_WARNING_POP
+#define BUGSPRAY_SECTION(...)                                                                                          \
+    BUGSPRAY_SECTION_WARNING_SUPPRESSION_ON                                                                            \
+    BUGSPRAY_SECTION_MACRO_CHOOSER_IMPL(__VA_ARGS__)(__VA_ARGS__) BUGSPRAY_SECTION_WARNING_SUPPRESSION_OFF
 
 // assert a conditional and log failure
 #define BUGSPRAY_ASSERT(type, ...)                                                                                     \
