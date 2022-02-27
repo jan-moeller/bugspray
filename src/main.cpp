@@ -24,70 +24,20 @@
 
 #include "bugspray/bugspray.hpp"
 
-constexpr void some_test(TEST_CASE_FN_PARAMS)
+#include <cstdlib>
+
+auto main() -> int
 {
-    CHECK(5 != 42);
-    SECTION("important")
+    ::bs::terminal_reporter reporter;
+    for (auto&& t : ::bs::get_test_case_registry().test_cases)
     {
-        SECTION("subsection", runtime)
-        {
-            REQUIRE(false);
-        }
+        ::bs::test_run data = ::bs::run_test(t);
+        reporter.report(data);
     }
+
+    bool const success = reporter.finalize();
+
+    if (success)
+        return EXIT_SUCCESS;
+    return EXIT_FAILURE;
 }
-REGISTER_TEST_CASE(some_test, "some test", "[register]");
-EVAL_TEST_CASE("some test");
-
-void other_test(TEST_CASE_FN_PARAMS)
-{
-    CHECK(2 == 3);
-    SECTION("subsection")
-    {
-        CHECK(1 == 1);
-    }
-    SECTION("another subsection")
-    {
-        CHECK(1 == 1);
-    }
-    REQUIRE(1 == 2);
-    REQUIRE(2 == 3);
-}
-REGISTER_TEST_CASE(other_test, "other test", "[register]", runtime);
-
-TEST_CASE("foo")
-{
-    REQUIRE(1 == 1);
-}
-
-TEST_CASE("foo with tags", "[tag]")
-{
-    CHECK(1 == 1);
-
-    SECTION("A.A")
-    {
-        CHECK(1 == 1);
-        SECTION("A.A.A")
-        {
-            CHECK(1 == 1);
-        }
-        SECTION("A.A.B", runtime)
-        {
-            REQUIRE(1 == 2);
-        }
-    }
-    SECTION("A.B")
-    {
-        CHECK(1 == 1);
-        SECTION("A.B.A")
-        {
-            CHECK(1 == 1);
-        }
-    }
-}
-EVAL_TEST_CASE("foo with tags");
-
-TEST_CASE("foo only at runtime", "[tag]", runtime)
-{
-    REQUIRE(1 == 2);
-}
-

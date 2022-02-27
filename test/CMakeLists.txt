@@ -1,6 +1,6 @@
 
 add_executable(bugspray-test test.cpp test2.cpp)
-target_link_libraries(bugspray-test bugspray)
+target_link_libraries(bugspray-test bugspray-with-main)
 target_compile_options(bugspray-test PRIVATE
         -Wall
         -Wextra
