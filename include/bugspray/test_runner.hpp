@@ -32,14 +32,15 @@ namespace bs
 {
 constexpr auto run_test(test_case_info const& t) noexcept -> test_run
 {
-    ::bs::test_run data{{t.name, t.filename, t.line}};
+    auto const     location = t.get_location();
+    ::bs::test_run data{{t.name, location.file_name(), location.line()}};
     try
     {
         do
         {
             data.executed_leaf_section = false;
 
-            t.fn(&data);
+            t.test(&data);
 
             if (std::ranges::all_of(data.subsections, [](section_run const& s) { return s.done; }))
                 data.done = true;
@@ -47,11 +48,15 @@ constexpr auto run_test(test_case_info const& t) noexcept -> test_run
     }
     catch (std::exception const& e)
     {
-        data.failures.emplace_back(t.filename, t.line, naive_string{"Exception escaped test case: "} + e.what());
+        data.failures.emplace_back(location.file_name(),
+                                   location.line(),
+                                   naive_string{"Exception escaped test case: "} + e.what());
     }
     catch (...)
     {
-        data.failures.emplace_back(t.filename, t.line, naive_string{"Unknown exception escaped test case."});
+        data.failures.emplace_back(location.file_name(),
+                                   location.line(),
+                                   naive_string{"Unknown exception escaped test case."});
     }
     return data;
 }

@@ -32,7 +32,7 @@
 #include "bugspray/test_macros.hpp"
 #include "bugspray/test_run.hpp"
 #include "bugspray/test_runner.hpp"
+#include "bugspray/test_tags_t.hpp"
 #include "bugspray/utility/string_literal.hpp"
-
 
 #endif // BUGSPRAY_BUGSPRAY_HPP

@@ -25,8 +25,11 @@
 #ifndef BUGSPRAY_TEST_CASE_REGISTRY_HPP
 #define BUGSPRAY_TEST_CASE_REGISTRY_HPP
 
+#include "bugspray/function_templates.hpp"
 #include "bugspray/test_run.hpp"
 
+#include <source_location>
+#include <span>
 #include <string_view>
 #include <vector>
 
@@ -35,10 +38,9 @@ namespace bs
 struct test_case_info
 {
     std::string_view name;
-    std::string_view tags;
-    std::string_view filename;
-    long int         line;
-    void (*fn)(test_run*);
+    tags_fn          get_tags;
+    location_fn      get_location;
+    test_fn          test;
 };
 
 struct test_case_registry

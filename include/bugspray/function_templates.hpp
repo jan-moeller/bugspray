@@ -28,10 +28,30 @@
 #include "bugspray/test_run.hpp"
 #include "bugspray/utility/string_literal.hpp"
 
+#include <source_location>
+#include <span>
+#include <string_view>
+
 namespace bs
 {
+namespace detail
+{
+template<::bs::string_literal Name>
+struct tags_for;
+}
+
+using test_fn     = void (*)(test_run*);
+using tags_fn     = std::span<std::string_view const> (*)();
+using location_fn = std::source_location (*)();
+
 template<string_literal>
 constexpr void test(test_run* bugspray_test_case_data) = delete;
+
+template<string_literal>
+constexpr auto test_tags() noexcept -> std::span<std::string_view const> = delete;
+
+template<string_literal>
+constexpr auto test_location() noexcept -> std::source_location = delete;
 } // namespace bs
 
 #endif // BUGSPRAY_FUNCTION_TEMPLATES_HPP

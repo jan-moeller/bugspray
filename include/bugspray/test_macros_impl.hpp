@@ -46,18 +46,48 @@
 // Register fn with name and tags for execution at runtime
 #define BUGSPRAY_REGISTER_RUNTIME_TEST_CASE_IMPL(fn, name, tags)                                                       \
     static bool const BUGSPRAY_UNIQUE_IDENTIFIER(                                                                      \
-        faux_registration) = (::bs::get_test_case_registry()                                                           \
-                                  .test_cases.push_back({name, tags, __FILE__, __LINE__, &::bs::test<name>}),          \
+        faux_registration) = (::bs::get_test_case_registry().test_cases.push_back({name,                               \
+                                                                                   &::bs::test_tags<name>,             \
+                                                                                   &::bs::test_location<name>,         \
+                                                                                   &::bs::test<name>}),                \
                               true)
 
 #define BUGSPRAY_TEST_CASE_FN_PARAMS ::bs::test_run* bugspray_test_case_data
 #define BUGSPRAY_TEST_CASE_FN_ARGS bugspray_test_case_data
 
 // Register fn with name and tags for execution at runtime. If qualifier is "both", the function is constexpr
-#define BUGSPRAY_REGISTER_TEST_CASE_IMPL(fn, name, tags, qualifier)                                                    \
+#define BUGSPRAY_DECLARE_TEST_FN(name, qualifier)                                                                      \
     template<>                                                                                                         \
     BUGSPRAY_CONSTEXPR_CHOOSER(qualifier)                                                                              \
-    void ::bs::test<name>(BUGSPRAY_TEST_CASE_FN_PARAMS)                                                                \
+    void ::bs::test<name>(BUGSPRAY_TEST_CASE_FN_PARAMS)
+#define BUGSPRAY_DEFINE_TEST_TAGS_FN(name, tags)                                                                       \
+    namespace bs::detail                                                                                               \
+    {                                                                                                                  \
+    template<>                                                                                                         \
+    struct tags_for<name>                                                                                              \
+    {                                                                                                                  \
+        static constexpr auto get() noexcept -> std::span<std::string_view const>                                      \
+        {                                                                                                              \
+            return m_data.m_tags;                                                                                      \
+        }                                                                                                              \
+        static constexpr auto m_data = ::bs::parse_tags<tags>();                                                       \
+    };                                                                                                                 \
+    }                                                                                                                  \
+    template<>                                                                                                         \
+    constexpr auto ::bs::test_tags<name>() noexcept -> std::span<std::string_view const>                               \
+    {                                                                                                                  \
+        return ::bs::detail::tags_for<name>::get();                                                                    \
+    }
+#define BUGSPRAY_DEFINE_TEST_LOCATION_FN(name)                                                                         \
+    template<>                                                                                                         \
+    constexpr auto ::bs::test_location<name>() noexcept -> std::source_location                                        \
+    {                                                                                                                  \
+        return std::source_location::current();                                                                        \
+    }
+#define BUGSPRAY_REGISTER_TEST_CASE_IMPL(fn, name, tags, qualifier)                                                    \
+    BUGSPRAY_DEFINE_TEST_TAGS_FN(name, tags)                                                                           \
+    BUGSPRAY_DEFINE_TEST_LOCATION_FN(name)                                                                             \
+    BUGSPRAY_DECLARE_TEST_FN(name, qualifier)                                                                          \
     {                                                                                                                  \
         fn(BUGSPRAY_TEST_CASE_FN_ARGS);                                                                                \
     }                                                                                                                  \
@@ -65,13 +95,11 @@
 
 // Register block after macro as test case with name and tags. If qualifier is "both", the function is constexpr
 #define BUGSPRAY_TEST_CASE_IMPL(name, tags, qualifier)                                                                 \
-    template<>                                                                                                         \
-    BUGSPRAY_CONSTEXPR_CHOOSER(qualifier)                                                                              \
-    void ::bs::test<name>(BUGSPRAY_TEST_CASE_FN_PARAMS);                                                               \
+    BUGSPRAY_DECLARE_TEST_FN(name, qualifier);                                                                         \
+    BUGSPRAY_DEFINE_TEST_TAGS_FN(name, tags)                                                                           \
+    BUGSPRAY_DEFINE_TEST_LOCATION_FN(name)                                                                             \
     BUGSPRAY_REGISTER_RUNTIME_TEST_CASE_IMPL(fn, name, tags);                                                          \
-    template<>                                                                                                         \
-    BUGSPRAY_CONSTEXPR_CHOOSER(qualifier)                                                                              \
-    void ::bs::test<name>(BUGSPRAY_TEST_CASE_FN_PARAMS)
+    BUGSPRAY_DECLARE_TEST_FN(name, qualifier)
 
 // Register fn. name, tags and qualifier are optional
 #define BUGSPRAY_REGISTER_TEST_CASE_FN_IMPL(fn) BUGSPRAY_REGISTER_TEST_CASE_IMPL(fn, fn, "", both)
@@ -102,7 +130,9 @@
 
 // Constant-evaluates test case
 #define BUGSPRAY_EVAL_TEST_CASE(name)                                                                                  \
-    static_assert(::bs::run_test(::bs::test_case_info{name, "", __FILE__, __LINE__, ::bs::test<name>}).passed())
+    static_assert(                                                                                                     \
+        ::bs::run_test(::bs::test_case_info{name, ::bs::test_tags<name>, ::bs::test_location<name>, ::bs::test<name>}) \
+            .passed())
 
 // Section inside a test case
 #define BUGSPRAY_SECTION_IMPL_runtime(name)                                                                            \
