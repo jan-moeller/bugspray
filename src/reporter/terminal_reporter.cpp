@@ -66,11 +66,7 @@ auto report_section_failures(section_run const& data, naive_vector<section_run c
         results                = combine_test_results(results, sub_results);
     }
 
-    if (data.failures.empty())
-        ++results.m_test_cases_passed;
-    else
-        ++results.m_test_cases_failed;
-    results.m_assertions_passed += data.passes;
+    results.m_assertions_passed += data.passes.size();
 
     for (auto&& failure : data.failures)
     {
@@ -90,12 +86,15 @@ auto report_section_failures(section_run const& data, naive_vector<section_run c
 
 void terminal_reporter::report(test_run const& data)
 {
-    if (!data.passed())
-    {
+    auto const passed = data.passed();
+    if (!passed)
         report_test_case_head(data);
-        auto const results = report_section_failures(data, {});
-        m_results          = combine_test_results(results, m_results);
-    }
+    auto results = report_section_failures(data, {});
+    if (passed)
+        ++results.m_test_cases_passed;
+    else
+        ++results.m_test_cases_failed;
+    m_results = combine_test_results(results, m_results);
 }
 
 auto terminal_reporter::finalize() -> bool

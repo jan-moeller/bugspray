@@ -42,13 +42,21 @@ struct failure_info
     constexpr auto operator==(failure_info const&) const noexcept -> bool = default;
 };
 
+struct pass_info
+{
+    std::string_view filename;
+    long int         line;
+
+    constexpr auto operator==(pass_info const&) const noexcept -> bool = default;
+};
+
 struct section_run
 {
     std::string_view           name;
     std::string_view           filename;
     long int                   line;
     naive_vector<failure_info> failures{};
-    long int                   passes{};
+    naive_vector<pass_info>    passes{};
     naive_vector<section_run>  subsections{};
     bool                       done = false;
 

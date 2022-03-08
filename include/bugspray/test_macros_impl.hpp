@@ -162,7 +162,8 @@
 #define BUGSPRAY_ASSERT(type, ...)                                                                                     \
     do                                                                                                                 \
     {                                                                                                                  \
-        if (!BUGSPRAY_TEST_CASE_FN_ARGS->executed_leaf_section && !(__VA_ARGS__))                                      \
+        bool const pass = (__VA_ARGS__);                                                                               \
+        if (!BUGSPRAY_TEST_CASE_FN_ARGS->executed_leaf_section && !pass)                                               \
         {                                                                                                              \
             if (std::is_constant_evaluated())                                                                          \
                 throw "TEST FAILED";                                                                                   \
@@ -176,7 +177,11 @@
             if constexpr (std::string_view{type} == "REQUIRE")                                                         \
                 return;                                                                                                \
         }                                                                                                              \
-        ++BUGSPRAY_TEST_CASE_FN_ARGS->passes;                                                                          \
+        if (::bs::pass_info pass_info{__FILE__, __LINE__};                                                             \
+            std::ranges::find(BUGSPRAY_TEST_CASE_FN_ARGS->passes, pass_info)                                           \
+                == BUGSPRAY_TEST_CASE_FN_ARGS->passes.end()                                                            \
+            && pass)                                                                                                   \
+            BUGSPRAY_TEST_CASE_FN_ARGS->passes.push_back(pass_info);                                                   \
     } while (false)
 #define BUGSPRAY_REQUIRE(...) BUGSPRAY_ASSERT("REQUIRE", __VA_ARGS__)
 #define BUGSPRAY_CHECK(...) BUGSPRAY_ASSERT("CHECK", __VA_ARGS__)
