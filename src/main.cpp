@@ -23,16 +23,35 @@
 //
 
 #include "bugspray/bugspray.hpp"
+#include "bugspray/cli_parser/cli_parser.hpp"
+
+#include <iostream>
 
 #include <cstdlib>
 
-auto main() -> int
+auto main(int argc, char const** argv) -> int
 {
-    ::bs::terminal_reporter reporter;
-    for (auto&& t : ::bs::get_test_case_registry().test_cases)
+    using namespace ::bs;
+
+    cli_parser<positional_argument<test_case_selector, "SELECTOR">,
+               named_argument<bool, "help", 'h', "display this help and exit", 0>>
+               parser{argc, argv};
+    auto const selector = parser.get_positional().value_or(test_case_selector{});
+
+    if (parser.get<"help">().value_or(false))
     {
-        ::bs::test_run data = ::bs::run_test(t);
-        reporter.report(data);
+        parser.print_help(std::cout);
+        return EXIT_SUCCESS;
+    }
+
+    terminal_reporter reporter;
+    for (auto&& t : get_test_case_registry().test_cases)
+    {
+        if (selector(t.name, t.get_tags()))
+        {
+            test_run data = run_test(t);
+            reporter.report(data);
+        }
     }
 
     bool const success = reporter.finalize();
