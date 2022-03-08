@@ -38,6 +38,7 @@ add_library(bugspray STATIC
         include/bugspray/test_macros_impl.hpp
         include/bugspray/test_run.hpp
         include/bugspray/test_runner.hpp
+        include/bugspray/test_tags_t.hpp
         include/bugspray/utility/naive_string.hpp
         include/bugspray/utility/naive_vector.hpp
         include/bugspray/utility/string_literal.hpp
