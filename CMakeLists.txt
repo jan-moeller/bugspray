@@ -26,6 +26,10 @@ project(bugspray)
 
 add_library(bugspray STATIC
         include/bugspray/bugspray.hpp
+        include/bugspray/cli_parser/argument_parser.hpp
+        include/bugspray/cli_parser/cli_parser.hpp
+        include/bugspray/cli_parser/named_argument.hpp
+        include/bugspray/cli_parser/positional_argument.hpp
         include/bugspray/reporter/terminal_reporter.hpp
         include/bugspray/section_tracker.hpp
         include/bugspray/test_case_registry.hpp
