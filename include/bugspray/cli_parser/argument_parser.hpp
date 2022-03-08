@@ -27,6 +27,7 @@
 
 #include "bugspray/cli_parser/named_argument.hpp"
 #include "bugspray/cli_parser/positional_argument.hpp"
+#include "bugspray/cli_parser/test_case_selector.hpp"
 #include "bugspray/utility/string_literal.hpp"
 
 #include <array>
@@ -38,6 +39,15 @@ template<typename Arg>
 struct argument_parser
 {
     constexpr auto parse(std::array<std::string_view, Arg::num_args> args) const -> typename Arg::type = delete;
+};
+
+template<string_literal Description>
+struct argument_parser<positional_argument<test_case_selector, Description>>
+{
+    [[nodiscard]] constexpr auto parse(std::array<std::string_view, 1> args) const -> test_case_selector
+    {
+        return parse_selector_string(args.front());
+    }
 };
 
 template<string_literal Name, char Abbreviated, string_literal Description>
