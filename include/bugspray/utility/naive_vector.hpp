@@ -36,6 +36,15 @@ template<typename T>
 class naive_vector
 {
   public:
+    using value_type      = T;
+    using reference       = T&;
+    using const_reference = T const&;
+    using pointer         = T*;
+    using const_pointer   = T const*;
+    using iterator        = T*;
+    using const_iterator  = T const*;
+    using difference_type = std::ptrdiff_t;
+
     constexpr naive_vector() = default;
     constexpr ~naive_vector() noexcept { delete[] m_begin; }
 
