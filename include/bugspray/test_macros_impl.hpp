@@ -45,7 +45,7 @@
 
 // Register fn with name and tags for execution at runtime
 #define BUGSPRAY_REGISTER_RUNTIME_TEST_CASE_IMPL(fn, name, tags)                                                       \
-    static bool const BUGSPRAY_UNIQUE_IDENTIFIER(                                                                      \
+    [[maybe_unused]] static bool const BUGSPRAY_UNIQUE_IDENTIFIER(                                                     \
         faux_registration) = (::bs::get_test_case_registry().test_cases.push_back({name,                               \
                                                                                    &::bs::test_tags<name>,             \
                                                                                    &::bs::test_location<name>,         \
@@ -136,10 +136,16 @@
 
 // Section inside a test case
 #define BUGSPRAY_SECTION_IMPL_runtime(name)                                                                            \
-    if (auto bugspray_tracker = ::bs::section_tracker{BUGSPRAY_TEST_CASE_FN_ARGS, name, __FILE__, __LINE__};           \
+    if ([[maybe_unused]] auto bugspray_tracker = ::bs::section_tracker{BUGSPRAY_TEST_CASE_FN_ARGS,                     \
+                                                                       name,                                           \
+                                                                       __FILE__,                                       \
+                                                                       __LINE__};                                      \
         !std::is_constant_evaluated() && bugspray_tracker.should_enter())
 #define BUGSPRAY_SECTION_IMPL_both(name)                                                                               \
-    if (auto bugspray_tracker = ::bs::section_tracker{BUGSPRAY_TEST_CASE_FN_ARGS, name, __FILE__, __LINE__};           \
+    if ([[maybe_unused]] auto bugspray_tracker = ::bs::section_tracker{BUGSPRAY_TEST_CASE_FN_ARGS,                     \
+                                                                       name,                                           \
+                                                                       __FILE__,                                       \
+                                                                       __LINE__};                                      \
         bugspray_tracker.should_enter())
 #define BUGSPRAY_SECTION_IMPL(name, qualifier) BUGSPRAY_SECTION_IMPL_##qualifier(name)
 #define BUGSPRAY_SECTION_NAME_IMPL(name) BUGSPRAY_SECTION_IMPL(name, both)
