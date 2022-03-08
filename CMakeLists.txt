@@ -30,6 +30,7 @@ add_library(bugspray STATIC
         include/bugspray/cli_parser/cli_parser.hpp
         include/bugspray/cli_parser/named_argument.hpp
         include/bugspray/cli_parser/positional_argument.hpp
+        include/bugspray/cli_parser/test_case_selector.hpp
         include/bugspray/reporter/terminal_reporter.hpp
         include/bugspray/section_tracker.hpp
         include/bugspray/test_case_registry.hpp
