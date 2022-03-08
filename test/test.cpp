@@ -35,7 +35,7 @@ constexpr void some_test(TEST_CASE_FN_PARAMS)
         }
     }
 }
-REGISTER_TEST_CASE(some_test, "some test", "[register]");
+REGISTER_TEST_CASE(some_test, "some test", "[register][bar]");
 EVAL_TEST_CASE("some test");
 
 void other_test(TEST_CASE_FN_PARAMS)
@@ -88,6 +88,10 @@ EVAL_TEST_CASE("foo with tags");
 
 TEST_CASE("foo only at runtime", "[tag]", runtime)
 {
-    REQUIRE(1 == 2);
+    CHECK(1 == 2);
+    auto const l = ::bs::test_location<"foo only at runtime">();
+    CHECK(l.line() == 89);
+    auto const tags = ::bs::test_tags<"foo only at runtime">();
+    REQUIRE(tags.size() == 1);
+    CHECK(tags.front() == "tag");
 }
-
