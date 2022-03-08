@@ -22,17 +22,16 @@
 // SOFTWARE.
 //
 
-#ifndef BUGSPRAY_BUGSPRAY_HPP
-#define BUGSPRAY_BUGSPRAY_HPP
+#ifndef BUGSPRAY_FUNCTION_TEMPLATES_HPP
+#define BUGSPRAY_FUNCTION_TEMPLATES_HPP
 
-#include "bugspray/function_templates.hpp"
-#include "bugspray/reporter/terminal_reporter.hpp"
-#include "bugspray/section_tracker.hpp"
-#include "bugspray/test_case_registry.hpp"
-#include "bugspray/test_macros.hpp"
 #include "bugspray/test_run.hpp"
-#include "bugspray/test_runner.hpp"
 #include "bugspray/utility/string_literal.hpp"
 
+namespace bs
+{
+template<string_literal>
+constexpr void test(test_run* bugspray_test_case_data) = delete;
+} // namespace bs
 
-#endif // BUGSPRAY_BUGSPRAY_HPP
+#endif // BUGSPRAY_FUNCTION_TEMPLATES_HPP
