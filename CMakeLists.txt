@@ -94,4 +94,5 @@ set_target_properties(bugspray-with-main PROPERTIES
         CXX_EXTENSIONS NO
         )
 
+enable_testing()
 add_subdirectory(test)

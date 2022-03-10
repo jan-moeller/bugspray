@@ -21,29 +21,22 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-include(CTest)
+cmake_minimum_required(VERSION 3.20)
+project(bugspray-compile-fail-tests-00-fail-trivial)
 
-add_subdirectory(compile-fail-tests)
-
-### TODO: REPLACE WITH PROPER TESTS ###
-add_executable(bugspray-test test.cpp test2.cpp)
-target_link_libraries(bugspray-test bugspray-with-main)
-target_compile_options(bugspray-test PRIVATE
-        -Wall
-        -Wextra
-        -Wpedantic
-        -Wduplicated-cond
-        -Wno-duplicated-branches
-        -Wlogical-op
-        -Wnull-dereference
-        -Wno-old-style-cast
-        -Wuseless-cast
-        -Wdouble-promotion
-        -Wshadow
-        -Wformat=2
-        -Wuninitialized
+add_library(bugspray-with-main STATIC IMPORTED)
+set_target_properties(bugspray-with-main PROPERTIES
+        IMPORTED_LOCATION ${BUGSPRAY_LIB_DIR}/libbugspray-with-main.a
+        INTERFACE_INCLUDE_DIRECTORIES ${BUGSPRAY_INCLUDE_DIR}
+        INTERFACE_LINK_LIBRARIES ${BUGSPRAY_LIB_DIR}/libbugspray.a
+        CXX_STANDARD 20
+        CXX_STANDARD_REQUIRED YES
+        CXX_EXTENSIONS NO
         )
-set_target_properties(bugspray-test PROPERTIES
+
+add_executable(00-fail-trivial main.cpp)
+target_link_libraries(00-fail-trivial PUBLIC bugspray-with-main)
+set_target_properties(00-fail-trivial PROPERTIES
         CXX_STANDARD 20
         CXX_STANDARD_REQUIRED YES
         CXX_EXTENSIONS NO
