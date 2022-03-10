@@ -40,4 +40,8 @@
 #define REQUIRE(...) BUGSPRAY_REQUIRE(__VA_ARGS__)
 #define CHECK(...) BUGSPRAY_CHECK(__VA_ARGS__)
 
+#define FAIL(...) REQUIRE(false)
+#define FAIL_CHECK(...) CHECK(false)
+#define SUCCEED(...) CHECK(true)
+
 #endif // BUGSPRAY_TEST_MACROS_HPP
