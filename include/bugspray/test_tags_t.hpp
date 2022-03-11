@@ -48,15 +48,20 @@ constexpr auto parse_tags()
         char const* begin = nullptr;
         for (char const& c : tags)
         {
-            if (c == '[' && begin == nullptr)
-                begin = &c + 1;
-            else if (c == ']' && begin != nullptr)
+            if ((begin == nullptr && c != '[') || (begin != nullptr && c == '['))
+                throw std::runtime_error{"Invalid tag string"};
+
+            switch (c)
             {
+            case '[':
+                begin = &c + 1;
+                break;
+            case ']':
                 result.emplace_back(begin, &c);
                 begin = nullptr;
+                break;
+            default:;
             }
-            else if (c == '[' || c == ']')
-                throw std::runtime_error{"Invalid tag string"};
         }
         if (begin != nullptr)
             throw std::runtime_error{"Invalid tag string"};
