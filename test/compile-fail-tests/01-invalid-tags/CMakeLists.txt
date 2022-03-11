@@ -21,16 +21,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-add_build_test(00-fail-trivial)
-set_tests_properties(00-fail-trivial PROPERTIES
-        PASS_REGULAR_EXPRESSION "EVAL_TEST_CASE\\(\"this will fail\"\\).*FAIL\\(\\)"
+cmake_minimum_required(VERSION 3.20)
+project(bugspray-compile-fail-tests-01-invalid-tags)
+
+add_library(bugspray-with-main STATIC IMPORTED)
+set_target_properties(bugspray-with-main PROPERTIES
+        IMPORTED_LOCATION ${BUGSPRAY_LIB_DIR}/libbugspray-with-main.a
+        INTERFACE_INCLUDE_DIRECTORIES ${BUGSPRAY_INCLUDE_DIR}
+        INTERFACE_LINK_LIBRARIES ${BUGSPRAY_LIB_DIR}/libbugspray.a
+        CXX_STANDARD 20
+        CXX_STANDARD_REQUIRED YES
+        CXX_EXTENSIONS NO
         )
 
-add_build_test(01-invalid-tags-both 01-invalid-tags-both-testcase 01-invalid-tags)
-set_tests_properties(01-invalid-tags-both PROPERTIES
-        PASS_REGULAR_EXPRESSION "Invalid tag string"
-        )
-add_build_test(01-invalid-tags-runtime 01-invalid-tags-runtime-testcase 01-invalid-tags)
-set_tests_properties(01-invalid-tags-runtime PROPERTIES
-        PASS_REGULAR_EXPRESSION "Invalid tag string"
-        )
+add_subdirectory(runtime-testcase)
+add_subdirectory(both-testcase)

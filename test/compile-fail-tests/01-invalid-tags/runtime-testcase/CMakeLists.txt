@@ -21,16 +21,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-add_build_test(00-fail-trivial)
-set_tests_properties(00-fail-trivial PROPERTIES
-        PASS_REGULAR_EXPRESSION "EVAL_TEST_CASE\\(\"this will fail\"\\).*FAIL\\(\\)"
-        )
-
-add_build_test(01-invalid-tags-both 01-invalid-tags-both-testcase 01-invalid-tags)
-set_tests_properties(01-invalid-tags-both PROPERTIES
-        PASS_REGULAR_EXPRESSION "Invalid tag string"
-        )
-add_build_test(01-invalid-tags-runtime 01-invalid-tags-runtime-testcase 01-invalid-tags)
-set_tests_properties(01-invalid-tags-runtime PROPERTIES
-        PASS_REGULAR_EXPRESSION "Invalid tag string"
+add_executable(01-invalid-tags-runtime-testcase main.cpp)
+target_link_libraries(01-invalid-tags-runtime-testcase PUBLIC bugspray-with-main)
+set_target_properties(01-invalid-tags-runtime-testcase PROPERTIES
+        CXX_STANDARD 20
+        CXX_STANDARD_REQUIRED YES
+        CXX_EXTENSIONS NO
         )

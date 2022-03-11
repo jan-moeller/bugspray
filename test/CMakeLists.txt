@@ -23,6 +23,27 @@
 #
 include(CTest)
 
+function(add_build_test name)
+    set(target all)
+    if (${ARGC} GREATER 1)
+        set(target ${ARGV1})
+    endif ()
+    set(folder ${name})
+    if (${ARGC} GREATER 2)
+        set(folder ${ARGV2})
+    endif ()
+    add_test(NAME ${name}
+            COMMAND ${CMAKE_CTEST_COMMAND}
+            --build-and-test
+            ${CMAKE_CURRENT_LIST_DIR}/${folder}
+            ${CMAKE_CURRENT_BINARY_DIR}/${folder}
+            --build-target ${target}
+            --build-generator ${CMAKE_GENERATOR}
+            --build-options -DBUGSPRAY_LIB_DIR:STR=$<TARGET_PROPERTY:bugspray-with-main,BINARY_DIR> -DBUGSPRAY_INCLUDE_DIR:STR=$<TARGET_PROPERTY:bugspray-with-main,INCLUDE_DIRECTORIES>
+            --test-command ${CMAKE_CTEST_COMMAND}
+            )
+endfunction()
+
 add_subdirectory(compile-fail-tests)
 
 ### TODO: REPLACE WITH PROPER TESTS ###
