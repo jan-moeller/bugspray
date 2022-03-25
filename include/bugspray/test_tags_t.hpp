@@ -57,6 +57,8 @@ constexpr auto parse_tags()
                 begin = &c + 1;
                 break;
             case ']':
+                if (&c - begin <= 1)
+                    throw std::runtime_error{"Invalid tag string"};
                 result.emplace_back(begin, &c);
                 begin = nullptr;
                 break;
