@@ -24,6 +24,6 @@
 
 #include <bugspray/bugspray.hpp>
 
-TEST_CASE("invalid tags", "asd", runtime)
+TEST_CASE("invalid tags", "@TAG_STRING@", @QUALIFIER@)
 {
 }

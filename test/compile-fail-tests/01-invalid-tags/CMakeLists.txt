@@ -34,5 +34,23 @@ set_target_properties(bugspray-with-main PROPERTIES
         CXX_EXTENSIONS NO
         )
 
-add_subdirectory(runtime-testcase)
-add_subdirectory(both-testcase)
+function(create_executable name TAG_STRING QUALIFIER)
+    configure_file(main.cpp.in main_${name}.cpp @ONLY)
+    add_executable(01-invalid-tags-testcase-${name} ${CMAKE_CURRENT_BINARY_DIR}/main_${name}.cpp)
+    target_link_libraries(01-invalid-tags-testcase-${name} PUBLIC bugspray-with-main)
+    set_target_properties(01-invalid-tags-testcase-${name} PROPERTIES
+            CXX_STANDARD 20
+            CXX_STANDARD_REQUIRED YES
+            CXX_EXTENSIONS NO
+            )
+endfunction()
+
+function(create_test_executables name TAG_STRING)
+    create_executable(${name}-both ${TAG_STRING} "both")
+    create_executable(${name}-runtime ${TAG_STRING} "runtime")
+endfunction()
+
+create_test_executables(tag_not_closed "[")
+create_test_executables(tag_not_opened "]")
+create_test_executables(not_a_tag "not a tag")
+create_test_executables(tag_empty "[]")

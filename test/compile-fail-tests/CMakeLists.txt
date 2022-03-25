@@ -26,11 +26,19 @@ set_tests_properties(00-fail-trivial PROPERTIES
         PASS_REGULAR_EXPRESSION "EVAL_TEST_CASE\\(\"this will fail\"\\).*FAIL\\(\\)"
         )
 
-add_build_test(01-invalid-tags-both 01-invalid-tags-both-testcase 01-invalid-tags)
-set_tests_properties(01-invalid-tags-both PROPERTIES
-        PASS_REGULAR_EXPRESSION "Invalid tag string"
-        )
-add_build_test(01-invalid-tags-runtime 01-invalid-tags-runtime-testcase 01-invalid-tags)
-set_tests_properties(01-invalid-tags-runtime PROPERTIES
-        PASS_REGULAR_EXPRESSION "Invalid tag string"
-        )
+function(make_invalid_tags_testcase name)
+    add_build_test(01-invalid-tags-testcase-${name}-both 01-invalid-tags-testcase-${name}-both 01-invalid-tags)
+    set_tests_properties(01-invalid-tags-testcase-${name}-both PROPERTIES
+            PASS_REGULAR_EXPRESSION "Invalid tag string"
+            )
+
+    add_build_test(01-invalid-tags-testcase-${name}-runtime 01-invalid-tags-testcase-${name}-runtime 01-invalid-tags)
+    set_tests_properties(01-invalid-tags-testcase-${name}-runtime PROPERTIES
+            PASS_REGULAR_EXPRESSION "Invalid tag string"
+            )
+endfunction()
+
+make_invalid_tags_testcase(tag_not_closed)
+make_invalid_tags_testcase(tag_not_opened)
+make_invalid_tags_testcase(not_a_tag)
+make_invalid_tags_testcase(tag_empty)
