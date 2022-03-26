@@ -40,11 +40,12 @@ function(add_build_test name)
             --build-target ${target}
             --build-generator ${CMAKE_GENERATOR}
             --build-options -DBUGSPRAY_LIB_DIR:STR=$<TARGET_PROPERTY:bugspray-with-main,BINARY_DIR> -DBUGSPRAY_INCLUDE_DIR:STR=$<TARGET_PROPERTY:bugspray-with-main,INCLUDE_DIRECTORIES>
-            --test-command ${CMAKE_CTEST_COMMAND}
+            --test-command ${CMAKE_CTEST_COMMAND} --verbose
             )
 endfunction()
 
 add_subdirectory(compile-fail-tests)
+add_subdirectory(success-tests)
 
 ### TODO: REPLACE WITH PROPER TESTS ###
 add_executable(bugspray-test test.cpp test2.cpp)
