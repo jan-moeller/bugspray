@@ -24,22 +24,14 @@
 cmake_minimum_required(VERSION 3.20)
 project(bugspray-success-tests-00-basic)
 
-add_library(bugspray-with-main STATIC IMPORTED)
-set_target_properties(bugspray-with-main PROPERTIES
-        IMPORTED_LOCATION ${BUGSPRAY_LIB_DIR}/libbugspray-with-main.a
-        INTERFACE_INCLUDE_DIRECTORIES ${BUGSPRAY_INCLUDE_DIR}
-        INTERFACE_LINK_LIBRARIES ${BUGSPRAY_LIB_DIR}/libbugspray.a
-        CXX_STANDARD 20
-        CXX_STANDARD_REQUIRED YES
-        CXX_EXTENSIONS NO
-        )
+set(CMAKE_MODULE_PATH ${BUGSPRAY_CMAKE_MODULE_PATH} ${CMAKE_MODULE_PATH})
+include(bs_target_setup)
+include(bs_test_add_imported_bs_lib)
+
+bs_import_lib_for_testing()
 
 add_executable(00-basic main.cpp)
 target_link_libraries(00-basic PUBLIC bugspray-with-main)
-set_target_properties(00-basic PROPERTIES
-        CXX_STANDARD 20
-        CXX_STANDARD_REQUIRED YES
-        CXX_EXTENSIONS NO
-        )
+bs_target_setup(00-basic)
 enable_testing()
 add_test(NAME 00-basic COMMAND 00-basic)

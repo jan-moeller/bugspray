@@ -21,28 +21,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-cmake_minimum_required(VERSION 3.20)
-project(bugspray-compile-fail-tests-01-invalid-tags)
-
-set(CMAKE_MODULE_PATH ${BUGSPRAY_CMAKE_MODULE_PATH} ${CMAKE_MODULE_PATH})
-include(bs_target_setup)
-include(bs_test_add_imported_bs_lib)
-
-bs_import_lib_for_testing()
-
-function(create_executable name TAG_STRING QUALIFIER)
-    configure_file(main.cpp.in main_${name}.cpp @ONLY)
-    add_executable(01-invalid-tags-testcase-${name} ${CMAKE_CURRENT_BINARY_DIR}/main_${name}.cpp)
-    target_link_libraries(01-invalid-tags-testcase-${name} PUBLIC bugspray-with-main)
-    bs_target_setup(01-invalid-tags-testcase-${name})
+function(bs_import_lib_for_testing)
+    add_library(bugspray-with-main STATIC IMPORTED)
+    set_target_properties(bugspray-with-main PROPERTIES
+            IMPORTED_LOCATION ${BUGSPRAY_LIB_DIR}/libbugspray-with-main.a
+            INTERFACE_INCLUDE_DIRECTORIES ${BUGSPRAY_INCLUDE_DIR}
+            INTERFACE_LINK_LIBRARIES ${BUGSPRAY_LIB_DIR}/libbugspray.a
+            CXX_STANDARD 20
+            CXX_STANDARD_REQUIRED YES
+            CXX_EXTENSIONS NO
+            )
 endfunction()
-
-function(create_test_executables name TAG_STRING)
-    create_executable(${name}-both ${TAG_STRING} "both")
-    create_executable(${name}-runtime ${TAG_STRING} "runtime")
-endfunction()
-
-create_test_executables(tag_not_closed "[")
-create_test_executables(tag_not_opened "]")
-create_test_executables(not_a_tag "not a tag")
-create_test_executables(tag_empty "[]")
