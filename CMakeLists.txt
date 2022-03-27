@@ -45,7 +45,9 @@ add_library(bugspray STATIC
         include/bugspray/test_tags_t.hpp
         include/bugspray/utility/naive_string.hpp
         include/bugspray/utility/naive_vector.hpp
+        include/bugspray/utility/string.hpp
         include/bugspray/utility/string_literal.hpp
+        include/bugspray/utility/vector.hpp
         include/bugspray/utility/warning_suppression.hpp
         src/reporter/terminal_reporter.cpp
         src/test_case_registry.cpp

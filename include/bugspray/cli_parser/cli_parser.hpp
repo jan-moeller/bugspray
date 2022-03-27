@@ -28,8 +28,8 @@
 #include "bugspray/cli_parser/argument_parser.hpp"
 #include "bugspray/cli_parser/named_argument.hpp"
 #include "bugspray/cli_parser/positional_argument.hpp"
-#include "bugspray/utility/naive_vector.hpp"
 #include "bugspray/utility/string_literal.hpp"
+#include "bugspray/utility/vector.hpp"
 
 #include <algorithm>
 #include <array>
@@ -125,7 +125,7 @@ class cli_parser
                 std::optional<typename Arg::type> result = std::nullopt;
                 auto                              v      = std::ranges::find_if(m_values,
                                               [](auto const& e) {
-                                                                                    return std::visit([](auto const& e2)
+                                                  return std::visit([](auto const& e2)
                                                                     { return e2.name == Name.value; },
                                                                     e);
                                               });
@@ -170,7 +170,7 @@ class cli_parser
     using args_type  = std::variant<Arguments...>;
     using value_type = std::variant<value<typename Arguments::type>...>;
     static constexpr std::array              s_arguments{args_type{Arguments{}}...};
-    naive_vector<value_type>                 m_values{};
+    bs::vector<value_type>                   m_values{};
     std::optional<typename Positional::type> m_positional_val;
     std::string_view                         m_executable_name;
 };

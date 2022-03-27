@@ -25,8 +25,8 @@
 #ifndef BUGSPRAY_TEST_TAGS_T_HPP
 #define BUGSPRAY_TEST_TAGS_T_HPP
 
-#include "bugspray/utility/naive_vector.hpp"
 #include "bugspray/utility/string_literal.hpp"
+#include "bugspray/utility/vector.hpp"
 
 #include <string_view>
 
@@ -43,7 +43,7 @@ constexpr auto parse_tags()
 {
     constexpr auto parse_tags_internal = [](std::string_view tags)
     {
-        naive_vector<std::string_view> result;
+        bs::vector<std::string_view> result;
 
         char const* begin = nullptr;
         for (char const& c : tags)

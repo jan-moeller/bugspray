@@ -27,6 +27,7 @@
 
 #include "test_case_registry.hpp"
 #include "test_run.hpp"
+#include "utility/string.hpp"
 
 namespace bs
 {
@@ -50,13 +51,13 @@ constexpr auto run_test(test_case_info const& t) noexcept -> test_run
     {
         data.failures.emplace_back(location.file_name(),
                                    location.line(),
-                                   naive_string{"Exception escaped test case: "} + e.what());
+                                   bs::string{"Exception escaped test case: "} + e.what());
     }
     catch (...)
     {
         data.failures.emplace_back(location.file_name(),
                                    location.line(),
-                                   naive_string{"Unknown exception escaped test case."});
+                                   bs::string{"Unknown exception escaped test case."});
     }
     return data;
 }

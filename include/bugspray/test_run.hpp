@@ -25,8 +25,8 @@
 #ifndef BUGSPRAY_TEST_RUN_HPP
 #define BUGSPRAY_TEST_RUN_HPP
 
-#include "bugspray/utility/naive_string.hpp"
-#include "bugspray/utility/naive_vector.hpp"
+#include "bugspray/utility/string.hpp"
+#include "bugspray/utility/vector.hpp"
 
 #include <ranges>
 #include <string_view>
@@ -37,7 +37,7 @@ struct failure_info
 {
     std::string_view filename;
     long int         line;
-    naive_string     detail;
+    bs::string       detail;
 
     constexpr auto operator==(failure_info const&) const noexcept -> bool = default;
 };
@@ -52,13 +52,13 @@ struct pass_info
 
 struct section_run
 {
-    std::string_view           name;
-    std::string_view           filename;
-    long int                   line;
-    naive_vector<failure_info> failures{};
-    naive_vector<pass_info>    passes{};
-    naive_vector<section_run>  subsections{};
-    bool                       done = false;
+    std::string_view         name;
+    std::string_view         filename;
+    long int                 line;
+    bs::vector<failure_info> failures{};
+    bs::vector<pass_info>    passes{};
+    bs::vector<section_run>  subsections{};
+    bool                     done = false;
 
     constexpr auto passed() const noexcept -> bool
     {
@@ -74,8 +74,8 @@ struct section_run
 
 struct test_run : section_run
 {
-    naive_vector<std::string_view> current_prefix{};
-    bool                           executed_leaf_section = false; // TODO: This probably shouldn't be in here
+    bs::vector<std::string_view> current_prefix{};
+    bool                         executed_leaf_section = false; // TODO: This probably shouldn't be in here
 };
 
 // If the test_run object already contains a subsection for the current_prefix, then this returns a pointer to it.

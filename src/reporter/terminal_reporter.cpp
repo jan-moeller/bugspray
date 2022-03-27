@@ -24,6 +24,8 @@
 
 #include "bugspray/reporter/terminal_reporter.hpp"
 
+#include "bugspray/utility/vector.hpp"
+
 #include <iostream>
 #include <ranges>
 
@@ -51,7 +53,7 @@ void report_test_case_head(test_run const& data)
     std::cout << '\n';
 }
 
-auto report_section_failures(section_run const& data, naive_vector<section_run const*> const history) -> test_results
+auto report_section_failures(section_run const& data, bs::vector<section_run const*> const history) -> test_results
 {
     test_results results;
     auto const   child_history = [&]

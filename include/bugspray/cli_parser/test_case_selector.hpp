@@ -25,7 +25,8 @@
 #ifndef BUGSPRAY_TEST_CASE_SELECTOR_HPP
 #define BUGSPRAY_TEST_CASE_SELECTOR_HPP
 
-#include "bugspray/utility/naive_string.hpp"
+#include "bugspray/utility/string.hpp"
+#include "bugspray/utility/vector.hpp"
 
 #include <algorithm>
 #include <span>
@@ -57,10 +58,10 @@ struct test_case_selector
     }
     struct element
     {
-        naive_string str;
-        bool         is_tag = false;
+        bs::string str;
+        bool       is_tag = false;
     };
-    naive_vector<naive_vector<element>> m_selector; // 1st level: OR, 2nd level: AND
+    bs::vector<bs::vector<element>> m_selector; // 1st level: OR, 2nd level: AND
 };
 
 constexpr auto parse_selector_string(std::string_view str) -> test_case_selector
