@@ -21,10 +21,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-
-#include <bugspray/bugspray.hpp>
+#include "bugspray/bugspray.hpp"
 
 TEST_CASE("this will succeed")
 {
+    SECTION("a")
+    {
+        SECTION("a.a")
+        {
+        }
+        SECTION("a.b")
+        {
+        }
+    }
+    SECTION("b")
+    {
+    }
 }
 EVAL_TEST_CASE("this will succeed");
