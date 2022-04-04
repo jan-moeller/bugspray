@@ -37,6 +37,10 @@ include(Catch)
 add_executable(bugspray-unit-tests
         utility/detail/test_naive_string.cpp
         utility/detail/test_naive_vector.cpp
+        utility/macros/test_get_nth_arg.cpp
+        utility/macros/test_get_nth_arg_or.cpp
+        utility/macros/test_get_tail.cpp
+        utility/macros/test_unique_identifier.cpp
         utility/test_compiletime_string.cpp
         utility/test_source_location.cpp
         )
