@@ -34,9 +34,31 @@ namespace bs
 template<std::size_t N>
 struct string_literal
 {
+    constexpr string_literal() { std::fill_n(value, N, '\0'); }
     constexpr string_literal(char const (&str)[N]) { std::copy_n(str, N, value); }
     char value[N];
 };
+
+template<std::size_t N1, std::size_t N2>
+constexpr auto operator+(string_literal<N1> lhs, string_literal<N2> rhs) -> string_literal<N1 + N2 - 1>
+{
+    string_literal<N1 + N2 - 1> result;
+    std::copy_n(lhs.value, N1, result.value + 0);
+    std::copy_n(rhs.value, N2, result.value + N1 - 1);
+    return result;
+}
+
+template<std::size_t N1, std::size_t N2>
+constexpr auto operator+(string_literal<N1> lhs, char const (&rhs)[N2]) -> string_literal<N1 + N2 - 1>
+{
+    return lhs + string_literal<N2>{rhs};
+}
+
+template<std::size_t N1, std::size_t N2>
+constexpr auto operator+(char const (&lhs)[N1], string_literal<N2> rhs) -> string_literal<N1 + N2 - 1>
+{
+    return string_literal<N1>{lhs} + rhs;
+}
 } // namespace bs
 
 #endif // BUGSPRAY_STRING_LITERAL_HPP
