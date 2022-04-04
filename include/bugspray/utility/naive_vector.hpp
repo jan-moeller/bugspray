@@ -141,6 +141,9 @@ class naive_vector
         --m_end;
     }
 
+    constexpr auto operator[](std::size_t idx) const noexcept -> const_reference { return *(begin() + idx); }
+    constexpr auto operator[](std::size_t idx) noexcept -> reference { return *(begin() + idx); }
+
     friend constexpr auto operator==(naive_vector<T> const& lhs, naive_vector<T> const& rhs) noexcept -> bool
     {
         return std::ranges::equal(lhs, rhs);
