@@ -38,6 +38,7 @@ add_library(bugspray STATIC
         include/bugspray/utility/macros/identity.hpp
         include/bugspray/utility/macros/stringify.hpp
         include/bugspray/utility/macros/unique_identifier.hpp
+        include/bugspray/utility/macros/warning_suppression.hpp
         include/bugspray/utility/source_location.hpp
         include/bugspray/utility/string.hpp
         include/bugspray/utility/vector.hpp

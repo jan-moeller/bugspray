@@ -22,15 +22,33 @@
 // SOFTWARE.
 //
 
-#ifndef BUGSPRAY_MACROS_HPP
-#define BUGSPRAY_MACROS_HPP
+#ifndef BUGSPRAY_WARNING_SUPPRESSION_HPP
+#define BUGSPRAY_WARNING_SUPPRESSION_HPP
 
-#include "macros/get_nth_arg.hpp"
-#include "macros/get_nth_arg_or.hpp"
-#include "macros/get_tail.hpp"
-#include "macros/identity.hpp"
-#include "macros/stringify.hpp"
-#include "macros/unique_identifier.hpp"
-#include "macros/warning_suppression.hpp"
+/*
+ * Provides macros that disable certain warnings.
+ *
+ * To be used like this:
+ * BUGSPRAY_DISABLE_WARNING_PUSH
+ * BUGSPRAY_DISABLE_WARNING_<warning>
+ * ...
+ * BUGSPRAY_DISABLE_WARNING_POP
+ */
 
-#endif // BUGSPRAY_MACROS_HPP
+#if defined(__GNUC__) || defined(__clang__)
+#define BUGSPRAY_PRAGMA(X) _Pragma(#X)
+#define BUGSPRAY_DISABLE_WARNING_PUSH BUGSPRAY_PRAGMA(GCC diagnostic push)
+#define BUGSPRAY_DISABLE_WARNING_POP BUGSPRAY_PRAGMA(GCC diagnostic pop)
+#define BUGSPRAY_DISABLE_WARNING(warningName) BUGSPRAY_PRAGMA(GCC diagnostic ignored #warningName)
+
+#define BUGSPRAY_DISABLE_WARNING_SHADOW_LOCAL BUGSPRAY_DISABLE_WARNING(-Wshadow)
+
+#else
+#define BUGSPRAY_DISABLE_WARNING_PUSH
+#define BUGSPRAY_DISABLE_WARNING_POP
+
+#define BUGSPRAY_DISABLE_WARNING_SHADOW_LOCAL
+
+#endif
+
+#endif // BUGSPRAY_WARNING_SUPPRESSION_HPP
