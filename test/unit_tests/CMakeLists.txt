@@ -21,16 +21,22 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-cmake_minimum_required(VERSION 3.20)
-project(bugspray)
+include(FetchContent)
 
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
-include(bs_target_setup)
+fetchcontent_declare(
+        Catch2
+        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+        GIT_TAG 797c3e731883bfb80dff5e237f2559232314310c
+)
+fetchcontent_makeavailable(Catch2)
 
-add_library(bugspray STATIC
+list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
+include(CTest)
+include(Catch)
+
+add_executable(bugspray-unit-tests
         )
-target_include_directories(bugspray PUBLIC include/)
-bs_target_setup(bugspray)
+target_link_libraries(bugspray-unit-tests PRIVATE bugspray Catch2::Catch2WithMain)
+bs_target_setup(bugspray-unit-tests)
 
-enable_testing()
-add_subdirectory(test)
+catch_discover_tests(bugspray-unit-tests)

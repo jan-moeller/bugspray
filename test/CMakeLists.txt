@@ -21,16 +21,4 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-cmake_minimum_required(VERSION 3.20)
-project(bugspray)
-
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
-include(bs_target_setup)
-
-add_library(bugspray STATIC
-        )
-target_include_directories(bugspray PUBLIC include/)
-bs_target_setup(bugspray)
-
-enable_testing()
-add_subdirectory(test)
+add_subdirectory(unit_tests)
