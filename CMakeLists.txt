@@ -32,6 +32,7 @@ add_library(bugspray STATIC
         include/bugspray/utility/detail/naive_string.hpp
         include/bugspray/utility/detail/naive_vector.hpp
         include/bugspray/utility/source_location.hpp
+        include/bugspray/utility/vector.hpp
         )
 target_include_directories(bugspray PUBLIC include/)
 bs_target_setup(bugspray)
