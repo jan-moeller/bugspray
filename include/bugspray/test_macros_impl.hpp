@@ -25,23 +25,12 @@
 #ifndef BUGSPRAY_TEST_MACROS_IMPL_HPP
 #define BUGSPRAY_TEST_MACROS_IMPL_HPP
 
+#include "bugspray/utility/macros.hpp"
 #include "bugspray/utility/warning_suppression.hpp"
-
-#define BUGSPRAY_UNIQUE_IDENTIFIER_IMPL2(prefix, arg) prefix##_##arg
-#define BUGSPRAY_UNIQUE_IDENTIFIER_IMPL(prefix, arg) BUGSPRAY_UNIQUE_IDENTIFIER_IMPL2(prefix, arg)
-#define BUGSPRAY_UNIQUE_IDENTIFIER(prefix) BUGSPRAY_UNIQUE_IDENTIFIER_IMPL(prefix, __COUNTER__)
 
 #define BUGSPRAY_QUALIFIER_both constexpr
 #define BUGSPRAY_QUALIFIER_runtime
 #define BUGSPRAY_CONSTEXPR_CHOOSER(qualifier) BUGSPRAY_QUALIFIER_##qualifier
-
-#define BUGSPRAY_GET_3RD_ARG(arg1, arg2, arg3, ...) arg3
-#define BUGSPRAY_GET_4TH_ARG(arg1, arg2, arg3, arg4, ...) arg4
-#define BUGSPRAY_GET_5TH_ARG(arg1, arg2, arg3, arg4, arg5, ...) arg5
-
-#define BUGSPRAY_LINE_STR_IMPL_2(L) #L
-#define BUGSPRAY_LINE_STR_IMPL(L) BUGSPRAY_LINE_STR_IMPL_2(L)
-#define BUGSPRAY_LINE_STR BUGSPRAY_LINE_STR_IMPL(__LINE__)
 
 // Register fn with name and tags for execution at runtime
 #define BUGSPRAY_REGISTER_RUNTIME_TEST_CASE_IMPL(fn, name, tags)                                                       \
