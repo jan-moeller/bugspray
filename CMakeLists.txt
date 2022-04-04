@@ -28,6 +28,7 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 include(bs_target_setup)
 
 add_library(bugspray STATIC
+        include/bugspray/utility/compiletime_string.hpp
         include/bugspray/utility/source_location.hpp
         )
 target_include_directories(bugspray PUBLIC include/)
