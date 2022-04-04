@@ -35,6 +35,7 @@ include(CTest)
 include(Catch)
 
 add_executable(bugspray-unit-tests
+        utility/test_source_location.cpp
         )
 target_link_libraries(bugspray-unit-tests PRIVATE bugspray Catch2::Catch2WithMain)
 bs_target_setup(bugspray-unit-tests)
