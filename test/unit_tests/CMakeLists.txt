@@ -35,6 +35,7 @@ include(CTest)
 include(Catch)
 
 add_executable(bugspray-unit-tests
+        utility/detail/test_naive_string.cpp
         utility/detail/test_naive_vector.cpp
         utility/test_compiletime_string.cpp
         utility/test_source_location.cpp

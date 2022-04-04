@@ -29,6 +29,7 @@ include(bs_target_setup)
 
 add_library(bugspray STATIC
         include/bugspray/utility/compiletime_string.hpp
+        include/bugspray/utility/detail/naive_string.hpp
         include/bugspray/utility/detail/naive_vector.hpp
         include/bugspray/utility/source_location.hpp
         )

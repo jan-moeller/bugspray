@@ -159,6 +159,8 @@ class naive_vector
     T* m_begin        = nullptr;
     T* m_end          = nullptr;
     T* m_capacity_end = nullptr;
+
+    friend class naive_string;
 };
 } // namespace bs
 
