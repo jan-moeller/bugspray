@@ -128,7 +128,7 @@ class naive_vector
     constexpr void push_back(T const& value) { emplace_back(value); }
 
     template<typename... Ts>
-    constexpr void emplace_back(Ts&&... values)
+    constexpr auto emplace_back(Ts&&... values) -> reference
     {
         if (m_capacity_end == m_end)
         {
@@ -143,7 +143,7 @@ class naive_vector
             m_capacity_end = m_begin + new_c;
         }
         std::construct_at(m_end, T{std::forward<Ts>(values)...});
-        ++m_end;
+        return *(m_end++);
     }
 
     constexpr void pop()
