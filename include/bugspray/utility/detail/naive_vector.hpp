@@ -26,6 +26,7 @@
 #define BUGSPRAY_NAIVE_VECTOR_HPP
 
 #include <algorithm>
+#include <concepts>
 #include <initializer_list>
 
 #include <cassert>
@@ -55,10 +56,15 @@ class naive_vector
     constexpr ~naive_vector() noexcept { delete[] m_begin; }
 
     constexpr naive_vector(std::initializer_list<T> ilist)
-        : naive_vector()
+        : naive_vector(ilist.begin(), ilist.end())
     {
-        for (auto&& e : ilist)
-            push_back(e);
+    }
+
+    template<std::forward_iterator Begin, std::sentinel_for<Begin> End>
+    constexpr naive_vector(Begin begin, End end)
+    {
+        for (std::forward_iterator auto iter = begin; iter != end; ++iter)
+            push_back(*iter);
     }
 
     constexpr naive_vector(naive_vector const& other)
