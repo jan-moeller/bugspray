@@ -32,6 +32,7 @@ add_library(bugspray STATIC
         include/bugspray/utility/detail/naive_string.hpp
         include/bugspray/utility/detail/naive_vector.hpp
         include/bugspray/utility/macros.hpp
+        include/bugspray/utility/macros/concatenate.hpp
         include/bugspray/utility/macros/get_nth_arg.hpp
         include/bugspray/utility/macros/get_nth_arg_or.hpp
         include/bugspray/utility/macros/get_tail.hpp

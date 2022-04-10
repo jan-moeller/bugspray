@@ -22,16 +22,15 @@
 // SOFTWARE.
 //
 
-#ifndef BUGSPRAY_MACROS_HPP
-#define BUGSPRAY_MACROS_HPP
+#ifndef BUGSPRAY_CONCATENATE_HPP
+#define BUGSPRAY_CONCATENATE_HPP
 
-#include "macros/concatenate.hpp"
-#include "macros/get_nth_arg.hpp"
-#include "macros/get_nth_arg_or.hpp"
-#include "macros/get_tail.hpp"
-#include "macros/identity.hpp"
-#include "macros/stringify.hpp"
-#include "macros/unique_identifier.hpp"
-#include "macros/warning_suppression.hpp"
+/*
+ * BUGSPRAY_CONCATENATE() concatenates its arguments.
+ * BUGSPRAY_CONCATENATE_EXPANSION() concatenates the expansion of its arguments.
+ */
 
-#endif // BUGSPRAY_MACROS_HPP
+#define BUGSPRAY_CONCATENATE(first, second) first##second
+#define BUGSPRAY_CONCATENATE_EXPANSION(first, second) BUGSPRAY_CONCATENATE(first, second)
+
+#endif // BUGSPRAY_CONCATENATE_HPP
