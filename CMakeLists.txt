@@ -29,6 +29,7 @@ include(bs_target_setup)
 
 add_library(bugspray STATIC
         include/bugspray/test_evaluation/section_path.hpp
+        include/bugspray/test_evaluation/test_case_topology.hpp
         include/bugspray/utility/compiletime_string.hpp
         include/bugspray/utility/detail/naive_string.hpp
         include/bugspray/utility/detail/naive_vector.hpp
