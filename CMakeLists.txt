@@ -33,6 +33,7 @@ add_library(bugspray STATIC
         include/bugspray/reporter/caching_reporter.hpp
         include/bugspray/reporter/noop_reporter.hpp
         include/bugspray/reporter/reporter.hpp
+        include/bugspray/test_evaluation/evaluate_test_case.hpp
         include/bugspray/test_evaluation/evaluate_test_case_target.hpp
         include/bugspray/test_evaluation/section_path.hpp
         include/bugspray/test_evaluation/section_tracker.hpp
