@@ -31,6 +31,7 @@ add_library(bugspray STATIC
         include/bugspray/macro_interface/assertion_macros.hpp
         include/bugspray/macro_interface/section_macro.hpp
         include/bugspray/reporter/caching_reporter.hpp
+        include/bugspray/reporter/formatted_ostream_reporter.hpp
         include/bugspray/reporter/noop_reporter.hpp
         include/bugspray/reporter/reporter.hpp
         include/bugspray/test_evaluation/evaluate_test_case.hpp
@@ -56,6 +57,7 @@ add_library(bugspray STATIC
         include/bugspray/utility/source_location.hpp
         include/bugspray/utility/string.hpp
         include/bugspray/utility/vector.hpp
+        src/reporter/formatted_ostream_reporter.cpp
         )
 target_include_directories(bugspray PUBLIC include/)
 bs_target_setup(bugspray)
