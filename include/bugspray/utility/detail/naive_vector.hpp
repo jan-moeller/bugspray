@@ -28,6 +28,9 @@
 #include <algorithm>
 #include <concepts>
 #include <initializer_list>
+#include <iterator>
+#include <memory>
+#include <utility>
 
 #include <cassert>
 #include <cstdint>
@@ -53,7 +56,14 @@ class naive_vector
     using difference_type = std::ptrdiff_t;
 
     constexpr naive_vector() = default;
-    constexpr ~naive_vector() noexcept { delete[] m_begin; }
+    constexpr ~naive_vector() noexcept
+    {
+        if (capacity() > 0)
+        {
+            std::destroy_n(m_begin, size());
+            m_allocator.deallocate(m_begin, capacity());
+        }
+    }
 
     constexpr naive_vector(std::initializer_list<T> ilist)
         : naive_vector(ilist.begin(), ilist.end())
@@ -68,11 +78,12 @@ class naive_vector
     }
 
     constexpr naive_vector(naive_vector const& other)
-        : m_begin(new T[other.capacity()])
-        , m_end(m_begin + other.size())
-        , m_capacity_end(m_begin + other.capacity())
+        : m_begin(other.capacity() > 0 ? m_allocator.allocate(other.capacity()) : nullptr)
+        , m_end(m_begin ? m_begin + other.size() : nullptr)
+        , m_capacity_end(m_begin ? m_begin + other.capacity() : nullptr)
     {
-        std::ranges::copy(other, m_begin);
+        for (std::size_t i = 0; i < other.size(); ++i)
+            std::construct_at(m_begin + i, other[i]);
     }
 
     constexpr naive_vector(naive_vector&& other) noexcept
@@ -86,11 +97,16 @@ class naive_vector
     {
         if (this != &other)
         {
-            delete[] m_begin;
-            m_begin        = new T[other.capacity()];
-            m_end          = m_begin + other.size();
-            m_capacity_end = m_begin + other.capacity();
-            std::ranges::copy(other, m_begin);
+            if (capacity() > 0)
+            {
+                std::destroy_n(m_begin, size());
+                m_allocator.deallocate(m_begin, capacity());
+            }
+            m_begin        = other.capacity() > 0 ? m_allocator.allocate(other.capacity()) : nullptr;
+            m_end          = m_begin ? m_begin + other.size() : nullptr;
+            m_capacity_end = m_begin ? m_begin + other.capacity() : nullptr;
+            for (std::size_t i = 0; i < other.size(); ++i)
+                std::construct_at(m_begin + i, other[i]);
         }
         return *this;
     }
@@ -99,7 +115,11 @@ class naive_vector
     {
         if (this != &other)
         {
-            delete[] m_begin;
+            if (capacity() > 0)
+            {
+                std::destroy_n(m_begin, size());
+                m_allocator.deallocate(m_begin, capacity());
+            }
             m_begin        = std::exchange(other.m_begin, nullptr);
             m_end          = std::exchange(other.m_end, nullptr);
             m_capacity_end = std::exchange(other.m_capacity_end, nullptr);
@@ -134,10 +154,15 @@ class naive_vector
         {
             auto const s         = size();
             auto const c         = capacity();
-            auto const new_c     = c > 0 ? 2 * c : 2;
-            T*         new_begin = new T[new_c];
-            std::ranges::copy(*this, new_begin);
-            delete[] m_begin;
+            auto const new_c     = c > 0 ? 2 * c : 1;
+            T*         new_begin = m_allocator.allocate(new_c);
+            for (std::size_t i = 0; i < s; ++i)
+                std::construct_at(new_begin + i, (*this)[i]);
+            if (c > 0)
+            {
+                std::destroy_n(m_begin, s);
+                m_allocator.deallocate(m_begin, c);
+            }
             m_begin        = new_begin;
             m_end          = m_begin + s;
             m_capacity_end = m_begin + new_c;
@@ -162,6 +187,8 @@ class naive_vector
     }
 
   private:
+    std::allocator<T> m_allocator{};
+
     T* m_begin        = nullptr;
     T* m_end          = nullptr;
     T* m_capacity_end = nullptr;
