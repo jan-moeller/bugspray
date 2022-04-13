@@ -65,5 +65,9 @@ add_library(bugspray STATIC
 target_include_directories(bugspray PUBLIC include/)
 bs_target_setup(bugspray)
 
+add_library(bugspray-with-main STATIC src/main.cpp)
+target_link_libraries(bugspray-with-main PUBLIC bugspray)
+bs_target_setup(bugspray-with-main)
+
 enable_testing()
 add_subdirectory(test)
