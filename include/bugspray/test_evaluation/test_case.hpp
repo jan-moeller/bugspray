@@ -29,6 +29,7 @@
 #include "bugspray/utility/source_location.hpp"
 #include "bugspray/utility/vector.hpp"
 
+#include <span>
 #include <string_view>
 
 /*
@@ -39,10 +40,10 @@ namespace bs
 {
 struct test_case
 {
-    std::string_view             name;
-    bs::vector<std::string_view> tags;
-    bs::source_location          source_location;
-    bs::test_case_fn             test_fn;
+    std::string_view                  name;
+    std::span<std::string_view const> tags;
+    bs::source_location               source_location;
+    bs::test_case_fn                  test_fn;
 };
 } // namespace bs
 
