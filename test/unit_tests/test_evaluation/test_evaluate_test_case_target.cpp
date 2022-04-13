@@ -21,6 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
+#define BUGSPRAY_NO_SHORT_MACROS
 #include "bugspray/macro_interface/assertion_macros.hpp"
 #include "bugspray/macro_interface/section_macro.hpp"
 #include "bugspray/reporter/caching_reporter.hpp"

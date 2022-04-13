@@ -25,6 +25,7 @@
 #ifndef BUGSPRAY_TEST_CASE_MACROS_HPP
 #define BUGSPRAY_TEST_CASE_MACROS_HPP
 
+#include "bugspray/test_evaluation/evaluate_test_case.hpp"
 #include "bugspray/test_evaluation/parse_tag_string.hpp"
 #include "bugspray/test_registration/test_case_registry.hpp"
 #include "bugspray/utility/macros.hpp"
@@ -106,5 +107,11 @@
                             BUGSPRAY_GET_3RD_ARG_OR(both, __VA_ARGS__))
 
 #define BUGSPRAY_EVAL_TEST_CASE(name) static_assert(::bs::evaluate_compiletime_test<name>())
+
+#ifndef BUGSPRAY_NO_SHORT_MACROS
+#define REGISTER_TEST_CASE(...) BUGSPRAY_REGISTER_TEST_CASE(__VA_ARGS__)
+#define TEST_CASE(...) BUGSPRAY_TEST_CASE(__VA_ARGS__)
+#define EVAL_TEST_CASE(...) BUGSPRAY_EVAL_TEST_CASE(__VA_ARGS__)
+#endif
 
 #endif // BUGSPRAY_TEST_CASE_MACROS_HPP
