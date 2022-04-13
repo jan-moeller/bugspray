@@ -21,22 +21,24 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-include(CTest)
+function(bs_import_lib_for_testing)
+    add_library(bugspray STATIC IMPORTED)
+    set_target_properties(bugspray PROPERTIES
+            IMPORTED_LOCATION ${BUGSPRAY_LIB_DIR}/libbugspray.a
+            INTERFACE_INCLUDE_DIRECTORIES ${BUGSPRAY_INCLUDE_DIR}
+            INTERFACE_LINK_LIBRARIES ${BUGSPRAY_LIB_DIR}/libbugspray.a
+            CXX_STANDARD 20
+            CXX_STANDARD_REQUIRED YES
+            CXX_EXTENSIONS NO
+            )
 
-function(add_build_test name)
-    set(target all)
-    set(folder ${name})
-    add_test(NAME ${name}
-            COMMAND ${CMAKE_CTEST_COMMAND}
-            --build-and-test
-            ${CMAKE_CURRENT_LIST_DIR}/${folder}
-            ${CMAKE_CURRENT_BINARY_DIR}/${folder}
-            --build-target ${target}
-            --build-generator ${CMAKE_GENERATOR}
-            --build-options -DBUGSPRAY_CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH} -DBUGSPRAY_LIB_DIR:STR=$<TARGET_PROPERTY:bugspray-with-main,BINARY_DIR> -DBUGSPRAY_INCLUDE_DIR:STR=$<TARGET_PROPERTY:bugspray-with-main,INCLUDE_DIRECTORIES>
-            --test-command ${CMAKE_CTEST_COMMAND} --verbose
+    add_library(bugspray-with-main STATIC IMPORTED)
+    set_target_properties(bugspray-with-main PROPERTIES
+            IMPORTED_LOCATION ${BUGSPRAY_LIB_DIR}/libbugspray-with-main.a
+            INTERFACE_INCLUDE_DIRECTORIES ${BUGSPRAY_INCLUDE_DIR}
+            INTERFACE_LINK_LIBRARIES ${BUGSPRAY_LIB_DIR}/libbugspray-with-main.a
+            CXX_STANDARD 20
+            CXX_STANDARD_REQUIRED YES
+            CXX_EXTENSIONS NO
             )
 endfunction()
-
-add_build_test(examples)
-add_subdirectory(unit_tests)

@@ -21,22 +21,22 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
+cmake_minimum_required(VERSION 3.20)
+project(bugspray-examples-00-trivial)
+
+set(CMAKE_MODULE_PATH ${BUGSPRAY_CMAKE_MODULE_PATH} ${CMAKE_MODULE_PATH})
+include(bs_target_setup)
+include(bs_import_lib_for_testing)
 include(CTest)
 
-function(add_build_test name)
-    set(target all)
-    set(folder ${name})
-    add_test(NAME ${name}
-            COMMAND ${CMAKE_CTEST_COMMAND}
-            --build-and-test
-            ${CMAKE_CURRENT_LIST_DIR}/${folder}
-            ${CMAKE_CURRENT_BINARY_DIR}/${folder}
-            --build-target ${target}
-            --build-generator ${CMAKE_GENERATOR}
-            --build-options -DBUGSPRAY_CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH} -DBUGSPRAY_LIB_DIR:STR=$<TARGET_PROPERTY:bugspray-with-main,BINARY_DIR> -DBUGSPRAY_INCLUDE_DIR:STR=$<TARGET_PROPERTY:bugspray-with-main,INCLUDE_DIRECTORIES>
-            --test-command ${CMAKE_CTEST_COMMAND} --verbose
-            )
+bs_import_lib_for_testing()
+
+function(register_test name)
+    add_executable(${name} ${name}.cpp)
+    target_link_libraries(${name} PUBLIC bugspray bugspray-with-main)
+    bs_target_setup(${name})
+    add_test(NAME ${name} COMMAND ${name})
 endfunction()
 
-add_build_test(examples)
-add_subdirectory(unit_tests)
+register_test(00-trivial)
+register_test(01-sections)
