@@ -30,6 +30,7 @@ include(bs_target_setup)
 add_library(bugspray STATIC
         include/bugspray/macro_interface/assertion_macros.hpp
         include/bugspray/macro_interface/section_macro.hpp
+        include/bugspray/macro_interface/test_case_macros.hpp
         include/bugspray/reporter/caching_reporter.hpp
         include/bugspray/reporter/formatted_ostream_reporter.hpp
         include/bugspray/reporter/noop_reporter.hpp
@@ -43,6 +44,7 @@ add_library(bugspray STATIC
         include/bugspray/test_evaluation/test_case_fn.hpp
         include/bugspray/test_evaluation/test_case_topology.hpp
         include/bugspray/test_evaluation/test_run_data.hpp
+        include/bugspray/test_registration/test_case_registry.hpp
         include/bugspray/utility/compiletime_string.hpp
         include/bugspray/utility/detail/naive_string.hpp
         include/bugspray/utility/detail/naive_vector.hpp
