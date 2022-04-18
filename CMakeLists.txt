@@ -50,6 +50,7 @@ add_library(bugspray STATIC
         include/bugspray/to_string/to_string_bool.hpp
         include/bugspray/to_string/to_string_char.hpp
         include/bugspray/to_string/to_string_integral.hpp
+        include/bugspray/to_string/to_string_string_like.hpp
         include/bugspray/utility/compiletime_string.hpp
         include/bugspray/utility/detail/naive_string.hpp
         include/bugspray/utility/detail/naive_vector.hpp
