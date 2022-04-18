@@ -42,6 +42,7 @@ add_executable(bugspray-unit-tests
         test_evaluation/test_test_case_topology.cpp
         test_evaluation/test_test_run_data.cpp
         to_string/test_to_string_bool.cpp
+        to_string/test_to_string_integral.cpp
         utility/detail/test_naive_string.cpp
         utility/detail/test_naive_vector.cpp
         utility/macros/test_get_nth_arg.cpp
