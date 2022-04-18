@@ -43,6 +43,7 @@ add_executable(bugspray-unit-tests
         test_evaluation/test_test_run_data.cpp
         to_string/test_char_to_printable_string.cpp
         to_string/test_to_string_bool.cpp
+        to_string/test_to_string_char.cpp
         to_string/test_to_string_integral.cpp
         utility/detail/test_naive_string.cpp
         utility/detail/test_naive_vector.cpp

@@ -48,6 +48,7 @@ add_library(bugspray STATIC
         include/bugspray/test_registration/test_case_registry.hpp
         include/bugspray/to_string/char_to_printable_string.hpp
         include/bugspray/to_string/to_string_bool.hpp
+        include/bugspray/to_string/to_string_char.hpp
         include/bugspray/to_string/to_string_integral.hpp
         include/bugspray/utility/compiletime_string.hpp
         include/bugspray/utility/detail/naive_string.hpp
