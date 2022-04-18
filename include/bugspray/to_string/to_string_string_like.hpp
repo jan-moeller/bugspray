@@ -32,7 +32,7 @@
 
 namespace bs
 {
-template<std::ranges::range T>
+template<std::ranges::forward_range T>
 constexpr auto to_string(T&& s) -> bs::string
     requires std::same_as<std::ranges::range_value_t<T>,
                           char>
