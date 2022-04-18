@@ -25,6 +25,8 @@
 
 #include <catch2/catch_all.hpp>
 
+#include <array>
+
 using namespace bs;
 
 TEST_CASE("caching_reporter", "[reporter]")
@@ -33,6 +35,7 @@ TEST_CASE("caching_reporter", "[reporter]")
 
     constexpr std::string_view test_case_name = "test_case";
     constexpr std::string_view test_case_tag  = "tag";
+    constexpr std::array       test_case_tags = {test_case_tag};
     constexpr std::size_t      test_case_line = 10;
 
     constexpr std::string_view section_name = "section";
@@ -45,7 +48,7 @@ TEST_CASE("caching_reporter", "[reporter]")
 
     constexpr auto test = [filename,
                            test_case_name,
-                           test_case_tag,
+                           test_case_tags,
                            test_case_line,
                            section_name,
                            section_line,
@@ -56,11 +59,9 @@ TEST_CASE("caching_reporter", "[reporter]")
     {
         caching_reporter reporter;
 
-        bs::vector<std::string_view> tags{};
-        // TODO: check if gcc bug https://gcc.gnu.org/bugzilla/show_bug.cgi?id=100495 has been fixed
-        if (!std::is_constant_evaluated()) // This works around above bug
-            tags.push_back(test_case_tag);
-        reporter.enter_test_case(test_case_name, tags, source_location{.file_name = filename, .line = test_case_line});
+        reporter.enter_test_case(test_case_name,
+                                 test_case_tags,
+                                 source_location{.file_name = filename, .line = test_case_line});
 
         reporter.start_run(section_path{});
         reporter.stop_run();
@@ -89,6 +90,8 @@ TEST_CASE("caching_reporter", "[reporter]")
     PREFIX##REQUIRE(test()[0].name == test_case_name);                                                                 \
     PREFIX##REQUIRE(test()[0].sloc.file_name == filename);                                                             \
     PREFIX##REQUIRE(test()[0].sloc.line == test_case_line);                                                            \
+    PREFIX##REQUIRE(test()[0].tags.size() == 1);                                                                       \
+    PREFIX##REQUIRE(test()[0].tags[0] == test_case_tag);                                                               \
     PREFIX##REQUIRE(test()[0].test_runs.size() == 2);                                                                  \
     PREFIX##REQUIRE(test()[0].test_runs[0].target == section_path{});                                                  \
     PREFIX##REQUIRE(test()[0].test_runs[0].assertions.size() == 0);                                                    \
@@ -110,8 +113,6 @@ TEST_CASE("caching_reporter", "[reporter]")
     MAKE_TESTS()
 
     // TODO: The following tests are only made at runtime due to gcc bug 100495, see above.
-    REQUIRE(test()[0].tags.size() == 1);
-    REQUIRE(test()[0].tags[0] == test_case_tag);
     REQUIRE(test()[0].test_runs[1].sections[0].assertions[0].messages.size() == 1);
     REQUIRE(test()[0].test_runs[1].sections[0].assertions[0].messages[0] == assertion_message);
 
