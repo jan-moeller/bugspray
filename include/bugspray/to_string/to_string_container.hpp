@@ -22,31 +22,31 @@
 // SOFTWARE.
 //
 
-#ifndef BUGSPRAY_STRINGIFY_HPP
-#define BUGSPRAY_STRINGIFY_HPP
+#ifndef BUGSPRAY_TO_STRING_CONTAINER_HPP
+#define BUGSPRAY_TO_STRING_CONTAINER_HPP
 
-#include "bugspray/to_string/to_string_bool.hpp"
-#include "bugspray/to_string/to_string_char.hpp"
-#include "bugspray/to_string/to_string_container.hpp"
-#include "bugspray/to_string/to_string_integral.hpp"
-#include "bugspray/to_string/to_string_string_like.hpp"
-#include "bugspray/to_string/to_string_tag.hpp"
 #include "bugspray/utility/string.hpp"
+
+#include <ranges>
 
 namespace bs
 {
 template<typename T>
-constexpr auto stringify(T&& thing) -> bs::string
+constexpr auto stringify(T&& thing) -> bs::string;
+
+template<std::ranges::forward_range T>
+constexpr auto to_string(T&& r) -> bs::string
 {
-    if constexpr (requires { to_string(bs::to_string_override_tag{}, std::forward<T>(thing)); })
-        return to_string(bs::to_string_override_tag{}, std::forward<T>(thing));
-    else if constexpr (requires { to_string(std::forward<T>(thing)); })
-        return to_string(std::forward<T>(thing));
-    else if constexpr (requires { to_string(bs::to_string_tag{}, std::forward<T>(thing)); })
-        return to_string(bs::to_string_tag{}, std::forward<T>(thing));
-    else
-        return "<?>";
+    bs::string result = "{ ";
+    if (std::ranges::size(r) > 0)
+    {
+        result += stringify(*std::begin(r));
+        for (auto iter = std::next(std::begin(r)); iter != std::end(r); ++iter)
+            result += ", " + stringify(*iter);
+    }
+    result += " }";
+    return result;
 }
 } // namespace bs
 
-#endif // BUGSPRAY_STRINGIFY_HPP
+#endif // BUGSPRAY_TO_STRING_CONTAINER_HPP

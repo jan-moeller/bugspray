@@ -21,32 +21,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-
-#ifndef BUGSPRAY_STRINGIFY_HPP
-#define BUGSPRAY_STRINGIFY_HPP
-
-#include "bugspray/to_string/to_string_bool.hpp"
-#include "bugspray/to_string/to_string_char.hpp"
+#include "bugspray/to_string/stringify.hpp"
 #include "bugspray/to_string/to_string_container.hpp"
-#include "bugspray/to_string/to_string_integral.hpp"
-#include "bugspray/to_string/to_string_string_like.hpp"
-#include "bugspray/to_string/to_string_tag.hpp"
-#include "bugspray/utility/string.hpp"
+#include "bugspray/utility/vector.hpp"
 
-namespace bs
+#include <catch2/catch_all.hpp>
+
+TEST_CASE("to_string(container)", "[to_string]")
 {
-template<typename T>
-constexpr auto stringify(T&& thing) -> bs::string
-{
-    if constexpr (requires { to_string(bs::to_string_override_tag{}, std::forward<T>(thing)); })
-        return to_string(bs::to_string_override_tag{}, std::forward<T>(thing));
-    else if constexpr (requires { to_string(std::forward<T>(thing)); })
-        return to_string(std::forward<T>(thing));
-    else if constexpr (requires { to_string(bs::to_string_tag{}, std::forward<T>(thing)); })
-        return to_string(bs::to_string_tag{}, std::forward<T>(thing));
-    else
-        return "<?>";
+#define MAKE_TESTS(PREFIX)                                                                                             \
+    PREFIX##CHECK(bs::to_string(bs::vector<int>{}) == R"({  })");                                                      \
+    PREFIX##CHECK(bs::to_string(bs::vector<int>{1}) == R"({ 1 })");                                                    \
+    PREFIX##CHECK(bs::to_string(bs::vector<int>{1, 2, 3}) == R"({ 1, 2, 3 })");
+
+    MAKE_TESTS()
+    MAKE_TESTS(STATIC_)
+#undef MAKE_TESTS
 }
-} // namespace bs
-
-#endif // BUGSPRAY_STRINGIFY_HPP
