@@ -50,6 +50,7 @@ class naive_string
     using difference_type = naive_vector<char>::difference_type;
 
     constexpr naive_string() noexcept = default;
+    constexpr naive_string(char c) { push_back(c); }
     constexpr naive_string(char const* str)
         : naive_string(std::string_view{str})
     {
@@ -90,12 +91,23 @@ class naive_string
         return lhs + naive_string{rhs};
     }
 
+    constexpr friend auto operator+(naive_string const& lhs, char rhs) -> naive_string
+    {
+        return lhs + naive_string{rhs};
+    }
+
     constexpr friend auto operator+(naive_string const& lhs, naive_string const& rhs) -> naive_string
     {
         auto result = lhs;
-        for (auto c : rhs)
-            result.push_back(c);
+        result += rhs;
         return result;
+    }
+
+    constexpr auto operator+=(naive_string const& rhs) -> naive_string&
+    {
+        for (auto c : rhs)
+            push_back(c);
+        return *this;
     }
 
     constexpr auto operator[](std::size_t idx) const noexcept -> const_reference { return m_data[idx]; }
