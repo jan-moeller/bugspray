@@ -59,7 +59,7 @@ constexpr auto char_to_printable_string(char c) -> bs::string
         auto const s = to_string<16, 2>(static_cast<unsigned char>(c));
         return R"(\x)" + s;
     }
-    return c;
+    return bs::string{c};
 }
 } // namespace bs
 
