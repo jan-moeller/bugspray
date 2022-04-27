@@ -72,7 +72,7 @@ TEST_CASE("caching_reporter", "[reporter]")
         bs::vector<bs::string> messages{};
         // TODO: check if gcc bug https://gcc.gnu.org/bugzilla/show_bug.cgi?id=100495 has been fixed
         if (!std::is_constant_evaluated()) // This works around above bug
-            messages.push_back(assertion_message);
+            messages.push_back(bs::string{assertion_message});
         reporter.log_assertion(assertion,
                                source_location{.file_name = filename, .line = assertion_line},
                                messages,
