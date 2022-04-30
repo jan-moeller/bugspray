@@ -21,7 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-#include "bugspray/utility/macros/get_nth_arg.hpp"
+#include "bugspray/utility/macros/macro_get_nth_arg.hpp"
 
 #include <catch2/catch_all.hpp>
 

@@ -22,16 +22,33 @@
 // SOFTWARE.
 //
 
-#ifndef BUGSPRAY_GET_TAIL_HPP
-#define BUGSPRAY_GET_TAIL_HPP
+#ifndef BUGSPRAY_MACRO_WARNING_SUPPRESSION_HPP
+#define BUGSPRAY_MACRO_WARNING_SUPPRESSION_HPP
 
 /*
- * BUGSPRAY_GET_TAIL() evaluates to one of the following:
- *  <empty> if the variadic argument list had 0 or 1 arguments
- *  all arguments except the first if the variadic argument list had 2 or more arguments
+ * Provides macros that disable certain warnings.
+ *
+ * To be used like this:
+ * BUGSPRAY_DISABLE_WARNING_PUSH
+ * BUGSPRAY_DISABLE_WARNING_<warning>
+ * ...
+ * BUGSPRAY_DISABLE_WARNING_POP
  */
 
-#define BUGSPRAY_GET_TAIL_IMPL(arg1, ...) __VA_ARGS__
-#define BUGSPRAY_GET_TAIL(...) __VA_OPT__(BUGSPRAY_GET_TAIL_IMPL(__VA_ARGS__))
+#if defined(__GNUC__) || defined(__clang__)
+#define BUGSPRAY_PRAGMA(X) _Pragma(#X)
+#define BUGSPRAY_DISABLE_WARNING_PUSH BUGSPRAY_PRAGMA(GCC diagnostic push)
+#define BUGSPRAY_DISABLE_WARNING_POP BUGSPRAY_PRAGMA(GCC diagnostic pop)
+#define BUGSPRAY_DISABLE_WARNING(warningName) BUGSPRAY_PRAGMA(GCC diagnostic ignored #warningName)
 
-#endif // BUGSPRAY_GET_TAIL_HPP
+#define BUGSPRAY_DISABLE_WARNING_SHADOW_LOCAL BUGSPRAY_DISABLE_WARNING(-Wshadow)
+
+#else
+#define BUGSPRAY_DISABLE_WARNING_PUSH
+#define BUGSPRAY_DISABLE_WARNING_POP
+
+#define BUGSPRAY_DISABLE_WARNING_SHADOW_LOCAL
+
+#endif
+
+#endif // BUGSPRAY_MACRO_WARNING_SUPPRESSION_HPP

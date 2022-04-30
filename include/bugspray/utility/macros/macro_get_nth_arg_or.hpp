@@ -22,11 +22,11 @@
 // SOFTWARE.
 //
 
-#ifndef BUGSPRAY_GET_NTH_ARG_OR_HPP
-#define BUGSPRAY_GET_NTH_ARG_OR_HPP
+#ifndef BUGSPRAY_MACRO_GET_NTH_ARG_OR_HPP
+#define BUGSPRAY_MACRO_GET_NTH_ARG_OR_HPP
 
-#include "get_nth_arg.hpp"
-#include "get_tail.hpp"
+#include "macro_get_nth_arg.hpp"
+#include "macro_get_tail.hpp"
 
 /*
  * This is functionality to retrieve the nth argument from a variadic macro or an alternative default value if the
@@ -43,4 +43,4 @@
 #define BUGSPRAY_GET_8TH_ARG_OR(alt, ...) BUGSPRAY_GET_7TH_ARG_OR(alt, BUGSPRAY_GET_TAIL(__VA_ARGS__))
 #define BUGSPRAY_GET_9TH_ARG_OR(alt, ...) BUGSPRAY_GET_8TH_ARG_OR(alt, BUGSPRAY_GET_TAIL(__VA_ARGS__))
 
-#endif // BUGSPRAY_GET_NTH_ARG_OR_HPP
+#endif // BUGSPRAY_MACRO_GET_NTH_ARG_OR_HPP

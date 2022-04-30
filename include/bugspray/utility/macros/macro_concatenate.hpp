@@ -22,33 +22,15 @@
 // SOFTWARE.
 //
 
-#ifndef BUGSPRAY_WARNING_SUPPRESSION_HPP
-#define BUGSPRAY_WARNING_SUPPRESSION_HPP
+#ifndef BUGSPRAY_MACRO_CONCATENATE_HPP
+#define BUGSPRAY_MACRO_CONCATENATE_HPP
 
 /*
- * Provides macros that disable certain warnings.
- *
- * To be used like this:
- * BUGSPRAY_DISABLE_WARNING_PUSH
- * BUGSPRAY_DISABLE_WARNING_<warning>
- * ...
- * BUGSPRAY_DISABLE_WARNING_POP
+ * BUGSPRAY_CONCATENATE() concatenates its arguments.
+ * BUGSPRAY_CONCATENATE_EXPANSION() concatenates the expansion of its arguments.
  */
 
-#if defined(__GNUC__) || defined(__clang__)
-#define BUGSPRAY_PRAGMA(X) _Pragma(#X)
-#define BUGSPRAY_DISABLE_WARNING_PUSH BUGSPRAY_PRAGMA(GCC diagnostic push)
-#define BUGSPRAY_DISABLE_WARNING_POP BUGSPRAY_PRAGMA(GCC diagnostic pop)
-#define BUGSPRAY_DISABLE_WARNING(warningName) BUGSPRAY_PRAGMA(GCC diagnostic ignored #warningName)
+#define BUGSPRAY_CONCATENATE(first, second) first##second
+#define BUGSPRAY_CONCATENATE_EXPANSION(first, second) BUGSPRAY_CONCATENATE(first, second)
 
-#define BUGSPRAY_DISABLE_WARNING_SHADOW_LOCAL BUGSPRAY_DISABLE_WARNING(-Wshadow)
-
-#else
-#define BUGSPRAY_DISABLE_WARNING_PUSH
-#define BUGSPRAY_DISABLE_WARNING_POP
-
-#define BUGSPRAY_DISABLE_WARNING_SHADOW_LOCAL
-
-#endif
-
-#endif // BUGSPRAY_WARNING_SUPPRESSION_HPP
+#endif // BUGSPRAY_MACRO_CONCATENATE_HPP

@@ -22,8 +22,8 @@
 // SOFTWARE.
 //
 
-#ifndef BUGSPRAY_GET_NTH_ARG_HPP
-#define BUGSPRAY_GET_NTH_ARG_HPP
+#ifndef BUGSPRAY_MACRO_GET_NTH_ARG_HPP
+#define BUGSPRAY_MACRO_GET_NTH_ARG_HPP
 
 /*
  * This is functionality to retrieve the nth argument from a variadic macro.
@@ -41,4 +41,4 @@
 #define BUGSPRAY_GET_8TH_ARG(arg1, ...) BUGSPRAY_GET_7TH_ARG(__VA_ARGS__)
 #define BUGSPRAY_GET_9TH_ARG(arg1, ...) BUGSPRAY_GET_8TH_ARG(__VA_ARGS__)
 
-#endif // BUGSPRAY_GET_NTH_ARG_HPP
+#endif // BUGSPRAY_MACRO_GET_NTH_ARG_HPP

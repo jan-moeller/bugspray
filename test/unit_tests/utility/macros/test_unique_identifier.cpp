@@ -21,8 +21,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-#include "bugspray/utility/macros/stringify.hpp"
-#include "bugspray/utility/macros/unique_identifier.hpp"
+#include "bugspray/utility/macros/macro_stringify.hpp"
+#include "bugspray/utility/macros/macro_unique_identifier.hpp"
 
 #include <catch2/catch_all.hpp>
 

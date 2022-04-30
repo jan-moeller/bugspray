@@ -25,13 +25,13 @@
 #ifndef BUGSPRAY_MACROS_HPP
 #define BUGSPRAY_MACROS_HPP
 
-#include "macros/concatenate.hpp"
-#include "macros/get_nth_arg.hpp"
-#include "macros/get_nth_arg_or.hpp"
-#include "macros/get_tail.hpp"
-#include "macros/identity.hpp"
-#include "macros/stringify.hpp"
-#include "macros/unique_identifier.hpp"
-#include "macros/warning_suppression.hpp"
+#include "macros/macro_concatenate.hpp"
+#include "macros/macro_get_nth_arg.hpp"
+#include "macros/macro_get_nth_arg_or.hpp"
+#include "macros/macro_get_tail.hpp"
+#include "macros/macro_identity.hpp"
+#include "macros/macro_stringify.hpp"
+#include "macros/macro_unique_identifier.hpp"
+#include "macros/macro_warning_suppression.hpp"
 
 #endif // BUGSPRAY_MACROS_HPP

@@ -22,8 +22,8 @@
 // SOFTWARE.
 //
 
-#ifndef BUGSPRAY_IDENTITY_HPP
-#define BUGSPRAY_IDENTITY_HPP
+#ifndef BUGSPRAY_MACRO_IDENTITY_HPP
+#define BUGSPRAY_MACRO_IDENTITY_HPP
 
 /*
  * BUGSPRAY_IDENTITY() evaluates to all arguments verbatim.
@@ -31,4 +31,4 @@
 
 #define BUGSPRAY_IDENTITY(...) __VA_ARGS__
 
-#endif // BUGSPRAY_IDENTITY_HPP
+#endif // BUGSPRAY_MACRO_IDENTITY_HPP

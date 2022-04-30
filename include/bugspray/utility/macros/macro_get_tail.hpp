@@ -22,15 +22,16 @@
 // SOFTWARE.
 //
 
-#ifndef BUGSPRAY_CONCATENATE_HPP
-#define BUGSPRAY_CONCATENATE_HPP
+#ifndef BUGSPRAY_MACRO_GET_TAIL_HPP
+#define BUGSPRAY_MACRO_GET_TAIL_HPP
 
 /*
- * BUGSPRAY_CONCATENATE() concatenates its arguments.
- * BUGSPRAY_CONCATENATE_EXPANSION() concatenates the expansion of its arguments.
+ * BUGSPRAY_GET_TAIL() evaluates to one of the following:
+ *  <empty> if the variadic argument list had 0 or 1 arguments
+ *  all arguments except the first if the variadic argument list had 2 or more arguments
  */
 
-#define BUGSPRAY_CONCATENATE(first, second) first##second
-#define BUGSPRAY_CONCATENATE_EXPANSION(first, second) BUGSPRAY_CONCATENATE(first, second)
+#define BUGSPRAY_GET_TAIL_IMPL(arg1, ...) __VA_ARGS__
+#define BUGSPRAY_GET_TAIL(...) __VA_OPT__(BUGSPRAY_GET_TAIL_IMPL(__VA_ARGS__))
 
-#endif // BUGSPRAY_CONCATENATE_HPP
+#endif // BUGSPRAY_MACRO_GET_TAIL_HPP

@@ -58,14 +58,14 @@ add_library(bugspray STATIC
         include/bugspray/utility/detail/naive_string.hpp
         include/bugspray/utility/detail/naive_vector.hpp
         include/bugspray/utility/macros.hpp
-        include/bugspray/utility/macros/concatenate.hpp
-        include/bugspray/utility/macros/get_nth_arg.hpp
-        include/bugspray/utility/macros/get_nth_arg_or.hpp
-        include/bugspray/utility/macros/get_tail.hpp
-        include/bugspray/utility/macros/identity.hpp
-        include/bugspray/utility/macros/stringify.hpp
-        include/bugspray/utility/macros/unique_identifier.hpp
-        include/bugspray/utility/macros/warning_suppression.hpp
+        include/bugspray/utility/macros/macro_concatenate.hpp
+        include/bugspray/utility/macros/macro_get_nth_arg.hpp
+        include/bugspray/utility/macros/macro_get_nth_arg_or.hpp
+        include/bugspray/utility/macros/macro_get_tail.hpp
+        include/bugspray/utility/macros/macro_identity.hpp
+        include/bugspray/utility/macros/macro_stringify.hpp
+        include/bugspray/utility/macros/macro_unique_identifier.hpp
+        include/bugspray/utility/macros/macro_warning_suppression.hpp
         include/bugspray/utility/source_location.hpp
         include/bugspray/utility/string.hpp
         include/bugspray/utility/trim.hpp
