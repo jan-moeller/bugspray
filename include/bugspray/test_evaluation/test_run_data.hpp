@@ -91,7 +91,18 @@ struct test_run_data
                                  std::span<bs::string const> messages,
                                  bool                        result) noexcept
     {
-        m_reporter.log_assertion(assertion, sloc, messages, result);
+        bs::vector<bs::string> msgs;
+        std::ranges::copy(messages, std::back_inserter(msgs));
+        std::ranges::copy(m_messages, std::back_inserter(msgs));
+        m_reporter.log_assertion(assertion, sloc, msgs, result);
+    }
+
+    constexpr void push_message(bs::string const& message) { m_messages.push_back(message); }
+
+    constexpr void pop_message()
+    {
+        assert(!m_messages.empty());
+        m_messages.pop();
     }
 
     constexpr ~test_run_data() = default;
@@ -102,11 +113,12 @@ struct test_run_data
     constexpr auto operator=(test_run_data&&) -> test_run_data&      = delete;
 
   private:
-    reporter&           m_reporter;
-    test_case_topology& m_topology;
-    std::size_t const   m_target_idx;
-    std::size_t         m_cur_level = 0;
-    bool                m_success   = true;
+    reporter&              m_reporter;
+    test_case_topology&    m_topology;
+    std::size_t const      m_target_idx;
+    std::size_t            m_cur_level = 0;
+    bool                   m_success   = true;
+    bs::vector<bs::string> m_messages;
 };
 } // namespace bs
 
