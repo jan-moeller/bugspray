@@ -27,8 +27,8 @@
 
 #include "bugspray/test_evaluation/test_run_data.hpp"
 #include "bugspray/to_string/stringify.hpp"
-#include "bugspray/utility/compiletime_string.hpp"
 #include "bugspray/utility/string.hpp"
+#include "bugspray/utility/structural_string.hpp"
 #include "bugspray/utility/trim.hpp"
 
 #include <algorithm>
@@ -67,7 +67,7 @@ struct info_capture
     std::size_t    m_count;
 };
 
-template<compiletime_string S>
+template<structural_string S>
 constexpr auto split_expression_string() // splits an expression by comma into std::array. To be used with #__VA_ARGS__.
 {
     constexpr auto create = []

@@ -25,7 +25,7 @@
 #ifndef BUGSPRAY_PARSE_TAG_STRING_HPP
 #define BUGSPRAY_PARSE_TAG_STRING_HPP
 
-#include "bugspray/utility/compiletime_string.hpp"
+#include "bugspray/utility/structural_string.hpp"
 #include "bugspray/utility/vector.hpp"
 
 #include <array>
@@ -38,7 +38,7 @@
 
 namespace bs
 {
-template<compiletime_string TagString, bool UseVector = false>
+template<structural_string TagString, bool UseVector = false>
 constexpr auto parse_tag_string()
 {
     constexpr auto parse_tags_internal = [](std::string_view tags)

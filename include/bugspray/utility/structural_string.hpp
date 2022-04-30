@@ -22,8 +22,8 @@
 // SOFTWARE.
 //
 
-#ifndef BUGSPRAY_COMPILETIME_STRING_HPP
-#define BUGSPRAY_COMPILETIME_STRING_HPP
+#ifndef BUGSPRAY_STRUCTURAL_STRING_HPP
+#define BUGSPRAY_STRUCTURAL_STRING_HPP
 
 #include <algorithm>
 #include <string_view>
@@ -31,53 +31,53 @@
 #include <cstdint>
 
 /*
- * compiletime_string is a very simplistic string class that can be used as NTTP. It can be implicitly constructed from
+ * structural_string is a very simplistic string class that can be used as NTTP. It can be implicitly constructed from
  * literals.
  */
 
 namespace bs
 {
 template<std::size_t N>
-struct compiletime_string
+struct structural_string
 {
-    constexpr compiletime_string() { std::fill_n(value, N, '\0'); }
-    constexpr compiletime_string(char const (&str)[N]) { std::copy_n(str, N, value); }
+    constexpr structural_string() { std::fill_n(value, N, '\0'); }
+    constexpr structural_string(char const (&str)[N]) { std::copy_n(str, N, value); }
     char value[N];
 
-    constexpr auto operator==(compiletime_string const& rhs) const -> bool = default;
+    constexpr auto operator==(structural_string const& rhs) const -> bool = default;
     constexpr auto operator==(char const* rhs) const -> bool { return std::string_view{value} == rhs; }
 };
 
 template<std::size_t N1, std::size_t N2>
-constexpr auto operator+(compiletime_string<N1> lhs, compiletime_string<N2> rhs) -> compiletime_string<N1 + N2 - 1>
+constexpr auto operator+(structural_string<N1> lhs, structural_string<N2> rhs) -> structural_string<N1 + N2 - 1>
 {
-    compiletime_string<N1 + N2 - 1> result;
+    structural_string<N1 + N2 - 1> result;
     std::copy_n(lhs.value, N1, result.value + 0);
     std::copy_n(rhs.value, N2, result.value + N1 - 1);
     return result;
 }
 
 template<std::size_t N1, std::size_t N2>
-constexpr auto operator+(compiletime_string<N1> lhs, char const (&rhs)[N2]) -> compiletime_string<N1 + N2 - 1>
+constexpr auto operator+(structural_string<N1> lhs, char const (&rhs)[N2]) -> structural_string<N1 + N2 - 1>
 {
-    return lhs + compiletime_string<N2>{rhs};
+    return lhs + structural_string<N2>{rhs};
 }
 
 template<std::size_t N1, std::size_t N2>
-constexpr auto operator+(char const (&lhs)[N1], compiletime_string<N2> rhs) -> compiletime_string<N1 + N2 - 1>
+constexpr auto operator+(char const (&lhs)[N1], structural_string<N2> rhs) -> structural_string<N1 + N2 - 1>
 {
-    return compiletime_string<N1>{lhs} + rhs;
+    return structural_string<N1>{lhs} + rhs;
 }
 
-template<compiletime_string S>
+template<structural_string S>
 constexpr auto trim() noexcept
 {
-    constexpr auto           iter = std::ranges::find_if(S.value, [](char c) { return c == '\0'; });
-    constexpr auto           size = iter - std::begin(S.value) + 1;
-    compiletime_string<size> result{};
+    constexpr auto          iter = std::ranges::find_if(S.value, [](char c) { return c == '\0'; });
+    constexpr auto          size = iter - std::begin(S.value) + 1;
+    structural_string<size> result{};
     std::ranges::copy_n(S.value, size, result.value);
     return result;
 }
 } // namespace bs
 
-#endif // BUGSPRAY_COMPILETIME_STRING_HPP
+#endif // BUGSPRAY_STRUCTURAL_STRING_HPP

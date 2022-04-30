@@ -31,7 +31,7 @@
 #include "bugspray/test_evaluation/evaluate_test_case_target.hpp"
 #include "bugspray/test_evaluation/test_case.hpp"
 #include "bugspray/test_evaluation/test_run_data.hpp"
-#include "bugspray/utility/compiletime_string.hpp"
+#include "bugspray/utility/structural_string.hpp"
 
 /*
  * Evaluates a test case by calling the function multiple times until every section has been called once.
@@ -80,7 +80,7 @@ constexpr auto evaluate_test_case_constexpr(test_case const& tc)
     return std::make_pair(result, reporter.messages());
 }
 
-template<compiletime_string... Messages>
+template<structural_string... Messages>
 constexpr void compile_time_error()
 {
     static_assert((sizeof...(Messages), false), "Test evaluation failed.");

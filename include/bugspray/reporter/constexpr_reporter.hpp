@@ -26,7 +26,7 @@
 #define BUGSPRAY_CONSTEXPR_REPORTER_HPP
 
 #include "bugspray/reporter/reporter.hpp"
-#include "bugspray/utility/compiletime_string.hpp"
+#include "bugspray/utility/structural_string.hpp"
 
 #include <algorithm>
 #include <array>
@@ -96,7 +96,7 @@ struct constexpr_reporter : reporter
     static constexpr std::size_t s_max_messages       = 3;
     static constexpr std::size_t s_max_message_length = 1024;
 
-    std::array<compiletime_string<s_max_message_length>, s_max_messages> m_messages;
+    std::array<structural_string<s_max_message_length>, s_max_messages> m_messages;
 };
 } // namespace bs
 

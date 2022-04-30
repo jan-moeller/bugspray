@@ -29,14 +29,14 @@ using namespace bs;
 
 TEST_CASE("parse_tag_string", "[test_evaluation]")
 {
-    constexpr compiletime_string empty_tags = "";
+    constexpr structural_string empty_tags = "";
     STATIC_REQUIRE(parse_tag_string<empty_tags>().size() == 0);
 
-    constexpr compiletime_string single_tag = "[a]";
+    constexpr structural_string single_tag = "[a]";
     STATIC_REQUIRE(parse_tag_string<single_tag>().size() == 1);
     STATIC_REQUIRE(parse_tag_string<single_tag>()[0] == "a");
 
-    constexpr compiletime_string three_tags = "[a][b][ab]";
+    constexpr structural_string three_tags = "[a][b][ab]";
     STATIC_REQUIRE(parse_tag_string<three_tags>().size() == 3);
     STATIC_REQUIRE(parse_tag_string<three_tags>()[0] == "a");
     STATIC_REQUIRE(parse_tag_string<three_tags>()[1] == "b");

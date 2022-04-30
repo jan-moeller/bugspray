@@ -26,7 +26,7 @@
 #define BUGSPRAY_TEST_CASE_REGISTRY_HPP
 
 #include "bugspray/test_evaluation/test_case.hpp"
-#include "bugspray/utility/compiletime_string.hpp"
+#include "bugspray/utility/structural_string.hpp"
 #include "bugspray/utility/vector.hpp"
 
 #include <functional>
@@ -35,7 +35,7 @@ namespace bs
 {
 inline bs::vector<std::reference_wrapper<test_case const>> g_test_case_registry;
 
-template<compiletime_string Name, int Bogus>
+template<structural_string Name, int Bogus>
 struct evaluate_compiletime_test
 {
     constexpr auto operator()() -> bool

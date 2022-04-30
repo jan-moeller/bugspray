@@ -57,7 +57,6 @@ add_library(bugspray STATIC
         include/bugspray/to_string/to_string_integral.hpp
         include/bugspray/to_string/to_string_string_like.hpp
         include/bugspray/to_string/to_string_tag.hpp
-        include/bugspray/utility/compiletime_string.hpp
         include/bugspray/utility/detail/naive_string.hpp
         include/bugspray/utility/detail/naive_vector.hpp
         include/bugspray/utility/macros.hpp
@@ -71,6 +70,7 @@ add_library(bugspray STATIC
         include/bugspray/utility/macros/macro_warning_suppression.hpp
         include/bugspray/utility/source_location.hpp
         include/bugspray/utility/string.hpp
+        include/bugspray/utility/structural_string.hpp
         include/bugspray/utility/trim.hpp
         include/bugspray/utility/vector.hpp
         src/reporter/formatted_ostream_reporter.cpp

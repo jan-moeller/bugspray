@@ -21,23 +21,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-#include "bugspray/utility/compiletime_string.hpp"
+#include "bugspray/utility/structural_string.hpp"
 
 #include <catch2/catch_all.hpp>
 
 using namespace bs;
 
-template<compiletime_string S>
+template<structural_string S>
 struct foo
 {
     static constexpr std::string_view str = S.value;
 };
 
-TEST_CASE("compiletime_string", "[utility]")
+TEST_CASE("structural_string", "[utility]")
 {
-    STATIC_REQUIRE(compiletime_string{"foobar"} == "foobar");
-    STATIC_REQUIRE("foobar" == compiletime_string{"foobar"});
+    STATIC_REQUIRE(structural_string{"foobar"} == "foobar");
+    STATIC_REQUIRE("foobar" == structural_string{"foobar"});
     STATIC_REQUIRE(foo<"bar">::str == "bar");
-    STATIC_REQUIRE(compiletime_string{"foo"} + compiletime_string{"bar"} == "foobar");
+    STATIC_REQUIRE(structural_string{"foo"} + structural_string{"bar"} == "foobar");
     STATIC_REQUIRE(trim<"foo\0\0">() == "foo");
 }
