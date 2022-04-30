@@ -39,6 +39,7 @@ add_library(bugspray STATIC
         include/bugspray/reporter/reporter.hpp
         include/bugspray/test_evaluation/evaluate_test_case.hpp
         include/bugspray/test_evaluation/evaluate_test_case_target.hpp
+        include/bugspray/test_evaluation/info_capture.hpp
         include/bugspray/test_evaluation/parse_tag_string.hpp
         include/bugspray/test_evaluation/section_path.hpp
         include/bugspray/test_evaluation/section_tracker.hpp
