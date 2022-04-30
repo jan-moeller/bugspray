@@ -59,11 +59,22 @@
         = (::bs::g_test_case_registry.push_back(std::cref(test_case_id)), false);
 // clang-format on
 #define BUGSPRAY_REGISTER_TEST_CASE_IMPL_compiletime(name, test_case_id)                                               \
-    template<>                                                                                                         \
-    constexpr auto ::bs::evaluate_compiletime_test<name>()->bool                                                       \
+    template<int Bogus>                                                                                                \
+    struct bs::evaluate_compiletime_test<name, Bogus>                                                                  \
     {                                                                                                                  \
-        return ::bs::evaluate_test_case(test_case_id);                                                                 \
-    }
+        constexpr auto operator()() -> bool                                                                            \
+        {                                                                                                              \
+            constexpr auto results = ::bs::evaluate_test_case_constexpr<Bogus>(test_case_id);                          \
+            if constexpr (!results.first)                                                                              \
+            {                                                                                                          \
+                constexpr auto m1 = ::bs::trim<results.second[0]>();                                                   \
+                constexpr auto m2 = ::bs::trim<results.second[1]>();                                                   \
+                constexpr auto m3 = ::bs::trim<results.second[2]>();                                                   \
+                ::bs::compile_time_error<m1, m2, m3>();                                                                \
+            }                                                                                                          \
+            return results.first;                                                                                      \
+        }                                                                                                              \
+    };
 // clang-format off
 #define BUGSPRAY_REGISTER_TEST_CASE_IMPL_both(name, test_case_id)                                                      \
     BUGSPRAY_REGISTER_TEST_CASE_IMPL_runtime(name, test_case_id)                                                       \
@@ -106,7 +117,7 @@
                             BUGSPRAY_GET_2ND_ARG_OR("", __VA_ARGS__),                                                  \
                             BUGSPRAY_GET_3RD_ARG_OR(both, __VA_ARGS__))
 
-#define BUGSPRAY_EVAL_TEST_CASE(name) static_assert(::bs::evaluate_compiletime_test<name>())
+#define BUGSPRAY_EVAL_TEST_CASE(name) static_assert(::bs::evaluate_compiletime_test<name, 0>{}())
 
 #ifndef BUGSPRAY_NO_SHORT_MACROS
 #define REGISTER_TEST_CASE(...) BUGSPRAY_REGISTER_TEST_CASE(__VA_ARGS__)

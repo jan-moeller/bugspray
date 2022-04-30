@@ -35,12 +35,15 @@ namespace bs
 {
 inline bs::vector<std::reference_wrapper<test_case const>> g_test_case_registry;
 
-template<compiletime_string Name>
-constexpr auto evaluate_compiletime_test() -> bool
+template<compiletime_string Name, int Bogus>
+struct evaluate_compiletime_test
 {
-    static_assert((Name, false), "There is no constexpr-enabled test with this name");
-    return false;
-}
+    constexpr auto operator()() -> bool
+    {
+        static_assert((Name, false), "There is no constexpr-enabled test with this name");
+        return false;
+    }
+};
 } // namespace bs
 
 #endif // BUGSPRAY_TEST_CASE_REGISTRY_HPP

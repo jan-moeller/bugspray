@@ -46,8 +46,6 @@
         if (!assertion_result)                                                                                         \
         {                                                                                                              \
             bugspray_data.mark_failed();                                                                               \
-            if (std::is_constant_evaluated())                                                                          \
-                throw text;                                                                                            \
             if constexpr (std::string_view{#type} == "REQUIRE")                                                        \
                 return;                                                                                                \
         }                                                                                                              \

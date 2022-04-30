@@ -21,13 +21,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
+#include "bugspray/bugspray.hpp"
 
-#ifndef BUGSPRAY_BUGSPRAY_HPP
-#define BUGSPRAY_BUGSPRAY_HPP
-
-#include "bugspray/macro_interface/assertion_macros.hpp"
-#include "bugspray/macro_interface/capture_macro.hpp"
-#include "bugspray/macro_interface/section_macro.hpp"
-#include "bugspray/macro_interface/test_case_macros.hpp"
-
-#endif // BUGSPRAY_BUGSPRAY_HPP
+TEST_CASE("This will fail")
+{
+    int variable = 42;
+    CAPTURE(variable);
+    FAIL();
+}
+EVAL_TEST_CASE("This will fail");

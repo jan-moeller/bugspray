@@ -23,6 +23,7 @@
 //
 #define BUGSPRAY_NO_SHORT_MACROS
 #include "bugspray/macro_interface/assertion_macros.hpp"
+#include "bugspray/macro_interface/capture_macro.hpp"
 #include "bugspray/macro_interface/section_macro.hpp"
 #include "bugspray/reporter/caching_reporter.hpp"
 #include "bugspray/test_evaluation/evaluate_test_case.hpp"
@@ -46,6 +47,9 @@ constexpr void a_test_case_fn(test_run_data& bugspray_data)
         }
         BUGSPRAY_SECTION("t12")
         {
+            int const        i   = 42;
+            bs::string const foo = "foo";
+            BUGSPRAY_CAPTURE(i, foo);
             BUGSPRAY_REQUIRE(bugspray_data.current() == section_path{"t1", "t12"});
             BUGSPRAY_REQUIRE(bugspray_data.target() == bugspray_data.current());
         }
@@ -149,6 +153,10 @@ TEST_CASE("evaluate_test_case", "[test_evaluation]")
     PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].sections[0].sections.size() == 0);                  \
     PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].sections[0].assertions.size() == 2);                \
     PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].sections[0].assertions[0].result == true);          \
+    PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].sections[0].assertions[0].messages.size() == 2);    \
+    PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].sections[0].assertions[0].messages[0] == "i: 42");  \
+    PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].sections[0].assertions[0].messages[1]               \
+                    == R"(foo: "foo")");                                                                               \
     PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].sections[0].assertions[1].result == true);          \
     PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].assertions.size() == 3);                            \
     PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].assertions[0].result == true);                      \

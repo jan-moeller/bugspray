@@ -25,11 +25,13 @@
 #ifndef BUGSPRAY_EVALUATE_TEST_CASE_HPP
 #define BUGSPRAY_EVALUATE_TEST_CASE_HPP
 
+#include "bugspray/reporter/constexpr_reporter.hpp"
 #include "bugspray/reporter/noop_reporter.hpp"
 #include "bugspray/reporter/reporter.hpp"
 #include "bugspray/test_evaluation/evaluate_test_case_target.hpp"
 #include "bugspray/test_evaluation/test_case.hpp"
 #include "bugspray/test_evaluation/test_run_data.hpp"
+#include "bugspray/utility/compiletime_string.hpp"
 
 /*
  * Evaluates a test case by calling the function multiple times until every section has been called once.
@@ -37,6 +39,7 @@
 
 namespace bs
 {
+template<bool AbortEarly = false>
 constexpr auto evaluate_test_case(test_case const& tc, reporter& the_reporter) -> bool
 {
     bool               success = true;
@@ -51,6 +54,12 @@ constexpr auto evaluate_test_case(test_case const& tc, reporter& the_reporter) -
         success &= evaluate_test_case_target(tc, data);
 
         the_reporter.stop_run();
+
+        if constexpr (AbortEarly)
+        {
+            if (!success)
+                break;
+        }
     }
     the_reporter.leave_test_case();
 
@@ -61,6 +70,20 @@ constexpr auto evaluate_test_case(test_case const& tc) -> bool
 {
     noop_reporter reporter;
     return evaluate_test_case(tc, reporter);
+}
+
+template<auto>
+constexpr auto evaluate_test_case_constexpr(test_case const& tc)
+{
+    ::bs::constexpr_reporter reporter;
+    auto const               result = evaluate_test_case<true>(tc, reporter);
+    return std::make_pair(result, reporter.messages());
+}
+
+template<compiletime_string... Messages>
+constexpr void compile_time_error()
+{
+    static_assert((sizeof...(Messages), false), "Test evaluation failed.");
 }
 } // namespace bs
 
