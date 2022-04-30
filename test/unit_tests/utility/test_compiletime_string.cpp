@@ -39,4 +39,5 @@ TEST_CASE("compiletime_string", "[utility]")
     STATIC_REQUIRE("foobar" == compiletime_string{"foobar"});
     STATIC_REQUIRE(foo<"bar">::str == "bar");
     STATIC_REQUIRE(compiletime_string{"foo"} + compiletime_string{"bar"} == "foobar");
+    STATIC_REQUIRE(trim<"foo\0\0">() == "foo");
 }

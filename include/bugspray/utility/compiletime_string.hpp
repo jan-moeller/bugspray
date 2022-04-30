@@ -68,6 +68,16 @@ constexpr auto operator+(char const (&lhs)[N1], compiletime_string<N2> rhs) -> c
 {
     return compiletime_string<N1>{lhs} + rhs;
 }
+
+template<compiletime_string S>
+constexpr auto trim() noexcept
+{
+    constexpr auto           iter = std::ranges::find_if(S.value, [](char c) { return c == '\0'; });
+    constexpr auto           size = iter - std::begin(S.value) + 1;
+    compiletime_string<size> result{};
+    std::ranges::copy_n(S.value, size, result.value);
+    return result;
+}
 } // namespace bs
 
 #endif // BUGSPRAY_COMPILETIME_STRING_HPP
