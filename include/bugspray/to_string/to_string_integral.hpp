@@ -51,13 +51,13 @@ constexpr auto to_string(std::integral auto i) -> bs::string
     do
     {
         auto const r = n % Base;
-        result += g_digits[r];
+        result.push_back(g_digits[r]);
         n /= Base;
     } while (n != 0);
     while (result.size() < MinDigits)
         result.push_back('0');
     if (neg)
-        result += '-';
+        result.push_back('-');
     std::ranges::reverse(result);
     return result;
 }
