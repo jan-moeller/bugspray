@@ -33,6 +33,7 @@ add_library(bugspray STATIC
         include/bugspray/macro_interface/section_macro.hpp
         include/bugspray/macro_interface/test_case_macros.hpp
         include/bugspray/reporter/caching_reporter.hpp
+        include/bugspray/reporter/constexpr_reporter.hpp
         include/bugspray/reporter/formatted_ostream_reporter.hpp
         include/bugspray/reporter/noop_reporter.hpp
         include/bugspray/reporter/reporter.hpp
