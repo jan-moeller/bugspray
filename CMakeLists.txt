@@ -38,6 +38,10 @@ add_library(bugspray STATIC
         include/bugspray/reporter/formatted_ostream_reporter.hpp
         include/bugspray/reporter/noop_reporter.hpp
         include/bugspray/reporter/reporter.hpp
+        include/bugspray/test_evaluation/decomposition/binary_expr.hpp
+        include/bugspray/test_evaluation/decomposition/decomposer.hpp
+        include/bugspray/test_evaluation/decomposition/decomposition_result.hpp
+        include/bugspray/test_evaluation/decomposition/unary_expr.hpp
         include/bugspray/test_evaluation/evaluate_test_case.hpp
         include/bugspray/test_evaluation/evaluate_test_case_target.hpp
         include/bugspray/test_evaluation/info_capture.hpp

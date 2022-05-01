@@ -36,6 +36,7 @@ include(Catch)
 
 add_executable(bugspray-unit-tests
         reporter/test_caching_reporter.cpp
+        test_evaluation/decomposition/test_decomposer.cpp
         test_evaluation/test_evaluate_test_case.cpp
         test_evaluation/test_evaluate_test_case_target.cpp
         test_evaluation/test_parse_tag_string.cpp
