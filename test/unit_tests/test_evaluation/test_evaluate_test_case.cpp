@@ -38,7 +38,7 @@ constexpr void a_test_case_fn(test_run_data& bugspray_data)
     BUGSPRAY_SECTION("t1")
     {
         BUGSPRAY_REQUIRE(bugspray_data.current() == section_path{"t1"});
-        BUGSPRAY_REQUIRE(bugspray_data.target().size() > 0);
+        BUGSPRAY_REQUIRE(bugspray_data.target().size() > std::size_t{0});
         BUGSPRAY_REQUIRE(bugspray_data.target()[0] == "t1");
         BUGSPRAY_SECTION("t11")
         {
@@ -57,13 +57,13 @@ constexpr void a_test_case_fn(test_run_data& bugspray_data)
     BUGSPRAY_SECTION("t2", runtime)
     {
         BUGSPRAY_REQUIRE(bugspray_data.current() == section_path{"t2"});
-        BUGSPRAY_REQUIRE(bugspray_data.target().size() > 0);
+        BUGSPRAY_REQUIRE(bugspray_data.target().size() > std::size_t{0});
         BUGSPRAY_REQUIRE(bugspray_data.target()[0] == "t2");
     }
     BUGSPRAY_SECTION("t3", compiletime)
     {
         BUGSPRAY_REQUIRE(bugspray_data.current() == section_path{"t3"});
-        BUGSPRAY_REQUIRE(bugspray_data.target().size() > 0);
+        BUGSPRAY_REQUIRE(bugspray_data.target().size() > std::size_t{0});
         BUGSPRAY_REQUIRE(bugspray_data.target()[0] == "t3");
     }
 }
