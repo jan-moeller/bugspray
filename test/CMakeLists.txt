@@ -41,7 +41,7 @@ endfunction()
 add_build_test(examples)
 add_build_test(compile-failure-tests)
 set_tests_properties(compile-failure-tests PROPERTIES
-        PASS_REGULAR_EXPRESSION "variable: 42.*static assertion failed: Test evaluation failed."
+        PASS_REGULAR_EXPRESSION "42 == 0.*other_var: 6.*static assertion failed: Test evaluation failed."
         )
 
 add_subdirectory(unit_tests)

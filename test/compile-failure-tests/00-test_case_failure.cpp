@@ -25,8 +25,9 @@
 
 TEST_CASE("This will fail")
 {
-    int variable = 42;
-    CAPTURE(variable);
-    FAIL();
+    int other_var = 6;
+    int variable  = 42;
+    CAPTURE(other_var);
+    REQUIRE(variable == 0);
 }
 EVAL_TEST_CASE("This will fail");

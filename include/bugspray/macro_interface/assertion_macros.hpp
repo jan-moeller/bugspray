@@ -25,6 +25,8 @@
 #ifndef BUGSPRAY_ASSERTION_MACROS_HPP
 #define BUGSPRAY_ASSERTION_MACROS_HPP
 
+#include "bugspray/test_evaluation/decomposition/decomposer.hpp"
+#include "bugspray/test_evaluation/decomposition/decomposition_result.hpp"
 #include "bugspray/utility/macros.hpp"
 #include "bugspray/utility/source_location.hpp"
 
@@ -41,8 +43,11 @@
 #define BUGSPRAY_ASSERTION_IMPL(type, text, ...)                                                                       \
     do                                                                                                                 \
     {                                                                                                                  \
-        bool const assertion_result = (__VA_ARGS__);                                                                   \
-        bugspray_data.log_assertion(text, BUGSPRAY_THIS_LOCATION(), {}, assertion_result);                             \
+        ::bs::decomposition_result const decom = ::bs::decomposer{} % __VA_ARGS__;                                     \
+        auto const                       msg   = "WITH EXPANSION: " + decom.str();                                     \
+        bs::string                       msgs[]{msg};                                                                  \
+        auto const                       assertion_result = decom.result();                                            \
+        bugspray_data.log_assertion(text, BUGSPRAY_THIS_LOCATION(), msgs, assertion_result);                           \
         if (!assertion_result)                                                                                         \
         {                                                                                                              \
             bugspray_data.mark_failed();                                                                               \

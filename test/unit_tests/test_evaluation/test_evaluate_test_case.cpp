@@ -153,9 +153,11 @@ TEST_CASE("evaluate_test_case", "[test_evaluation]")
     PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].sections[0].sections.size() == 0);                  \
     PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].sections[0].assertions.size() == 2);                \
     PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].sections[0].assertions[0].result == true);          \
-    PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].sections[0].assertions[0].messages.size() == 2);    \
-    PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].sections[0].assertions[0].messages[0] == "i: 42");  \
-    PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].sections[0].assertions[0].messages[1]               \
+    PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].sections[0].assertions[0].messages.size() == 3);    \
+    PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].sections[0].assertions[0].messages[0]               \
+                    == R"(WITH EXPANSION: { "t1", "t12" } == { "t1", "t12" })");                                       \
+    PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].sections[0].assertions[0].messages[1] == "i: 42");  \
+    PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].sections[0].assertions[0].messages[2]               \
                     == R"(foo: "foo")");                                                                               \
     PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].sections[0].assertions[1].result == true);          \
     PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].sections[0].assertions.size() == 3);                            \
