@@ -57,6 +57,7 @@ add_executable(bugspray-unit-tests
         utility/macros/test_unique_identifier.cpp
         utility/test_source_location.cpp
         utility/test_structural_string.cpp
+        utility/test_structural_tuple.cpp
         )
 target_link_libraries(bugspray-unit-tests PRIVATE bugspray Catch2::Catch2WithMain)
 bs_target_setup(bugspray-unit-tests)
