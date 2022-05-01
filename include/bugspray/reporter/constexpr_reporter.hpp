@@ -69,17 +69,20 @@ struct constexpr_reporter : reporter
     {
     }
 
-    constexpr void log_assertion(std::string_view /*assertion*/,
+    constexpr void log_assertion(std::string_view assertion,
                                  source_location /*sloc*/,
                                  std::span<bs::string const> messages,
                                  bool                        result) noexcept override
     {
         if (!result)
         {
-            for (std::size_t i = 0; i < std::min(s_max_message_length, messages.size()); ++i)
+            std::ranges::copy_n(assertion.begin(),
+                                std::min(assertion.size(), s_max_message_length),
+                                m_messages[0].value);
+            for (std::size_t i = 0; i < std::min(s_max_messages - 1, messages.size()); ++i)
                 std::ranges::copy_n(messages[i].begin(),
                                     std::min(messages[i].size(), s_max_message_length),
-                                    m_messages[i].value);
+                                    m_messages[i + 1].value);
         }
     }
 
