@@ -30,6 +30,7 @@ include(bs_target_setup)
 add_library(bugspray STATIC
         include/bugspray/bugspray.hpp
         include/bugspray/cli/argument_destination.hpp
+        include/bugspray/cli/parameter_names.hpp
         include/bugspray/macro_interface/assertion_macros.hpp
         include/bugspray/macro_interface/capture_macro.hpp
         include/bugspray/macro_interface/section_macro.hpp
