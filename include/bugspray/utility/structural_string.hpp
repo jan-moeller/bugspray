@@ -42,10 +42,12 @@ struct structural_string
 {
     constexpr structural_string() { std::fill_n(value, N, '\0'); }
     constexpr structural_string(char const (&str)[N]) { std::copy_n(str, N, value); }
+    constexpr structural_string(std::string_view sv) { std::copy_n(sv.data(), std::min(N, sv.size()), value); }
     char value[N];
 
     constexpr auto operator==(structural_string const& rhs) const -> bool = default;
     constexpr auto operator==(char const* rhs) const -> bool { return std::string_view{value} == rhs; }
+    constexpr auto operator==(std::string_view rhs) const -> bool { return std::string_view{value} == rhs; }
 };
 
 template<std::size_t N1, std::size_t N2>
