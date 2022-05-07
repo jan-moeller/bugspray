@@ -83,7 +83,7 @@ struct argument_parser
                 throw std::runtime_error{"unexpected argument"};
         };
 
-        for (int i = 0; i < argc;)
+        for (int i = 1; i < argc;)
         {
             std::string_view arg = argv[i];
 

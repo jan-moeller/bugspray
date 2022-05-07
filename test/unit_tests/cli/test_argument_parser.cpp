@@ -65,7 +65,7 @@ TEST_CASE("argument_parser", "[cli]")
                     }>
         parser;
 
-    std::array   argv = {"--help", "-s", "true", "393"};
+    std::array   argv = {"tool_name", "--help", "-s", "true", "393"};
     config const c    = parser.parse<config>(argv.size(), argv.data());
     REQUIRE(c.help == true);
     REQUIRE(c.foo.sticky == true);
