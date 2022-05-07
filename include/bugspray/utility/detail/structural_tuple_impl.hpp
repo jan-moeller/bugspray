@@ -64,7 +64,8 @@ template<std::size_t... Indices, typename... Ts>
 struct tuple_impl<std::index_sequence<Indices...>, Ts...> : tuple_member<Indices, Ts>...
 {
     constexpr explicit tuple_impl(Ts&&... args)
-        : tuple_member<Indices, Ts>(std::move(args))...
+        requires(sizeof...(args) > 0)
+    : tuple_member<Indices, Ts>(std::move(args))...
     {
     }
 
