@@ -69,6 +69,8 @@ class naive_string
         return *this;
     }
 
+    constexpr explicit operator std::string_view() const { return std::string_view{&m_data.front(), size()}; }
+
     [[nodiscard]] constexpr auto begin() const noexcept -> char const* { return m_data.begin(); }
     [[nodiscard]] constexpr auto begin() noexcept -> char* { return m_data.begin(); }
 
