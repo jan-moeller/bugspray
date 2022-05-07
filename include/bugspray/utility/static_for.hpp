@@ -52,7 +52,7 @@ constexpr void static_for(Fn&& fn)
         constexpr arg_type arg;
 
         auto continuation = static_for_continuation::continue_;
-        if constexpr (std::is_same_v<std::invoke_result<Fn, arg_type>, static_for_continuation>)
+        if constexpr (std::same_as<std::invoke_result_t<Fn, arg_type>, static_for_continuation>)
             continuation = std::forward<Fn>(fn)(arg);
         else
             std::forward<Fn>(fn)(arg);
