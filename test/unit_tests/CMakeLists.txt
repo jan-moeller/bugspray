@@ -35,6 +35,7 @@ include(CTest)
 include(Catch)
 
 add_executable(bugspray-unit-tests
+        cli/test_argument_destination.cpp
         reporter/test_caching_reporter.cpp
         test_evaluation/decomposition/test_decomposer.cpp
         test_evaluation/test_evaluate_test_case.cpp
