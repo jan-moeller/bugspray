@@ -31,6 +31,7 @@ add_library(bugspray STATIC
         include/bugspray/bugspray.hpp
         include/bugspray/cli/argument_destination.hpp
         include/bugspray/cli/parameter_names.hpp
+        include/bugspray/cli/parsers/arg_parser.hpp
         include/bugspray/cli/parsers/parse_bool.hpp
         include/bugspray/cli/parsers/parse_integral.hpp
         include/bugspray/macro_interface/assertion_macros.hpp
