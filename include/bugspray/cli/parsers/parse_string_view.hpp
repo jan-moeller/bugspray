@@ -22,29 +22,18 @@
 // SOFTWARE.
 //
 
-#ifndef BUGSPRAY_ARG_PARSER_HPP
-#define BUGSPRAY_ARG_PARSER_HPP
-
-#include "parse_bool.hpp"
-#include "parse_integral.hpp"
-#include "parse_string_view.hpp"
+#ifndef BUGSPRAY_PARSE_STRING_VIEW_HPP
+#define BUGSPRAY_PARSE_STRING_VIEW_HPP
 
 #include <string_view>
 
 namespace bs::parsers
 {
-struct arg_parser
+constexpr auto parse_string_view(std::string_view arg, std::string_view& out) -> bool
 {
-    constexpr auto operator()(std::string_view input, bool& out) const -> bool { return parse_bool(input, out); }
-    constexpr auto operator()(std::string_view input, std::integral auto& out) const -> bool
-    {
-        return parse_integral(input, out);
-    }
-    constexpr auto operator()(std::string_view input, std::string_view& out) const -> bool
-    {
-        return parse_string_view(input, out);
-    }
-};
+    out = arg;
+    return true;
+}
 } // namespace bs::parsers
 
-#endif // BUGSPRAY_ARG_PARSER_HPP
+#endif // BUGSPRAY_PARSE_STRING_VIEW_HPP
