@@ -30,6 +30,7 @@
 #include "bugspray/reporter/reporter.hpp"
 #include "bugspray/test_evaluation/evaluate_test_case_target.hpp"
 #include "bugspray/test_evaluation/test_case.hpp"
+#include "bugspray/test_evaluation/test_case_filter.hpp"
 #include "bugspray/test_evaluation/test_run_data.hpp"
 #include "bugspray/utility/structural_string.hpp"
 
@@ -40,8 +41,11 @@
 namespace bs
 {
 template<bool AbortEarly = false>
-constexpr auto evaluate_test_case(test_case const& tc, reporter& the_reporter) -> bool
+constexpr auto evaluate_test_case(test_case const& tc, reporter& the_reporter, std::string_view test_spec = "") -> bool
 {
+    if (!test_case_filter(tc, test_spec))
+        return true;
+
     bool               success = true;
     test_case_topology topo;
 
