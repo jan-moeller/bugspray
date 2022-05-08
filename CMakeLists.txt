@@ -74,6 +74,7 @@ add_library(bugspray STATIC
         include/bugspray/utility/detail/naive_string.hpp
         include/bugspray/utility/detail/naive_vector.hpp
         include/bugspray/utility/detail/structural_tuple_impl.hpp
+        include/bugspray/utility/isspace.hpp
         include/bugspray/utility/macros.hpp
         include/bugspray/utility/macros/macro_concatenate.hpp
         include/bugspray/utility/macros/macro_get_nth_arg.hpp
