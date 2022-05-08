@@ -57,6 +57,7 @@ add_library(bugspray STATIC
         include/bugspray/test_evaluation/section_path.hpp
         include/bugspray/test_evaluation/section_tracker.hpp
         include/bugspray/test_evaluation/test_case.hpp
+        include/bugspray/test_evaluation/test_case_filter.hpp
         include/bugspray/test_evaluation/test_case_fn.hpp
         include/bugspray/test_evaluation/test_case_topology.hpp
         include/bugspray/test_evaluation/test_run_data.hpp
