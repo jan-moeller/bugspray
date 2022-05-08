@@ -66,12 +66,6 @@ constexpr auto evaluate_test_case(test_case const& tc, reporter& the_reporter) -
     return success;
 }
 
-constexpr auto evaluate_test_case(test_case const& tc) -> bool
-{
-    noop_reporter reporter;
-    return evaluate_test_case(tc, reporter);
-}
-
 template<auto>
 constexpr auto evaluate_test_case_constexpr(test_case const& tc)
 {
