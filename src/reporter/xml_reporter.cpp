@@ -89,7 +89,7 @@ void xml_reporter::leave_test_case() noexcept
     m_writer.close_element();
 }
 
-void xml_reporter::start_run(section_path const& target) noexcept
+void xml_reporter::start_run(section_path const& /*target*/) noexcept
 {
 }
 
