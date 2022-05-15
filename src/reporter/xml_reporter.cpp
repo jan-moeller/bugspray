@@ -49,10 +49,15 @@ void xml_reporter::enter_test_case(std::string_view                  name,
 
     m_writer.open_element("TestCase");
     m_writer.write_attribute("name", name);
-    std::string tag_string;
-    for (auto&& t : tags)
-        tag_string += "[" + std::string{t} + "]";
-    m_writer.write_attribute("tags", tag_string);
+
+    if (!tags.empty())
+    {
+        std::string tag_string;
+        for (auto&& t : tags)
+            tag_string += "[" + std::string{t} + "]";
+        m_writer.write_attribute("tags", tag_string);
+    }
+
     m_writer.write_attribute("filename", sloc.file_name);
     m_writer.write_attribute("line", std::string_view{to_string(sloc.line)});
     m_writer.close_attribute_section();
