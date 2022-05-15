@@ -139,12 +139,14 @@ void xml_reporter::log_assertion(std::string_view            assertion,
 {
     if (result)
     {
-        ++m_results.back().successes;
+        if (!m_results.empty())
+            ++m_results.back().successes;
         ++m_total_results.successes;
     }
     else
     {
-        ++m_results.back().failures;
+        if (!m_results.empty())
+            ++m_results.back().failures;
         ++m_total_results.failures;
     }
 
