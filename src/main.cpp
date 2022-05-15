@@ -33,18 +33,32 @@
 
 struct config
 {
+    bool             help;
     std::string_view test_spec;
 };
 
 auto main(int argc, char const** argv) -> int
 {
     using namespace bs;
-    using argparser = argument_parser<parameter{
+    constexpr parameter help_param{
+        .names       = parameter_names{"-h", "--help"},
+        .destination = argument_destination{&config::help},
+        .help        = structural_string{"show this help message and exit"},
+    };
+    constexpr parameter test_spec_param{
         .names       = parameter_names{"test-spec"},
         .destination = argument_destination{&config::test_spec},
-    }>;
+        .help        = structural_string{"specify which tests to run"},
+    };
+    using argparser = argument_parser<help_param, test_spec_param>;
     argparser                   parser;
     [[maybe_unused]] auto const c = parser.parse<config>(argc, argv);
+
+    if (c.help)
+    {
+        std::cout << parser.make_help_message(argv[0]) << '\n';
+        return EXIT_SUCCESS;
+    }
 
     bool success = true;
 
