@@ -33,7 +33,7 @@
 
 struct config
 {
-    bool             help;
+    bool help = false;
     std::string_view test_spec;
 };
 
