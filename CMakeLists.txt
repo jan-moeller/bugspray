@@ -30,6 +30,18 @@ option(BUGSPRAY_DONT_USE_STD_STRING "Forces bugspray to use its own string imple
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 include(bs_target_setup)
 
+set(BUGSPRAY_VERSION_MAJOR 0)
+set(BUGSPRAY_VERSION_MINOR 1)
+set(BUGSPRAY_VERSION_PATCH 0)
+execute_process(
+        COMMAND git log -1 --format=%h
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE BUGSPRAY_VERSION_COMMIT
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+configure_file(include/bugspray/version.hpp.in generated/bugspray/version.hpp @ONLY)
+
 add_library(bugspray STATIC
         include/bugspray/bugspray.hpp
         include/bugspray/cli/argument_destination.hpp
@@ -101,7 +113,7 @@ add_library(bugspray STATIC
         src/reporter/xml_reporter.cpp
         src/utility/xml_writer.cpp
         )
-target_include_directories(bugspray PUBLIC include/)
+target_include_directories(bugspray PUBLIC include/ ${CMAKE_BINARY_DIR}/generated)
 bs_target_setup(bugspray)
 
 add_library(bugspray-with-main STATIC src/main.cpp)

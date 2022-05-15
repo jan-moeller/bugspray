@@ -22,13 +22,12 @@
 // SOFTWARE.
 //
 
-#ifndef BUGSPRAY_BUGSPRAY_HPP
-#define BUGSPRAY_BUGSPRAY_HPP
+#ifndef BUGSPRAY_VERSION_HPP
+#define BUGSPRAY_VERSION_HPP
 
-#include "bugspray/macro_interface/assertion_macros.hpp"
-#include "bugspray/macro_interface/capture_macro.hpp"
-#include "bugspray/macro_interface/section_macro.hpp"
-#include "bugspray/macro_interface/test_case_macros.hpp"
-#include "bugspray/version.hpp"
+#define BUGSPRAY_VERSION_MAJOR @BUGSPRAY_VERSION_MAJOR@
+#define BUGSPRAY_VERSION_MINOR @BUGSPRAY_VERSION_MINOR@
+#define BUGSPRAY_VERSION_PATCH @BUGSPRAY_VERSION_PATCH@
+#define BUGSPRAY_VERSION_COMMIT @BUGSPRAY_VERSION_COMMIT@
 
-#endif // BUGSPRAY_BUGSPRAY_HPP
+#endif // BUGSPRAY_VERSION_HPP
