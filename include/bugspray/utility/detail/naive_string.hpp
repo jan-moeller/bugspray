@@ -25,7 +25,7 @@
 #ifndef BUGSPRAY_NAIVE_STRING_HPP
 #define BUGSPRAY_NAIVE_STRING_HPP
 
-#include "naive_vector.hpp"
+#include "bugspray/utility/vector.hpp"
 
 #include <ostream>
 #include <string_view>
@@ -40,14 +40,14 @@ namespace bs
 class naive_string
 {
   public:
-    using value_type      = naive_vector<char>::value_type;
-    using reference       = naive_vector<char>::reference;
-    using const_reference = naive_vector<char>::const_reference;
-    using pointer         = naive_vector<char>::pointer;
-    using const_pointer   = naive_vector<char>::const_pointer;
-    using iterator        = naive_vector<char>::iterator;
-    using const_iterator  = naive_vector<char>::const_iterator;
-    using difference_type = naive_vector<char>::difference_type;
+    using value_type      = bs::vector<char>::value_type;
+    using reference       = bs::vector<char>::reference;
+    using const_reference = bs::vector<char>::const_reference;
+    using pointer         = bs::vector<char>::pointer;
+    using const_pointer   = bs::vector<char>::const_pointer;
+    using iterator        = bs::vector<char>::iterator;
+    using const_iterator  = bs::vector<char>::const_iterator;
+    using difference_type = bs::vector<char>::difference_type;
 
     constexpr naive_string() noexcept = default;
     constexpr naive_string(char c) { push_back(c); }
@@ -118,7 +118,7 @@ class naive_string
     constexpr auto operator==(naive_string const&) const noexcept -> bool = default;
 
   private:
-    naive_vector<char> m_data{'\0'};
+    bs::vector<char> m_data{'\0'};
 };
 
 inline auto operator<<(std::ostream& os, naive_string const& s) -> std::ostream&
