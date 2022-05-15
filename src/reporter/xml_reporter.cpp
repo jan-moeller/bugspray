@@ -27,6 +27,8 @@
 #include "bugspray/to_string/to_string_bool.hpp"
 #include "bugspray/to_string/to_string_integral.hpp"
 
+#include <filesystem>
+
 namespace bs
 {
 xml_reporter::xml_reporter(std::ostream& stream, std::string_view appname, std::size_t seed, bool report_timings)
@@ -34,7 +36,7 @@ xml_reporter::xml_reporter(std::ostream& stream, std::string_view appname, std::
     , m_report_timings(report_timings)
 {
     m_writer.open_element("Catch2TestRun");
-    m_writer.write_attribute("name", appname);
+    m_writer.write_attribute("name", std::filesystem::path{appname}.stem().string());
     m_writer.write_attribute("rng-seed", std::string_view{to_string(seed)});
     m_writer.close_attribute_section();
 }
