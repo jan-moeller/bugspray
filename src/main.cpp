@@ -52,7 +52,17 @@ auto main(int argc, char const** argv) -> int
     };
     using argparser = argument_parser<help_param, test_spec_param>;
     argparser                   parser;
-    [[maybe_unused]] auto const c = parser.parse<config>(argc, argv);
+
+    config c;
+    try
+    {
+        parser.parse<config>(argc, argv, c);
+    }
+    catch (std::runtime_error const& e)
+    {
+        std::cerr << "Failed to parse arguments: " << e.what() << '\n';
+        return EXIT_FAILURE;
+    }
 
     if (c.help)
     {
