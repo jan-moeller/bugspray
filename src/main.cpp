@@ -161,6 +161,7 @@ auto main(int argc, char const** argv) -> int
     for (auto&& tc : g_test_case_registry)
         success &= evaluate_test_case(tc, *reporter, c.test_spec);
     reporter->finalize();
+    std::cout << std::endl;
 
     return success ? EXIT_SUCCESS : EXIT_FAILURE;
 }
