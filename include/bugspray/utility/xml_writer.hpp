@@ -50,10 +50,8 @@ struct xml_writer
     std::ostream&                 m_ostream;
     std::vector<std::string_view> m_open_elements;
 
-    void write(std::string_view text);
     void write_indentation();
     void write_newline();
-    void write_line(std::string_view line);
 };
 } // namespace bs
 

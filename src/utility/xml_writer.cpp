@@ -79,11 +79,6 @@ void xml_writer::write_content(std::string_view content)
     m_ostream << content;
 }
 
-void xml_writer::write(std::string_view text)
-{
-    m_ostream << text;
-}
-
 void xml_writer::write_indentation()
 {
     for (std::size_t i = 0; i < m_open_elements.size() * 2; ++i)
@@ -93,11 +88,5 @@ void xml_writer::write_indentation()
 void xml_writer::write_newline()
 {
     m_ostream << '\n';
-}
-
-void xml_writer::write_line(std::string_view line)
-{
-    write_indentation();
-    write(line);
 }
 } // namespace bs
