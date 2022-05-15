@@ -95,7 +95,9 @@ add_library(bugspray STATIC
         include/bugspray/utility/structural_tuple.hpp
         include/bugspray/utility/trim.hpp
         include/bugspray/utility/vector.hpp
+        include/bugspray/utility/xml_writer.hpp
         src/reporter/formatted_ostream_reporter.cpp
+        src/utility/xml_writer.cpp
         )
 target_include_directories(bugspray PUBLIC include/)
 bs_target_setup(bugspray)
