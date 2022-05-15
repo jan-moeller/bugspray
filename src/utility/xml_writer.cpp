@@ -24,7 +24,7 @@
 
 #include "bugspray/utility/xml_writer.hpp"
 
-#include <stdexcept>
+#include <cassert>
 
 namespace bs
 {
@@ -36,8 +36,7 @@ xml_writer::xml_writer(std::ostream& ostream, std::string_view version, std::str
 
 xml_writer::~xml_writer()
 {
-    if (!m_open_elements.empty())
-        throw std::runtime_error{"unclosed tags"};
+    assert(m_open_elements.empty());
 }
 
 void xml_writer::open_element(std::string_view tag)
