@@ -26,6 +26,7 @@
 #include "bugspray/cli/parameter.hpp"
 #include "bugspray/cli/parameter_names.hpp"
 #include "bugspray/reporter/formatted_ostream_reporter.hpp"
+#include "bugspray/reporter/xml_reporter.hpp"
 #include "bugspray/test_evaluation/evaluate_test_case.hpp"
 #include "bugspray/test_registration/test_case_registry.hpp"
 
@@ -34,6 +35,21 @@
 struct config
 {
     bool help = false;
+
+    enum class reporter_enum
+    {
+        console,
+        xml,
+    } reporter = reporter_enum::console;
+
+    enum class order_enum
+    {
+        declaration,
+        lexicographic,
+        random,
+    } order = order_enum::declaration;
+
+    bool             report_durations = false;
     std::string_view test_spec;
 };
 
@@ -45,13 +61,63 @@ auto main(int argc, char const** argv) -> int
         .destination = argument_destination{&config::help},
         .help        = structural_string{"show this help message and exit"},
     };
+    constexpr parameter reporter_param{
+        .names       = parameter_names{"-r", "--reporter"},
+        .destination = argument_destination{&config::reporter},
+        .parser =
+            [](std::string_view arg, config::reporter_enum& out)
+        {
+            if (arg == "console")
+            {
+                out = config::reporter_enum::console;
+                return true;
+            }
+            if (arg == "xml")
+            {
+                out = config::reporter_enum::xml;
+                return true;
+            }
+            return false;
+        },
+        .help = structural_string{"select reporter from [console, xml]"},
+    };
+    constexpr parameter durations_param{
+        .names       = parameter_names{"-d", "--durations"},
+        .destination = argument_destination{&config::report_durations},
+        .help        = structural_string{"specify whether durations are reported"},
+    };
+    constexpr parameter order_param{
+        .names       = parameter_names{"--order"},
+        .destination = argument_destination{&config::order},
+        .parser =
+            [](std::string_view arg, config::order_enum& out)
+        {
+            if (arg == "decl")
+            {
+                out = config::order_enum::declaration;
+                return true;
+            }
+            if (arg == "lex")
+            {
+                out = config::order_enum::lexicographic;
+                return true;
+            }
+            if (arg == "rand")
+            {
+                out = config::order_enum::random;
+                return true;
+            }
+            return false;
+        },
+        .help = structural_string{"specify order of test case execution from [decl]"},
+    };
     constexpr parameter test_spec_param{
         .names       = parameter_names{"test-spec"},
         .destination = argument_destination{&config::test_spec},
         .help        = structural_string{"specify which tests to run"},
     };
-    using argparser = argument_parser<help_param, test_spec_param>;
-    argparser                   parser;
+    using argparser = argument_parser<help_param, reporter_param, durations_param, order_param, test_spec_param>;
+    argparser parser;
 
     config c;
     try
@@ -70,11 +136,30 @@ auto main(int argc, char const** argv) -> int
         return EXIT_SUCCESS;
     }
 
+    if (c.order != config::order_enum::declaration) // TODO: Implement
+        std::cerr << "Only declration ordering is currently implemented. Specifying something else has no effect.";
+
     bool success = true;
 
-    formatted_ostream_reporter reporter{std::cout};
+    auto reporter = [&]() -> std::unique_ptr<struct reporter>
+    {
+        switch (c.reporter)
+        {
+            using enum config::reporter_enum;
+        case console:
+            return std::make_unique<formatted_ostream_reporter>(std::cout);
+        case xml:
+            return std::make_unique<xml_reporter>(std::cout,
+                                                  argv[0],
+                                                  0, // TODO: Implement seed support
+                                                  c.report_durations);
+        }
+        return nullptr;
+    }
+    ();
+
     for (auto&& tc : g_test_case_registry)
-        success &= evaluate_test_case(tc, reporter, c.test_spec);
+        success &= evaluate_test_case(tc, *reporter, c.test_spec);
     reporter->finalize();
 
     return success ? EXIT_SUCCESS : EXIT_FAILURE;
