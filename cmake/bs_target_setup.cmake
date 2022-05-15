@@ -43,4 +43,11 @@ function(bs_target_setup target)
             CXX_STANDARD_REQUIRED YES
             CXX_EXTENSIONS NO
             )
+    if (${BUGSPRAY_DONT_USE_STD_VECTOR})
+        target_compile_definitions(${target} PRIVATE BUGSPRAY_DONT_USE_STD_VECTOR)
+    endif ()
+    if (${BUGSPRAY_DONT_USE_STD_STRING})
+        target_compile_definitions(${target} PRIVATE BUGSPRAY_DONT_USE_STD_STRING)
+    endif ()
+
 endfunction()

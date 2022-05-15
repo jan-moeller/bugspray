@@ -31,7 +31,7 @@
  * bs::vector aliases std::vector, if it supports constexpr vector. Otherwise bs::naive_vector is used.
  */
 
-#if __cpp_lib_constexpr_vector >= 201907L
+#if __cpp_lib_constexpr_vector >= 201907L and not defined(BUGSPRAY_DONT_USE_STD_VECTOR)
 #include <vector>
 namespace bs
 {

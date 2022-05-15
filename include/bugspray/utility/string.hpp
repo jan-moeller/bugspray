@@ -31,7 +31,7 @@
  * bs::string aliases std::string, if it supports constexpr string. Otherwise bs::naive_string is used.
  */
 
-#if __cpp_lib_constexpr_string >= 201907L
+#if __cpp_lib_constexpr_string >= 201907L and not defined(BUGSPRAY_DONT_USE_STD_STRING)
 #include <string>
 namespace bs
 {
