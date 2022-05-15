@@ -48,6 +48,8 @@ struct structural_string
     constexpr auto operator==(structural_string const& rhs) const -> bool = default;
     constexpr auto operator==(char const* rhs) const -> bool { return std::string_view{value} == rhs; }
     constexpr auto operator==(std::string_view rhs) const -> bool { return std::string_view{value} == rhs; }
+
+    [[nodiscard]] constexpr static auto size() noexcept -> std::size_t { return N; }
 };
 
 template<std::size_t N1, std::size_t N2>
