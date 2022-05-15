@@ -42,6 +42,7 @@ struct xml_writer
 
     void write_attribute(std::string_view key, std::string_view value);
     void close_attribute_section();
+    void close_attribute_and_element();
 
     void write_content(std::string_view content);
 

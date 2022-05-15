@@ -77,8 +77,7 @@ void xml_reporter::leave_test_case() noexcept
         m_writer.write_attribute("durationInSeconds",
                                  std::string_view{to_string(ms.count())}); // TODO: sub-second accuracy
     }
-    m_writer.close_attribute_section();
-    m_writer.close_element();
+    m_writer.close_attribute_and_element();
 
     m_writer.close_element();
 }
@@ -126,8 +125,7 @@ void xml_reporter::leave_section() noexcept
     }
     m_section_start_time.pop_back();
 
-    m_writer.close_attribute_section();
-    m_writer.close_element();
+    m_writer.close_attribute_and_element();
 
     m_writer.close_element();
 
@@ -185,15 +183,13 @@ void xml_reporter::finalize() noexcept
     m_writer.write_attribute("successes", std::string_view{to_string(m_total_results.successes)});
     m_writer.write_attribute("failures", std::string_view{to_string(m_total_results.failures)});
     m_writer.write_attribute("expectedFailures", std::string_view{to_string(m_total_results.expected_failures)});
-    m_writer.close_attribute_section();
-    m_writer.close_element();
+    m_writer.close_attribute_and_element();
 
     m_writer.open_element("OverallResultsCases");
     m_writer.write_attribute("successes", std::string_view{to_string(m_results_test_cases.successes)});
     m_writer.write_attribute("failures", std::string_view{to_string(m_results_test_cases.failures)});
     m_writer.write_attribute("expectedFailures", std::string_view{to_string(m_results_test_cases.expected_failures)});
-    m_writer.close_attribute_section();
-    m_writer.close_element();
+    m_writer.close_attribute_and_element();
 
     m_writer.close_element();
 }

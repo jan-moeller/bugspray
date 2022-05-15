@@ -45,7 +45,7 @@ void xml_writer::open_element(std::string_view tag)
     write_newline();
     write_indentation();
     m_open_elements.push_back(tag);
-    m_ostream << R"(<)" << tag << ' ';
+    m_ostream << R"(<)" << tag;
 }
 
 void xml_writer::close_element()
@@ -60,12 +60,18 @@ void xml_writer::close_element()
 
 void xml_writer::write_attribute(std::string_view key, std::string_view value)
 {
-    m_ostream << key << '=' << '\"' << value << '\"' << ' ';
+    m_ostream << ' ' << key << '=' << '\"' << value << '\"';
 }
 
 void xml_writer::close_attribute_section()
 {
     m_ostream << '>';
+}
+
+void xml_writer::close_attribute_and_element()
+{
+    m_open_elements.pop_back();
+    m_ostream << "/>";
 }
 
 void xml_writer::write_content(std::string_view content)
