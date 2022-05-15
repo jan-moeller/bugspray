@@ -25,6 +25,7 @@
 #ifndef BUGSPRAY_ARGUMENT_PARSER_HPP
 #define BUGSPRAY_ARGUMENT_PARSER_HPP
 
+#include "bugspray/utility/string.hpp"
 #include "bugspray/utility/structural_string.hpp"
 #include "bugspray/utility/structural_tuple.hpp"
 
@@ -40,6 +41,98 @@ struct argument_parser
     constexpr static parameters_t parameters{Parameters...};
 
     static_assert((Parameters.names.valid() && ...), "All parameters must either be positional or named");
+
+    constexpr static structural_string help_message = []
+    {
+        constexpr auto gen = []
+        {
+            constexpr auto gen_usage = []
+            {
+                bs::string msg = bs::string{"usage: {}"};
+
+                bs::string positional;
+                bs::string options;
+                static_for<0, std::tuple_size_v<parameters_t>>(
+                    [&](auto I)
+                    {
+                        auto const& p = get<I>(parameters);
+                        if constexpr (p.names.is_unnamed)
+                        {
+                            if (!positional.empty())
+                                positional += " ";
+                            positional += get<0>(p.names.names).value;
+                        }
+                        if constexpr (p.names.is_named)
+                        {
+                            if (!options.empty())
+                                options += " ";
+                            options += bs::string{"["} + get<0>(p.names.names).value + "]";
+                        }
+                    });
+
+                if (!options.empty())
+                    msg += " " + options;
+                if (!positional.empty())
+                    msg += " " + positional;
+                return msg;
+            };
+
+            constexpr auto gen_detailed = []
+            {
+                bs::string msg;
+                bs::string positional;
+                bs::string options;
+                static_for<0, std::tuple_size_v<parameters_t>>(
+                    [&](auto I)
+                    {
+                        auto const& p      = get<I>(parameters);
+                        bs::string* target = nullptr;
+                        if constexpr (p.names.is_unnamed)
+                            target = &positional;
+                        if constexpr (p.names.is_named)
+                            target = &options;
+                        if (!target->empty())
+                            *target += '\n';
+                        *target += ' ';
+                        bs::string list;
+                        static_for<0, p.names.size>(
+                            [&](auto J)
+                            {
+                                if (!list.empty())
+                                    list += ", ";
+                                list += get<J>(p.names.names).value;
+                            });
+                        *target += list;
+                        *target += ' ';
+                        auto const    w                 = list.size() + 2;
+                        constexpr int left_column_width = 13;
+                        for (int i = w; i < left_column_width; ++i)
+                            *target += ' ';
+                        *target += p.help.value;
+                    });
+
+                if (!positional.empty())
+                    msg += "\n\npositional arguments:\n" + positional;
+                if (!options.empty())
+                    msg += "\n\noptions:\n" + options;
+                return msg;
+            };
+            bs::string msg = gen_usage() + gen_detailed();
+
+            return msg;
+        };
+        constexpr auto const size = gen().size();
+        return structural_string<size>{std::string_view{gen()}};
+    }();
+
+    [[nodiscard]] constexpr auto make_help_message(std::string_view application_name) const noexcept -> bs::string
+    {
+        std::string_view help_sv = help_message.value;
+        auto             msg     = bs::string{help_sv.substr(0, 7)};
+        msg += application_name;
+        msg += help_sv.substr(9);
+        return msg;
+    }
 
     template<typename Config>
     constexpr auto parse(int argc, char const* argv[]) -> Config

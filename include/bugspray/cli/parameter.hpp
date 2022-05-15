@@ -26,15 +26,17 @@
 #define BUGSPRAY_PARAMETER_HPP
 
 #include "bugspray/cli/parsers/arg_parser.hpp"
+#include "bugspray/utility/structural_string.hpp"
 
 namespace bs
 {
-template<typename ParamNames, typename Dest, typename Parser = parsers::arg_parser>
+template<typename ParamNames, typename Dest, typename Parser = parsers::arg_parser, std::size_t N = 1>
 struct parameter
 {
     ParamNames           names;
     Dest                 destination;
     Parser               parser{};
+    structural_string<N> help{};
 };
 } // namespace bs
 
