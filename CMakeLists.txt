@@ -49,6 +49,7 @@ add_library(bugspray STATIC
         include/bugspray/reporter/formatted_ostream_reporter.hpp
         include/bugspray/reporter/noop_reporter.hpp
         include/bugspray/reporter/reporter.hpp
+        include/bugspray/reporter/xml_reporter.hpp
         include/bugspray/test_evaluation/decomposition/binary_expr.hpp
         include/bugspray/test_evaluation/decomposition/decomposer.hpp
         include/bugspray/test_evaluation/decomposition/decomposition_result.hpp
@@ -97,6 +98,7 @@ add_library(bugspray STATIC
         include/bugspray/utility/vector.hpp
         include/bugspray/utility/xml_writer.hpp
         src/reporter/formatted_ostream_reporter.cpp
+        src/reporter/xml_reporter.cpp
         src/utility/xml_writer.cpp
         )
 target_include_directories(bugspray PUBLIC include/)
