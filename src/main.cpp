@@ -75,6 +75,7 @@ auto main(int argc, char const** argv) -> int
     formatted_ostream_reporter reporter{std::cout};
     for (auto&& tc : g_test_case_registry)
         success &= evaluate_test_case(tc, reporter, c.test_spec);
+    reporter->finalize();
 
     return success ? EXIT_SUCCESS : EXIT_FAILURE;
 }
