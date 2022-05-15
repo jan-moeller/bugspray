@@ -105,7 +105,7 @@ struct argument_parser
                         *target += list;
                         *target += ' ';
                         auto const    w                 = list.size() + 2;
-                        constexpr int left_column_width = 13;
+                        constexpr int left_column_width = 24;
                         for (int i = w; i < left_column_width; ++i)
                             *target += ' ';
                         *target += p.help.value;
