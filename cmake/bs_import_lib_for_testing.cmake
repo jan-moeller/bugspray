@@ -22,10 +22,13 @@
 # SOFTWARE.
 #
 function(bs_import_lib_for_testing)
+    message(STATUS "BUGSPRAY_LIB_DIR: ${BUGSPRAY_LIB_DIR}")
+    message(STATUS "BUGSPRAY_INCLUDE_DIR: ${BUGSPRAY_INCLUDE_DIR}")
+
     add_library(bugspray STATIC IMPORTED)
     set_target_properties(bugspray PROPERTIES
             IMPORTED_LOCATION ${BUGSPRAY_LIB_DIR}/libbugspray.a
-            INTERFACE_INCLUDE_DIRECTORIES ${BUGSPRAY_INCLUDE_DIR}
+            INTERFACE_INCLUDE_DIRECTORIES "${BUGSPRAY_INCLUDE_DIR}"
             INTERFACE_LINK_LIBRARIES ${BUGSPRAY_LIB_DIR}/libbugspray.a
             CXX_STANDARD 20
             CXX_STANDARD_REQUIRED YES
@@ -35,7 +38,7 @@ function(bs_import_lib_for_testing)
     add_library(bugspray-with-main STATIC IMPORTED)
     set_target_properties(bugspray-with-main PROPERTIES
             IMPORTED_LOCATION ${BUGSPRAY_LIB_DIR}/libbugspray-with-main.a
-            INTERFACE_INCLUDE_DIRECTORIES ${BUGSPRAY_INCLUDE_DIR}
+            INTERFACE_INCLUDE_DIRECTORIES "${BUGSPRAY_INCLUDE_DIR}"
             INTERFACE_LINK_LIBRARIES ${BUGSPRAY_LIB_DIR}/libbugspray-with-main.a
             CXX_STANDARD 20
             CXX_STANDARD_REQUIRED YES
