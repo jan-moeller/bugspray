@@ -29,12 +29,14 @@
 #include "bugspray/reporter/xml_reporter.hpp"
 #include "bugspray/test_evaluation/evaluate_test_case.hpp"
 #include "bugspray/test_registration/test_case_registry.hpp"
+#include "bugspray/version.hpp"
 
 #include <iostream>
 
 struct config
 {
-    bool help = false;
+    bool help    = false;
+    bool version = false;
 
     enum class reporter_enum
     {
@@ -60,6 +62,11 @@ auto main(int argc, char const** argv) -> int
         .names       = parameter_names{"-h", "--help"},
         .destination = argument_destination{&config::help},
         .help        = structural_string{"show this help message and exit"},
+    };
+    constexpr parameter version_param{
+        .names       = parameter_names{"--version"},
+        .destination = argument_destination{&config::version},
+        .help        = structural_string{"show the bugspray version and exit"},
     };
     constexpr parameter reporter_param{
         .names       = parameter_names{"-r", "--reporter"},
@@ -116,7 +123,8 @@ auto main(int argc, char const** argv) -> int
         .destination = argument_destination{&config::test_spec},
         .help        = structural_string{"specify which tests to run"},
     };
-    using argparser = argument_parser<help_param, reporter_param, durations_param, order_param, test_spec_param>;
+    using argparser =
+        argument_parser<help_param, version_param, reporter_param, durations_param, order_param, test_spec_param>;
     argparser parser;
 
     config c;
@@ -133,6 +141,12 @@ auto main(int argc, char const** argv) -> int
     if (c.help)
     {
         std::cout << parser.make_help_message(argv[0]) << '\n';
+        return EXIT_SUCCESS;
+    }
+    if (c.version)
+    {
+        std::cout << "Bugspray " << BUGSPRAY_VERSION_MAJOR << '.' << BUGSPRAY_VERSION_MINOR << '.'
+                  << BUGSPRAY_VERSION_PATCH << " (" << BUGSPRAY_VERSION_COMMIT << ")\n";
         return EXIT_SUCCESS;
     }
 
