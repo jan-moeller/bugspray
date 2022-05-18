@@ -51,6 +51,7 @@ add_executable(bugspray-unit-tests
         to_string/test_to_string_bool.cpp
         to_string/test_to_string_char.cpp
         to_string/test_to_string_container.cpp
+        to_string/test_to_string_floating_point.cpp
         to_string/test_to_string_integral.cpp
         to_string/test_to_string_string_like.cpp
         utility/detail/test_naive_string.cpp

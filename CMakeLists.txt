@@ -83,6 +83,7 @@ add_library(bugspray STATIC
         include/bugspray/to_string/to_string_bool.hpp
         include/bugspray/to_string/to_string_char.hpp
         include/bugspray/to_string/to_string_container.hpp
+        include/bugspray/to_string/to_string_floating_point.hpp
         include/bugspray/to_string/to_string_integral.hpp
         include/bugspray/to_string/to_string_string_like.hpp
         include/bugspray/to_string/to_string_tag.hpp
