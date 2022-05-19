@@ -33,14 +33,6 @@ include(bs_target_setup)
 set(BUGSPRAY_VERSION_MAJOR 0)
 set(BUGSPRAY_VERSION_MINOR 1)
 set(BUGSPRAY_VERSION_PATCH 0)
-execute_process(
-        COMMAND git log -1 --format=%h
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        OUTPUT_VARIABLE BUGSPRAY_VERSION_COMMIT
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-configure_file(include/bugspray/version.hpp.in generated/bugspray/version.hpp @ONLY)
 
 add_library(bugspray STATIC
         include/bugspray/bugspray.hpp
@@ -120,6 +112,31 @@ bs_target_setup(bugspray)
 add_library(bugspray-with-main STATIC src/main.cpp)
 target_link_libraries(bugspray-with-main PUBLIC bugspray)
 bs_target_setup(bugspray-with-main)
+
+set(BUGSPRAY_INPUT_VERSION_FILE ${CMAKE_CURRENT_LIST_DIR}/include/bugspray/version.hpp.in)
+set(BUGSPRAY_OUTPUT_VERSION_FILE ${CMAKE_CURRENT_BINARY_DIR}/generated/bugspray/version.hpp)
+add_custom_command(
+        OUTPUT
+            ${BUGSPRAY_OUTPUT_VERSION_FILE}
+            ALL
+        COMMAND
+            ${CMAKE_COMMAND}
+                -D BUGSPRAY_INPUT_VERSION_FILE=${BUGSPRAY_INPUT_VERSION_FILE}
+                -D BUGSPRAY_OUTPUT_VERSION_FILE=${BUGSPRAY_OUTPUT_VERSION_FILE}
+                -D BUGSPRAY_VERSION_MAJOR=${BUGSPRAY_VERSION_MAJOR}
+                -D BUGSPRAY_VERSION_MINOR=${BUGSPRAY_VERSION_MINOR}
+                -D BUGSPRAY_VERSION_PATCH=${BUGSPRAY_VERSION_PATCH}
+                -P ${PROJECT_SOURCE_DIR}/cmake/bs_configure_version_header.cmake
+        WORKING_DIRECTORY
+            ${CMAKE_CURRENT_SOURCE_DIR}
+)
+add_custom_target(
+        generate_version_header
+        ALL
+        DEPENDS
+            ${BUGSPRAY_OUTPUT_VERSION_FILE}
+)
+add_dependencies(bugspray generate_version_header)
 
 enable_testing()
 add_subdirectory(test)
