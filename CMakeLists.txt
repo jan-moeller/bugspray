@@ -50,6 +50,7 @@ add_library(bugspray STATIC
         include/bugspray/macro_interface/test_case_macros.hpp
         include/bugspray/reporter/caching_reporter.hpp
         include/bugspray/reporter/constexpr_reporter.hpp
+        include/bugspray/reporter/detail/runtime_stopwatch.hpp
         include/bugspray/reporter/formatted_ostream_reporter.hpp
         include/bugspray/reporter/noop_reporter.hpp
         include/bugspray/reporter/reporter.hpp
@@ -102,6 +103,7 @@ add_library(bugspray STATIC
         include/bugspray/utility/trim.hpp
         include/bugspray/utility/vector.hpp
         include/bugspray/utility/xml_writer.hpp
+        src/reporter/detail/runtime_stopwatch.cpp
         src/reporter/formatted_ostream_reporter.cpp
         src/reporter/xml_reporter.cpp
         src/utility/xml_writer.cpp

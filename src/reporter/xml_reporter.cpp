@@ -25,6 +25,7 @@
 #include "bugspray/reporter/xml_reporter.hpp"
 
 #include "bugspray/to_string/to_string_bool.hpp"
+#include "bugspray/to_string/to_string_floating_point.hpp"
 #include "bugspray/to_string/to_string_integral.hpp"
 
 #include <filesystem>
@@ -62,12 +63,12 @@ void xml_reporter::enter_test_case(std::string_view                  name,
     m_writer.write_attribute("line", std::string_view{to_string(sloc.line)});
     m_writer.close_attribute_section();
 
-    m_test_case_start_time = std::chrono::steady_clock::now();
+    m_stopwatch.start_test_case_timer();
 }
 
 void xml_reporter::leave_test_case() noexcept
 {
-    auto const stop_time = std::chrono::steady_clock::now();
+    auto const duration = m_stopwatch.stop_test_case_timer();
 
     if (m_failed)
         ++m_results_test_cases.failures;
@@ -77,13 +78,7 @@ void xml_reporter::leave_test_case() noexcept
     m_writer.open_element("OverallResult");
     m_writer.write_attribute("success", m_failed ? "false" : "true");
     if (m_report_timings)
-    {
-        using namespace std::chrono;
-        auto const diff = stop_time - m_test_case_start_time;
-        auto const ms   = duration_cast<seconds>(diff);
-        m_writer.write_attribute("durationInSeconds",
-                                 std::string_view{to_string(ms.count())}); // TODO: sub-second accuracy
-    }
+        m_writer.write_attribute("durationInSeconds", std::string_view{to_string(duration.count() / 1000.)});
     m_writer.close_attribute_and_element();
 
     m_writer.close_element();
@@ -110,12 +105,12 @@ void xml_reporter::enter_section(std::string_view name, source_location sloc) no
     else
         m_results.push_back(m_results.back());
 
-    m_section_start_time.emplace_back(std::chrono::steady_clock::now());
+    m_stopwatch.start_section_timer();
 }
 
 void xml_reporter::leave_section() noexcept
 {
-    auto const stop_time = std::chrono::steady_clock::now();
+    auto const duration = m_stopwatch.stop_section_timer();
 
     m_writer.open_element("OverallResults");
     m_writer.write_attribute("successes", std::string_view{to_string(m_results.back().successes)});
@@ -123,17 +118,9 @@ void xml_reporter::leave_section() noexcept
     m_writer.write_attribute("expectedFailures", std::string_view{to_string(m_results.back().expected_failures)});
 
     if (m_report_timings)
-    {
-        using namespace std::chrono;
-        auto const diff = stop_time - m_section_start_time.back();
-        auto const ms   = duration_cast<seconds>(diff);
-        m_writer.write_attribute("durationInSeconds",
-                                 std::string_view{to_string(ms.count())}); // TODO: sub-second accuracy
-    }
-    m_section_start_time.pop_back();
+        m_writer.write_attribute("durationInSeconds", std::string_view{to_string(duration.count() / 1000.)});
 
     m_writer.close_attribute_and_element();
-
     m_writer.close_element();
 
     m_results.pop_back();

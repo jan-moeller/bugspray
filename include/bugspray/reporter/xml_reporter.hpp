@@ -25,6 +25,7 @@
 #ifndef BUGSPRAY_NOOP_REPORTER_HPP
 #define BUGSPRAY_NOOP_REPORTER_HPP
 
+#include "bugspray/reporter/detail/runtime_stopwatch.hpp"
 #include "bugspray/reporter/reporter.hpp"
 #include "bugspray/utility/xml_writer.hpp"
 
@@ -70,9 +71,8 @@ struct xml_reporter : reporter
 
     xml_writer m_writer;
 
-    bool                                               m_report_timings;
-    std::chrono::steady_clock::time_point              m_test_case_start_time;
-    std::vector<std::chrono::steady_clock::time_point> m_section_start_time;
+    bool                      m_report_timings;
+    detail::runtime_stopwatch m_stopwatch;
 
     std::vector<results> m_results;
     results              m_results_test_cases;
