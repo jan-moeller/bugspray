@@ -31,6 +31,7 @@
 #include "bugspray/test_registration/test_case_registry.hpp"
 #include "bugspray/version.hpp"
 
+#include <algorithm>
 #include <iostream>
 
 struct config
@@ -116,7 +117,7 @@ auto main(int argc, char const** argv) -> int
             }
             return false;
         },
-        .help = structural_string{"specify order of test case execution from [decl]"},
+        .help = structural_string{"specify order of test case execution from [decl, lex]"},
     };
     constexpr parameter test_spec_param{
         .names       = parameter_names{"test-spec"},
@@ -149,8 +150,11 @@ auto main(int argc, char const** argv) -> int
         return EXIT_SUCCESS;
     }
 
-    if (c.order != config::order_enum::declaration) // TODO: Implement
-        std::cerr << "Only declaration ordering is currently implemented. Specifying something else has no effect.";
+    if (c.order == config::order_enum::random) // TODO: Implement
+        std::cerr << "Random ordering is not currently implemented. It defaults to declaration order.";
+    if (c.order == config::order_enum::lexicographic)
+        std::ranges::sort(g_test_case_registry,
+                          [](test_case const& lhs, test_case const& rhs) { return lhs.name < rhs.name; });
 
     bool success = true;
 
