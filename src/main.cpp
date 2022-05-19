@@ -33,6 +33,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <random>
 
 struct config
 {
@@ -117,7 +118,7 @@ auto main(int argc, char const** argv) -> int
             }
             return false;
         },
-        .help = structural_string{"specify order of test case execution from [decl, lex]"},
+        .help = structural_string{"specify order of test case execution from [decl, lex, rand]"},
     };
     constexpr parameter test_spec_param{
         .names       = parameter_names{"test-spec"},
@@ -150,11 +151,14 @@ auto main(int argc, char const** argv) -> int
         return EXIT_SUCCESS;
     }
 
-    if (c.order == config::order_enum::random) // TODO: Implement
-        std::cerr << "Random ordering is not currently implemented. It defaults to declaration order.";
+    std::size_t const          seed = std::random_device{}();
+    std::default_random_engine rand_engine{seed};
+
     if (c.order == config::order_enum::lexicographic)
         std::ranges::sort(g_test_case_registry,
                           [](test_case const& lhs, test_case const& rhs) { return lhs.name < rhs.name; });
+    else if (c.order == config::order_enum::random)
+        std::ranges::shuffle(g_test_case_registry, rand_engine);
 
     bool success = true;
 
@@ -166,10 +170,7 @@ auto main(int argc, char const** argv) -> int
         case console:
             return std::make_unique<formatted_ostream_reporter>(std::cout);
         case xml:
-            return std::make_unique<xml_reporter>(std::cout,
-                                                  argv[0],
-                                                  0, // TODO: Implement seed support
-                                                  c.report_durations);
+            return std::make_unique<xml_reporter>(std::cout, argv[0], seed, c.report_durations);
         }
         return nullptr;
     }
