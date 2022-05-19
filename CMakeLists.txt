@@ -108,7 +108,7 @@ add_library(bugspray STATIC
         src/reporter/xml_reporter.cpp
         src/utility/xml_writer.cpp
         )
-target_include_directories(bugspray PUBLIC include/ ${CMAKE_BINARY_DIR}/generated)
+target_include_directories(bugspray PUBLIC include/ ${CMAKE_CURRENT_BINARY_DIR}/generated)
 bs_target_setup(bugspray)
 
 add_library(bugspray-with-main STATIC src/main.cpp)
