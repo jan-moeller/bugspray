@@ -53,7 +53,9 @@ struct config
         random,
     } order = order_enum::declaration;
 
-    bool             report_durations = false;
+    bool        report_durations = false;
+    std::size_t seed             = std::random_device{}();
+
     std::string_view test_spec;
 };
 
@@ -120,13 +122,23 @@ auto main(int argc, char const** argv) -> int
         },
         .help = structural_string{"specify order of test case execution from [decl, lex, rand]"},
     };
+    constexpr parameter order_rng_seed{
+        .names       = parameter_names{"--rng-seed"},
+        .destination = argument_destination{&config::seed},
+        .help        = structural_string{"specify the seed for the random number generator used by bugspray"},
+    };
     constexpr parameter test_spec_param{
         .names       = parameter_names{"test-spec"},
         .destination = argument_destination{&config::test_spec},
         .help        = structural_string{"specify which tests to run"},
     };
-    using argparser =
-        argument_parser<help_param, version_param, reporter_param, durations_param, order_param, test_spec_param>;
+    using argparser = argument_parser<help_param,
+                                      version_param,
+                                      reporter_param,
+                                      durations_param,
+                                      order_param,
+                                      order_rng_seed,
+                                      test_spec_param>;
     argparser parser;
 
     config c;
@@ -151,9 +163,7 @@ auto main(int argc, char const** argv) -> int
         return EXIT_SUCCESS;
     }
 
-    std::size_t const          seed = std::random_device{}();
-    std::default_random_engine rand_engine{seed};
-
+    std::default_random_engine rand_engine{c.seed};
     if (c.order == config::order_enum::lexicographic)
         std::ranges::sort(g_test_case_registry,
                           [](test_case const& lhs, test_case const& rhs) { return lhs.name < rhs.name; });
@@ -170,7 +180,7 @@ auto main(int argc, char const** argv) -> int
         case console:
             return std::make_unique<formatted_ostream_reporter>(std::cout);
         case xml:
-            return std::make_unique<xml_reporter>(std::cout, argv[0], seed, c.report_durations);
+            return std::make_unique<xml_reporter>(std::cout, argv[0], c.seed, c.report_durations);
         }
         return nullptr;
     }
