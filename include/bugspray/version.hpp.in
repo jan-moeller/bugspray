@@ -22,12 +22,39 @@
 // SOFTWARE.
 //
 
+//
+// THIS FILE IS GENERATED - DO NOT TOUCH
+//
+
 #ifndef BUGSPRAY_VERSION_HPP
 #define BUGSPRAY_VERSION_HPP
 
-#define BUGSPRAY_VERSION_MAJOR @BUGSPRAY_VERSION_MAJOR@
-#define BUGSPRAY_VERSION_MINOR @BUGSPRAY_VERSION_MINOR@
-#define BUGSPRAY_VERSION_PATCH @BUGSPRAY_VERSION_PATCH@
-#define BUGSPRAY_VERSION_COMMIT "@BUGSPRAY_VERSION_COMMIT@"
+#include <ostream>
+#include <string_view>
+
+#include <cstdint>
+
+namespace bs
+{
+struct version_info
+{
+    std::uint8_t     major;
+    std::uint8_t     minor;
+    std::uint8_t     patch;
+    std::string_view commit;
+};
+inline auto operator<<(std::ostream& os, version_info const& version) -> std::ostream&
+{
+    os << (int)version.major << '.' << (int)version.minor << '.' << (int)version.patch << " (" << version.commit << ')';
+    return os;
+}
+
+constexpr version_info release_version{
+    .major  = @BUGSPRAY_VERSION_MAJOR@,
+    .minor  = @BUGSPRAY_VERSION_MINOR@,
+    .patch  = @BUGSPRAY_VERSION_PATCH@,
+    .commit = "@BUGSPRAY_VERSION_COMMIT@",
+};
+} // namespace bs
 
 #endif // BUGSPRAY_VERSION_HPP

@@ -145,8 +145,7 @@ auto main(int argc, char const** argv) -> int
     }
     if (c.version)
     {
-        std::cout << "Bugspray " << BUGSPRAY_VERSION_MAJOR << '.' << BUGSPRAY_VERSION_MINOR << '.'
-                  << BUGSPRAY_VERSION_PATCH << " (" << BUGSPRAY_VERSION_COMMIT << ")\n";
+        std::cout << "Bugspray " << release_version << '\n';
         return EXIT_SUCCESS;
     }
 
