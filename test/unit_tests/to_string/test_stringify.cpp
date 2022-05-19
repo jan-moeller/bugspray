@@ -89,6 +89,8 @@ TEST_CASE("stringify", "[to_string]")
     PREFIX##CHECK(bs::stringify(bs::string{"foo"}) == R"("foo")");                                                     \
     PREFIX##CHECK(bs::stringify(42) == R"(42)");
 
+    CHECK(bs::stringify(42.1) == R"(42.1)"); // TODO: Add static check once constexpr to_string(double) is implemented
+
     MAKE_TESTS()
     MAKE_TESTS(STATIC_)
 #undef MAKE_TESTS
