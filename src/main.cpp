@@ -150,7 +150,7 @@ auto main(int argc, char const** argv) -> int
     }
 
     if (c.order != config::order_enum::declaration) // TODO: Implement
-        std::cerr << "Only declration ordering is currently implemented. Specifying something else has no effect.";
+        std::cerr << "Only declaration ordering is currently implemented. Specifying something else has no effect.";
 
     bool success = true;
 
