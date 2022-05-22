@@ -40,3 +40,4 @@ endfunction()
 
 register_test(00-trivial)
 register_test(01-sections)
+register_test(02-section-independence)
