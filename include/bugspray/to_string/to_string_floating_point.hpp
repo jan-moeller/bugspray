@@ -38,6 +38,14 @@
 
 namespace bs
 {
+namespace detail
+{
+constexpr auto log10ceil(auto num) -> int
+{
+    return num < 10 ? 1 : 1 + log10ceil(num / 10);
+}
+}
+
 template<std::chars_format Format = std::chars_format::general, std::floating_point T>
 constexpr auto to_string(T f) -> bs::string
 {
@@ -45,15 +53,11 @@ constexpr auto to_string(T f) -> bs::string
         return "<?>";
     else
     {
-        constexpr auto log10ceil = [](auto num, auto&& self) -> int
-        {
-            return num < 10 ? 1 : 1 + self(num / 10, self);
-        };
-        constexpr auto length = [&]
+        constexpr auto length = []
         {
             if constexpr (Format == std::chars_format::scientific || Format == std::chars_format::general)
                 return 4 + std::numeric_limits<T>::max_digits10
-                       + std::max(2, log10ceil(std::numeric_limits<T>::max_exponent10, log10ceil));
+                       + std::max(2, detail::log10ceil(std::numeric_limits<T>::max_exponent10));
             else if constexpr (Format == std::chars_format::fixed || Format == std::chars_format::hex)
                 return 2 + std::numeric_limits<T>::max_exponent10 + std::numeric_limits<T>::max_digits10;
         }();
