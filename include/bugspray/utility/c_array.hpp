@@ -25,7 +25,7 @@
 #ifndef BUGSPRAY_C_ARRAY_HPP
 #define BUGSPRAY_C_ARRAY_HPP
 
-#include <cstdint>
+#include <cstddef>
 
 namespace bs
 {
