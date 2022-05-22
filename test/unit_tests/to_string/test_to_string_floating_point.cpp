@@ -25,6 +25,8 @@
 
 #include <catch2/catch_all.hpp>
 
+#include <numbers>
+
 template<std::chars_format Format, typename Out>
 auto from_str(bs::string const& str) -> Out
 {
