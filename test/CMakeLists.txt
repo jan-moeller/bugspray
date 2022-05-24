@@ -36,12 +36,13 @@ function(add_build_test name)
             --build-options -DBUGSPRAY_CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH} -DBUGSPRAY_LIB_DIR:STR=$<TARGET_PROPERTY:bugspray-with-main,BINARY_DIR> -DBUGSPRAY_INCLUDE_DIR:STR=$<TARGET_PROPERTY:bugspray-with-main,INCLUDE_DIRECTORIES>
             --test-command ${CMAKE_CTEST_COMMAND} --verbose
             )
+    if (${ARGC} GREATER 1)
+        set_tests_properties(${name} PROPERTIES PASS_REGULAR_EXPRESSION ${ARGV1})
+    endif ()
 endfunction()
 
 add_build_test(examples)
-add_build_test(compile-failure-tests)
-set_tests_properties(compile-failure-tests PROPERTIES
-        PASS_REGULAR_EXPRESSION "42 == 0.*other_var: 6.*static assertion failed: Test evaluation failed."
-        )
+add_build_test(compile-failure-tests/00-simple "42 == 0.*other_var: 6.*static assertion failed: Test evaluation failed.")
+add_build_test(compile-failure-tests/01-fibonacci "fib\\(i\\) == expected_values\\[i\\].*1 == 0.*i: 0.*static assertion failed: Test evaluation failed.")
 
 add_subdirectory(unit_tests)
