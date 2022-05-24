@@ -46,6 +46,7 @@ struct caching_reporter : reporter
     {
         std::string_view       text;
         source_location        sloc;
+        bs::string             expansion;
         bs::vector<bs::string> messages;
         bool                   result;
     };
@@ -85,18 +86,14 @@ struct caching_reporter : reporter
         m_test_cases.emplace_back(name, tags, sloc, bs::vector<test_run_data>{});
     }
 
-    constexpr void leave_test_case() noexcept override
-    {
-    }
+    constexpr void leave_test_case() noexcept override {}
 
     constexpr void start_run(section_path const& target) noexcept override
     {
         m_test_cases.back().test_runs.push_back({{}, target});
     }
 
-    constexpr void stop_run() noexcept override
-    {
-    }
+    constexpr void stop_run() noexcept override {}
 
     constexpr void enter_section(std::string_view name, source_location sloc) noexcept override
     {
@@ -104,29 +101,22 @@ struct caching_reporter : reporter
         m_current_section.push_back(name);
     }
 
-    constexpr void leave_section() noexcept override
-    {
-        m_current_section.pop();
-    }
+    constexpr void leave_section() noexcept override { m_current_section.pop(); }
 
     constexpr void log_assertion(std::string_view            assertion,
                                  source_location             sloc,
+                                 std::string_view            expansion,
                                  std::span<bs::string const> messages,
                                  bool                        result) noexcept override
     {
         auto*                  s = find_section(m_current_section);
         bs::vector<bs::string> msgs{messages.begin(), messages.end()};
-        s->assertions.emplace_back(assertion, sloc, msgs, result);
+        s->assertions.emplace_back(assertion, sloc, bs::string{expansion}, msgs, result);
     }
 
-    constexpr void finalize() noexcept override
-    {
-    }
+    constexpr void finalize() noexcept override {}
 
-    [[nodiscard]] constexpr auto cache() const noexcept -> bs::vector<test_case_data> const&
-    {
-        return m_test_cases;
-    }
+    [[nodiscard]] constexpr auto cache() const noexcept -> bs::vector<test_case_data> const& { return m_test_cases; }
 
   private:
     constexpr auto find_section(section_path const& path) noexcept -> assertion_and_section_holder*

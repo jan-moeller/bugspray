@@ -67,10 +67,8 @@
             constexpr auto results = ::bs::evaluate_test_case_constexpr<Bogus>(test_case_id);                          \
             if constexpr (!results.first)                                                                              \
             {                                                                                                          \
-                constexpr auto m1 = ::bs::trim<results.second[0]>();                                                   \
-                constexpr auto m2 = ::bs::trim<results.second[1]>();                                                   \
-                constexpr auto m3 = ::bs::trim<results.second[2]>();                                                   \
-                ::bs::compile_time_error<m1, m2, m3>();                                                                \
+                constexpr auto m = ::bs::trim<results.second>();                                                       \
+                ::bs::compile_time_error<m>();                                                                         \
             }                                                                                                          \
             return results.first;                                                                                      \
         }                                                                                                              \

@@ -61,6 +61,7 @@ struct reporter
 
     virtual constexpr void log_assertion(std::string_view            assertion,
                                          source_location             sloc,
+                                         std::string_view            expansion,
                                          std::span<bs::string const> messages,
                                          bool                        result) noexcept = 0;
 

@@ -71,6 +71,7 @@ void formatted_ostream_reporter::leave_section() noexcept
 
 void formatted_ostream_reporter::log_assertion(std::string_view            assertion,
                                                source_location             sloc,
+                                               std::string_view            expansion,
                                                std::span<bs::string const> messages,
                                                bool                        result) noexcept
 {
@@ -99,6 +100,9 @@ void formatted_ostream_reporter::log_assertion(std::string_view            asser
 
     m_stream << sloc.file_name << ':' << sloc.line << ": FAILED:\n";
     m_stream << "  " << assertion << '\n';
+
+    if (!expansion.empty())
+        m_stream << "WITH EXPANSION: " << expansion << '\n' << '\n';
 
     for (auto&& m : messages)
         m_stream << m << '\n';

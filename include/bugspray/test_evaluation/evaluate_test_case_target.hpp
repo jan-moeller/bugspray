@@ -25,6 +25,7 @@
 #ifndef BUGSPRAY_EVALUATE_TEST_CASE_TARGET_HPP
 #define BUGSPRAY_EVALUATE_TEST_CASE_TARGET_HPP
 
+#include "bugspray/test_evaluation/info_capture.hpp"
 #include "bugspray/test_evaluation/test_case.hpp"
 #include "bugspray/test_evaluation/test_run_data.hpp"
 
@@ -49,14 +50,16 @@ constexpr auto evaluate_test_case_target(test_case const& tc, test_run_data& dat
     }
     catch (std::exception const& e)
     {
-        bs::vector<bs::string> messages{bs::string{"WITH: "} + e.what()};
-        data.log_assertion(exception_escaped_text, tc.source_location, messages, false);
+        bs::string const   message{bs::string{"WITH: "} + e.what()};
+        info_capture const error_message{data, message};
+        data.log_assertion(exception_escaped_text, tc.source_location, {}, false);
         data.mark_failed();
     }
     catch (...)
     {
-        bs::vector<bs::string> messages{bs::string{"WITH: Unknown exception."}};
-        data.log_assertion(exception_escaped_text, tc.source_location, messages, false);
+        bs::string const   message{bs::string{"WITH: Unknown exception."}};
+        info_capture const error_message{data, message};
+        data.log_assertion(exception_escaped_text, tc.source_location, {}, false);
         data.mark_failed();
     }
     return data.success();

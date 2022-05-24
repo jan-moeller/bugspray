@@ -86,15 +86,10 @@ struct test_run_data
     constexpr void               mark_failed() noexcept { m_success = false; }
     [[nodiscard]] constexpr auto success() const noexcept -> bool { return m_success; }
 
-    constexpr void log_assertion(std::string_view            assertion,
-                                 source_location             sloc,
-                                 std::span<bs::string const> messages,
-                                 bool                        result) noexcept
+    constexpr void
+    log_assertion(std::string_view assertion, source_location sloc, std::string_view expansion, bool result) noexcept
     {
-        bs::vector<bs::string> msgs;
-        std::ranges::copy(messages, std::back_inserter(msgs));
-        std::ranges::copy(m_messages, std::back_inserter(msgs));
-        m_reporter.log_assertion(assertion, sloc, msgs, result);
+        m_reporter.log_assertion(assertion, sloc, expansion, m_messages, result);
     }
 
     constexpr void push_message(bs::string const& message) { m_messages.push_back(message); }

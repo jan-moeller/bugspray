@@ -75,6 +75,7 @@ TEST_CASE("caching_reporter", "[reporter]")
             messages.push_back(bs::string{assertion_message});
         reporter.log_assertion(assertion,
                                source_location{.file_name = filename, .line = assertion_line},
+                               {},
                                messages,
                                assertion_result);
 

@@ -44,11 +44,8 @@
     do                                                                                                                 \
     {                                                                                                                  \
         ::bs::decomposition_result const decom = ::bs::decomposer{} % __VA_ARGS__;                                     \
-        auto const                       msg   = "WITH EXPANSION: " + decom.str();                                     \
-        bs::string                       msgs[]{msg};                                                                  \
-        auto const                       assertion_result = decom.result();                                            \
-        bugspray_data.log_assertion(text, BUGSPRAY_THIS_LOCATION(), msgs, assertion_result);                           \
-        if (!assertion_result)                                                                                         \
+        bugspray_data.log_assertion(text, BUGSPRAY_THIS_LOCATION(), decom.str(), decom.result());                      \
+        if (!decom.result())                                                                                           \
         {                                                                                                              \
             bugspray_data.mark_failed();                                                                               \
             if constexpr (std::string_view{#type} == "REQUIRE")                                                        \

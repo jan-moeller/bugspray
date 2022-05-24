@@ -45,34 +45,23 @@ struct noop_reporter : reporter
                                    source_location /*sloc*/) noexcept override
     {
     }
-    constexpr void leave_test_case() noexcept override
-    {
-    }
+    constexpr void leave_test_case() noexcept override {}
 
-    constexpr void start_run(section_path const& /*target*/) noexcept override
-    {
-    }
-    constexpr void stop_run() noexcept override
-    {
-    }
+    constexpr void start_run(section_path const& /*target*/) noexcept override {}
+    constexpr void stop_run() noexcept override {}
 
-    constexpr void enter_section(std::string_view /*name*/, source_location /*sloc*/) noexcept override
-    {
-    }
-    constexpr void leave_section() noexcept override
-    {
-    }
+    constexpr void enter_section(std::string_view /*name*/, source_location /*sloc*/) noexcept override {}
+    constexpr void leave_section() noexcept override {}
 
     constexpr void log_assertion(std::string_view /*assertion*/,
                                  source_location /*sloc*/,
+                                 std::string_view /*expansion*/,
                                  std::span<bs::string const> /*messages*/,
                                  bool /*result*/) noexcept override
     {
     }
 
-    constexpr void finalize() noexcept override
-    {
-    }
+    constexpr void finalize() noexcept override {}
 };
 } // namespace bs
 

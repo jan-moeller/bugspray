@@ -128,6 +128,7 @@ void xml_reporter::leave_section() noexcept
 
 void xml_reporter::log_assertion(std::string_view            assertion,
                                  source_location             sloc,
+                                 std::string_view            expansion,
                                  std::span<bs::string const> messages,
                                  bool                        result) noexcept
 {
@@ -167,7 +168,7 @@ void xml_reporter::log_assertion(std::string_view            assertion,
         m_writer.close_element();
         m_writer.open_element("Expanded");
         m_writer.close_attribute_section();
-        // m_writer.write_content(); // TODO: Implement expansion
+        m_writer.write_content(expansion);
         m_writer.close_element();
         m_writer.close_element();
     }

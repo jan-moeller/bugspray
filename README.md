@@ -213,11 +213,11 @@ EVAL_TEST_CASE("This will fail");
 The compilation output is going to look something
 like this (here from gcc-12):
 
-```bash
+```
 In file included from bugspray/macro_interface/test_case_macros.hpp:28,
                  from bugspray/bugspray.hpp:31,
                  from test/compile-failure-tests/00-test_case_failure.cpp:24:
-bugspray/test_evaluation/evaluate_test_case.hpp: In instantiation of ‘constexpr void bs::compile_time_error() [with structural_string<...auto...> ...Messages = {bs::structural_string<23>{"REQUIRE(variable == 0)"}, bs::structural_string<24>{"WITH EXPANSION: 42 == 0"}, bs::structural_string<13>{"other_var: 6"}}]’:
+bugspray/test_evaluation/evaluate_test_case.hpp: In instantiation of ‘constexpr void bs::compile_time_error() [with structural_string<...auto...> ...Messages = {bs::structural_string<163>{"bugspray/test/compile-failure-tests/00-test_case_failure.cpp:31: REQUIRE(variable == 0) ### WITH EXPANSION: 42 == 0 ### WITH: other_var: 6"}}]’:
 test/compile-failure-tests/00-test_case_failure.cpp:26:1:   required from here
 test/compile-failure-tests/00-test_case_failure.cpp:33:1:   in ‘constexpr’ expansion of ‘bs::evaluate_compiletime_test<bs::structural_string<15>{"This will fail"}, 0>{}.bs::evaluate_compiletime_test<bs::structural_string<15>{"This will fail"}, 0>::operator()()’
 bugspray/test_evaluation/evaluate_test_case.hpp:84:39: error: static assertion failed: Test evaluation failed.

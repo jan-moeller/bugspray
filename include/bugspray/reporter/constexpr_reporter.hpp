@@ -26,6 +26,7 @@
 #define BUGSPRAY_CONSTEXPR_REPORTER_HPP
 
 #include "bugspray/reporter/reporter.hpp"
+#include "bugspray/to_string/to_string_integral.hpp"
 #include "bugspray/utility/structural_string.hpp"
 
 #include <algorithm>
@@ -51,55 +52,56 @@ struct constexpr_reporter : reporter
                                    source_location /*sloc*/) noexcept override
     {
     }
-    constexpr void leave_test_case() noexcept override
-    {
-    }
+    constexpr void leave_test_case() noexcept override {}
 
-    constexpr void start_run(section_path const& /*target*/) noexcept override
-    {
-    }
-    constexpr void stop_run() noexcept override
-    {
-    }
+    constexpr void start_run(section_path const& /*target*/) noexcept override {}
+    constexpr void stop_run() noexcept override {}
 
-    constexpr void enter_section(std::string_view /*name*/, source_location /*sloc*/) noexcept override
-    {
-    }
-    constexpr void leave_section() noexcept override
-    {
-    }
+    constexpr void enter_section(std::string_view /*name*/, source_location /*sloc*/) noexcept override {}
+    constexpr void leave_section() noexcept override {}
 
-    constexpr void log_assertion(std::string_view assertion,
-                                 source_location /*sloc*/,
+    constexpr void log_assertion(std::string_view            assertion,
+                                 source_location             sloc,
+                                 std::string_view            expansion,
                                  std::span<bs::string const> messages,
                                  bool                        result) noexcept override
     {
         if (!result)
-        {
-            std::ranges::copy_n(assertion.begin(),
-                                std::min(assertion.size(), s_max_message_length),
-                                m_messages[0].value);
-            for (std::size_t i = 0; i < std::min(s_max_messages - 1, messages.size()); ++i)
-                std::ranges::copy_n(messages[i].begin(),
-                                    std::min(messages[i].size(), s_max_message_length),
-                                    m_messages[i + 1].value);
-        }
+            m_messages = compose_messages(assertion, sloc, expansion, messages);
     }
 
-    constexpr void finalize() noexcept override
-    {
-    }
+    constexpr void finalize() noexcept override {}
 
-    [[nodiscard]] constexpr auto messages() const noexcept
-    {
-        return m_messages;
-    }
+    [[nodiscard]] constexpr auto messages() const noexcept { return m_messages; }
 
   private:
-    static constexpr std::size_t s_max_messages       = 3;
-    static constexpr std::size_t s_max_message_length = 1024;
+    static constexpr std::size_t            s_max_message_length = 1024;
+    structural_string<s_max_message_length> m_messages;
 
-    std::array<structural_string<s_max_message_length>, s_max_messages> m_messages;
+    constexpr auto compose_messages(std::string_view            assertion,
+                                    source_location             sloc,
+                                    std::string_view            expansion,
+                                    std::span<bs::string const> messages) -> structural_string<s_max_message_length>
+    {
+        structural_string<s_max_message_length> result;
+
+        std::size_t cur_idx = 0;
+        auto        append  = [&result, &cur_idx](auto&& s)
+        {
+            auto const length_available = s_max_message_length - cur_idx;
+            auto const length_to_copy   = std::min(s.size(), length_available);
+            std::ranges::copy_n(s.begin(), length_to_copy, result.value + cur_idx);
+            cur_idx += length_to_copy;
+        };
+
+        append(bs::string{sloc.file_name} + ':' + to_string(sloc.line) + ": " + bs::string{assertion});
+        if (!expansion.empty())
+            append(bs::string{" ### WITH EXPANSION: "} + bs::string{expansion});
+        for (auto&& m : messages)
+            append(bs::string{" ### WITH: "} + m);
+
+        return result;
+    }
 };
 } // namespace bs
 
