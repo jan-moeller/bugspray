@@ -100,3 +100,4 @@ TEST_CASE("categorize_utf8_codeunit")
     CHECK(categorize_utf8_codeunit(0xF0u) == leading_four_bytes);
     CHECK(categorize_utf8_codeunit(0xF8u) == invalid);
 }
+EVAL_TEST_CASE("categorize_utf8_codeunit");
