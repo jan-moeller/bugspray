@@ -22,7 +22,7 @@
 # SOFTWARE.
 #
 cmake_minimum_required(VERSION 3.20)
-project(bugspray-compile-failure-tests)
+project(bugspray-failing-examples)
 
 set(CMAKE_MODULE_PATH ${BUGSPRAY_CMAKE_MODULE_PATH} ${CMAKE_MODULE_PATH})
 include(bs_target_setup)
@@ -30,7 +30,7 @@ include(bs_import_lib_for_testing)
 
 bs_import_lib_for_testing()
 
-set(name test)
+set(name my-test)
 add_executable(${name} test.cpp)
 target_link_libraries(${name} PUBLIC bugspray bugspray-with-main)
 bs_target_setup(${name})
