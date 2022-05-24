@@ -44,5 +44,6 @@ endfunction()
 add_build_test(examples)
 add_build_test(compile-failure-tests/00-simple "42 == 0.*other_var: 6.*static assertion failed: Test evaluation failed.")
 add_build_test(compile-failure-tests/01-fibonacci "fib\\(i\\) == expected_values\\[i\\].*1 == 0.*i: 0.*static assertion failed: Test evaluation failed.")
+add_build_test(compile-failure-tests/02-invalid-tag-string "Invalid tag string")
 
 add_subdirectory(unit_tests)
