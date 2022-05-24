@@ -43,7 +43,16 @@ namespace bs
 {
 struct info_capture
 {
-    constexpr explicit info_capture(test_run_data& bugspray_data, std::ranges::forward_range auto&& messages)
+    constexpr explicit info_capture(test_run_data& bugspray_data, bs::string const& message)
+        : m_bugspray_data(bugspray_data)
+        , m_count(1)
+    {
+        m_bugspray_data.push_message(message);
+    }
+
+    template<std::ranges::forward_range Container>
+        requires(std::same_as<std::ranges::range_value_t<Container>, bs::string>)
+    constexpr explicit info_capture(test_run_data& bugspray_data, Container&& messages)
         : m_bugspray_data(bugspray_data)
         , m_count(messages.size())
     {
