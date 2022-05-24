@@ -55,7 +55,7 @@ class naive_string
         : naive_string(std::string_view{str})
     {
     }
-    constexpr naive_string(std::string_view sv)
+    constexpr explicit naive_string(std::string_view sv)
     {
         --m_data.m_end;
         for (auto c : sv)
@@ -69,7 +69,7 @@ class naive_string
         return *this;
     }
 
-    constexpr explicit operator std::string_view() const { return std::string_view{&m_data.front(), size()}; }
+    constexpr operator std::string_view() const { return std::string_view{&m_data.front(), size()}; }
 
     [[nodiscard]] constexpr auto begin() const noexcept -> char const* { return m_data.begin(); }
     [[nodiscard]] constexpr auto begin() noexcept -> char* { return m_data.begin(); }
@@ -105,7 +105,9 @@ class naive_string
         return result;
     }
 
-    constexpr auto operator+=(naive_string const& rhs) -> naive_string&
+    constexpr auto operator+=(naive_string const& rhs) -> naive_string& { return operator+=(std::string_view{rhs}); }
+    constexpr auto operator+=(char const* rhs) -> naive_string& { return operator+=(std::string_view{rhs}); }
+    constexpr auto operator+=(std::string_view rhs) -> naive_string&
     {
         for (auto c : rhs)
             push_back(c);
