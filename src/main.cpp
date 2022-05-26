@@ -32,6 +32,8 @@
 #include "bugspray/version.hpp"
 
 #include <algorithm>
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <random>
 
@@ -45,6 +47,7 @@ struct config
         console,
         xml,
     } reporter = reporter_enum::console;
+    std::string_view output;
 
     enum class order_enum
     {
@@ -92,6 +95,11 @@ auto main(int argc, char const** argv) -> int
         },
         .help = structural_string{"select reporter from [console, xml]"},
     };
+    constexpr parameter output_param{
+        .names       = parameter_names{"-o", "--out"},
+        .destination = argument_destination{&config::output},
+        .help        = structural_string{"send all output to a file"},
+    };
     constexpr parameter durations_param{
         .names       = parameter_names{"-d", "--durations"},
         .destination = argument_destination{&config::report_durations},
@@ -135,6 +143,7 @@ auto main(int argc, char const** argv) -> int
     using argparser = argument_parser<help_param,
                                       version_param,
                                       reporter_param,
+                                      output_param,
                                       durations_param,
                                       order_param,
                                       order_rng_seed,
@@ -163,6 +172,12 @@ auto main(int argc, char const** argv) -> int
         return EXIT_SUCCESS;
     }
 
+    std::unique_ptr<std::ofstream> output_filestream;
+    if (!c.output.empty())
+        output_filestream = std::make_unique<std::ofstream>(std::filesystem::path{c.output});
+
+    std::ostream& os = output_filestream ? *output_filestream : std::cout;
+
     std::default_random_engine rand_engine{c.seed};
     if (c.order == config::order_enum::lexicographic)
         std::ranges::sort(g_test_case_registry,
@@ -178,9 +193,9 @@ auto main(int argc, char const** argv) -> int
         {
             using enum config::reporter_enum;
         case console:
-            return std::make_unique<formatted_ostream_reporter>(std::cout);
+            return std::make_unique<formatted_ostream_reporter>(os);
         case xml:
-            return std::make_unique<xml_reporter>(std::cout, argv[0], c.seed, c.report_durations);
+            return std::make_unique<xml_reporter>(os, argv[0], c.seed, c.report_durations);
         }
         return nullptr;
     }
