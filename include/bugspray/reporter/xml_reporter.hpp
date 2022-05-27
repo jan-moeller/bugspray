@@ -63,6 +63,32 @@ struct xml_reporter : reporter
     void finalize() noexcept override;
 
   private:
+    struct assertion_data
+    {
+        std::string_view       text;
+        source_location        sloc;
+        bs::string             expansion;
+        bs::vector<bs::string> messages;
+        bool                   result;
+    };
+    struct section_data;
+    struct assertion_and_section_holder
+    {
+        bs::vector<assertion_data> assertions;
+        bs::vector<section_data>   sections;
+    };
+    struct section_data : assertion_and_section_holder
+    {
+        std::string_view name;
+        source_location  sloc;
+        double           runtime_in_seconds;
+    };
+    section_data m_section_root;
+    section_path m_current_target;
+
+    auto current_data() -> section_data&;
+    void write_section(section_data const& sd);
+
     struct results
     {
         std::size_t successes         = 0;
@@ -75,10 +101,9 @@ struct xml_reporter : reporter
     bool                      m_report_timings;
     detail::runtime_stopwatch m_stopwatch;
 
-    std::vector<results> m_results;
-    results              m_results_test_cases;
-    results              m_total_results;
-    bool                 m_failed = false;
+    results m_results_test_cases;
+    results m_total_results;
+    bool    m_failed = false;
 };
 } // namespace bs
 

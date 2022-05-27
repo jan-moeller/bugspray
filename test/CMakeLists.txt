@@ -23,6 +23,15 @@
 #
 include(CTest)
 
+include(FetchContent)
+
+fetchcontent_declare(
+        Catch2
+        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+        GIT_TAG 797c3e731883bfb80dff5e237f2559232314310c
+)
+fetchcontent_makeavailable(Catch2)
+
 function(add_build_test name)
     set(target all)
     set(folder ${name})
@@ -48,3 +57,5 @@ add_build_test(failing-examples/02-invalid-tag-string "Invalid tag string")
 add_build_test(failing-examples/03-utf8-codeunit-categorization "categorize_utf8_codeunit\\(0xF8u\\) == invalid.*00001110 == invalid")
 
 add_subdirectory(unit_tests)
+
+add_subdirectory(catch2-compatibility-tests)
