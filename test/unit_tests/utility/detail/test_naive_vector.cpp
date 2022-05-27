@@ -82,4 +82,52 @@ TEST_CASE("naive_vector", "[utility][detail]")
         STATIC_REQUIRE(naive_vector<int>{1, 2, 3} == naive_vector<int>{1, 2, 3});
         STATIC_REQUIRE(naive_vector<int>{1, 2, 3} != naive_vector<int>{1, 2, 3, 4});
     }
+    SECTION("can copy it")
+    {
+        constexpr auto test = []()
+        {
+            naive_vector<int> const v{1, 2, 3};
+            naive_vector<int>       v2;
+            v2 = v;
+            return v2;
+        };
+        STATIC_REQUIRE(test().size() == 3);
+        STATIC_REQUIRE(test()[0] == 1);
+        STATIC_REQUIRE(test()[1] == 2);
+        STATIC_REQUIRE(test()[2] == 3);
+        SECTION("can self-assign")
+        {
+            constexpr auto test_self_assignment = []()
+            {
+                naive_vector<int> v{1, 2, 3};
+                v = v;
+                return v;
+            };
+            STATIC_REQUIRE(test_self_assignment() == naive_vector<int>{1, 2, 3});
+        }
+    }
+    SECTION("can move it")
+    {
+        constexpr auto test = []()
+        {
+            naive_vector<int> v{1, 2, 3};
+            naive_vector<int> v2;
+            v2 = std::move(v);
+            return v2;
+        };
+        STATIC_REQUIRE(test().size() == 3);
+        STATIC_REQUIRE(test()[0] == 1);
+        STATIC_REQUIRE(test()[1] == 2);
+        STATIC_REQUIRE(test()[2] == 3);
+        SECTION("can self-assign")
+        {
+            constexpr auto test_self_assignment = []()
+            {
+                naive_vector<int> v{1, 2, 3};
+                std::swap(v, v);
+                return v;
+            };
+            STATIC_REQUIRE((test_self_assignment(), true)); // The resulting state is unspecified but valid
+        }
+    }
 }

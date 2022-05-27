@@ -111,19 +111,17 @@ class naive_vector
         return *this;
     }
 
-    constexpr auto operator=(naive_vector&& other) -> naive_vector&
+    constexpr auto operator=(naive_vector&& other) noexcept -> naive_vector&
     {
-        if (this != &other)
+        if (capacity() > 0)
         {
-            if (capacity() > 0)
-            {
-                std::destroy_n(m_begin, size());
-                m_allocator.deallocate(m_begin, capacity());
-            }
-            m_begin        = std::exchange(other.m_begin, nullptr);
-            m_end          = std::exchange(other.m_end, nullptr);
-            m_capacity_end = std::exchange(other.m_capacity_end, nullptr);
+            std::destroy_n(m_begin, size());
+            m_allocator.deallocate(m_begin, capacity());
+            m_begin = m_end = m_capacity_end = nullptr;
         }
+        m_begin        = std::exchange(other.m_begin, nullptr);
+        m_end          = std::exchange(other.m_end, nullptr);
+        m_capacity_end = std::exchange(other.m_capacity_end, nullptr);
         return *this;
     }
 
