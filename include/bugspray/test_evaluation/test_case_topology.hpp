@@ -50,9 +50,27 @@ struct test_case_topology
 
     constexpr void chart(section_path const& path)
     {
-        auto* const iter = std::ranges::find(m_paths, path);
-        if (iter == m_paths.end())
-            m_paths.push_back(path);
+        section_path const* insert_iter    = nullptr;
+        std::size_t         matching_depth = 0;
+        for (auto* iter = m_paths.begin(); iter != m_paths.end(); ++iter)
+        {
+            if (*iter == path)
+            {
+                insert_iter = nullptr;
+                break;
+            }
+            auto const [i1, i2] = std::ranges::mismatch(*iter, path);
+            auto const d        = i2 - path.begin();
+            if (std::cmp_greater_equal(d, matching_depth))
+            {
+                insert_iter    = iter;
+                matching_depth = d;
+            }
+            else
+                break;
+        }
+        if (insert_iter)
+            m_paths.insert(insert_iter + 1, path);
     }
 
     [[nodiscard]] constexpr auto size() const noexcept -> std::size_t { return m_paths.size(); }

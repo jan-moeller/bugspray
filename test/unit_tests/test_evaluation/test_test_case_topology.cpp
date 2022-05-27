@@ -35,11 +35,12 @@ TEST_CASE("test_case_topology", "[test_evaluation]")
         t.chart(section_path{"foo"});
         t.chart(section_path{"foo", "bar"});
         t.chart(section_path{"foo", "bar"}); // Same again
-        t.chart(section_path{"foo", "bar", "baz"});
         t.chart(section_path{"foo", "bam"});
+        t.chart(section_path{"foo", "bar", "baz"});
         t.chart(section_path{"foo", "bam", "blerp"});
         return t;
     };
+    CAPTURE(test());
     STATIC_REQUIRE(test().size() == 6);
     STATIC_REQUIRE(test()[0] == section_path{});
     STATIC_REQUIRE(test()[1] == section_path{"foo"});
