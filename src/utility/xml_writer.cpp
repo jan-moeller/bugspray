@@ -59,7 +59,7 @@ void xml_writer::close_element()
 
 void xml_writer::write_attribute(std::string_view key, std::string_view value)
 {
-    m_ostream << ' ' << key << '=' << '\"' << value << '\"';
+    m_ostream << ' ' << encode(key) << '=' << '\"' << encode(value) << '\"';
 }
 
 void xml_writer::close_attribute_section()
@@ -75,7 +75,7 @@ void xml_writer::close_attribute_and_element()
 
 void xml_writer::write_content(std::string_view content)
 {
-    m_ostream << content;
+    m_ostream << encode(content);
 }
 
 void xml_writer::write_indentation()
@@ -87,5 +87,39 @@ void xml_writer::write_indentation()
 void xml_writer::write_newline()
 {
     m_ostream << '\n';
+}
+
+auto xml_writer::encode_next_char(std::string_view& next) -> std::string
+{
+    char const c = next[0];
+    switch (c)
+    {
+    case '<':
+        next.remove_prefix(1);
+        return "&lt;";
+    case '&':
+        next.remove_prefix(1);
+        return "&amp;";
+    case '>':
+        next.remove_prefix(1);
+        if (next.starts_with("]]"))
+            return "&gt;";
+        else
+            return ">";
+    case '"':
+        next.remove_prefix(1);
+        return "&quot;";
+        // TODO: There are more constraints, see https://www.w3.org/TR/xml
+    }
+    next.remove_prefix(1);
+    return std::string{c};
+}
+
+auto xml_writer::encode(std::string_view sv) -> std::string
+{
+    std::string result;
+    while (!sv.empty())
+        result += encode_next_char(sv);
+    return result;
 }
 } // namespace bs

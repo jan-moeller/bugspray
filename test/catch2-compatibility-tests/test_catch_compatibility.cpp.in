@@ -37,12 +37,21 @@ TEST_CASE("Test A")
     }
 }
 
-TEST_CASE("Test B")
+TEST_CASE("Test B", "[op&][op<<][op>>]")
 {
     for (int i = 0; i < 3; ++i)
     {
         SECTION("In a loop")
         {
+        }
+    }
+    SECTION("operator<<")
+    {
+        SECTION("</Section>")
+        {
+            SECTION("\"This is funny\"")
+            {
+            }
         }
     }
 }

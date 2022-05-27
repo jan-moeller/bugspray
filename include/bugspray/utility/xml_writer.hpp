@@ -27,6 +27,7 @@
 
 #include <concepts>
 #include <ostream>
+#include <string>
 #include <string_view>
 #include <vector>
 
@@ -52,6 +53,8 @@ struct xml_writer
 
     void write_indentation();
     void write_newline();
+    auto encode_next_char(std::string_view& next) -> std::string;
+    auto encode(std::string_view sv) -> std::string;
 };
 } // namespace bs
 
