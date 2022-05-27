@@ -171,6 +171,19 @@ class naive_vector
         return *(m_end++);
     }
 
+    constexpr auto insert(const_iterator pos, T const& value) -> iterator
+    {
+        auto const idx = pos ? (pos - m_begin) : 0;
+        push_back(value);
+        if (size() == 1)
+            return begin();
+        auto b = begin() + idx;
+        auto m = m_end - 1;
+        auto e = m_end;
+        std::ranges::rotate(b, m, e);
+        return b;
+    }
+
     constexpr void pop()
     {
         assert(!empty());

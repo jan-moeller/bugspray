@@ -47,6 +47,24 @@ TEST_CASE("naive_vector", "[utility][detail]")
         STATIC_REQUIRE(test()[0] == 1);
         STATIC_REQUIRE(test()[1] == 2);
     }
+    SECTION("can insert into it")
+    {
+        constexpr auto test = []()
+        {
+            naive_vector<int> v;
+            v.insert(v.end(), 1);
+            v.insert(v.begin(), 2);
+            v.insert(v.end(), 3);
+            v.insert(v.begin() + 1, 4);
+            return v;
+        };
+        CAPTURE(test());
+        STATIC_REQUIRE(test().size() == 4);
+        STATIC_REQUIRE(test()[0] == 2);
+        STATIC_REQUIRE(test()[1] == 4);
+        STATIC_REQUIRE(test()[2] == 1);
+        STATIC_REQUIRE(test()[3] == 3);
+    }
     SECTION("can pop from it")
     {
         constexpr auto test = []()
