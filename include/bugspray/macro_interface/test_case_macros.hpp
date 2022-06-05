@@ -103,9 +103,9 @@
 #define BUGSPRAY_TEST_CASE_IMPL_CONSTEXPR_both constexpr
 
 #define BUGSPRAY_TEST_CASE_IMPL_COMMON(name, tags, qualifier, test_fn_id)                                              \
-    BUGSPRAY_TEST_CASE_IMPL_CONSTEXPR_##qualifier void test_fn_id(::bs::test_run_data& bugspray_data);                 \
+    static BUGSPRAY_TEST_CASE_IMPL_CONSTEXPR_##qualifier void test_fn_id(::bs::test_run_data& bugspray_data);          \
     BUGSPRAY_REGISTER_TEST_CASE(test_fn_id, name, tags, qualifier);                                                    \
-    BUGSPRAY_TEST_CASE_IMPL_CONSTEXPR_##qualifier void test_fn_id(::bs::test_run_data& bugspray_data)
+    static BUGSPRAY_TEST_CASE_IMPL_CONSTEXPR_##qualifier void test_fn_id(::bs::test_run_data& bugspray_data)
 
 #define BUGSPRAY_TEST_CASE_IMPL(name, tags, qualifier)                                                                 \
     BUGSPRAY_TEST_CASE_IMPL_COMMON(name, tags, qualifier, BUGSPRAY_UNIQUE_IDENTIFIER(bugspray_test_case_fn))
