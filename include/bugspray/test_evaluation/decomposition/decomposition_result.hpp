@@ -29,13 +29,17 @@
 #include "bugspray/test_evaluation/decomposition/unary_expr.hpp"
 #include "bugspray/utility/string.hpp"
 
+#include <type_traits>
+
 namespace bs
 {
 template<typename T>
 struct decomposition_result
 {
+    using value_type = std::remove_cvref_t<T>;
+
     bs::string m_str;
-    T          m_result;
+    value_type m_result;
 
     constexpr decomposition_result(unary_expr<T> const& unary)
         : m_str(unary.str())
@@ -66,7 +70,7 @@ struct decomposition_result
     }
 
     [[nodiscard]] constexpr auto str() const noexcept -> bs::string { return m_str; }
-    [[nodiscard]] constexpr auto result() const noexcept -> T const& { return m_result; }
+    [[nodiscard]] constexpr auto result() const noexcept -> value_type const& { return m_result; }
 };
 } // namespace bs
 
