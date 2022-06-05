@@ -114,7 +114,7 @@
         catch (...)                                                                                                    \
         {                                                                                                              \
         }                                                                                                              \
-        BUGSPRAY_ASSERTION_IMPL(type, #type "_THROWS(" #__VA_ARGS__ ")", did_throw);                                   \
+        BUGSPRAY_ASSERTION_IMPL(type, #type "_THROWS_AS(" #__VA_ARGS__ ")", did_throw);                                \
     } while (false)
 #define BUGSPRAY_REQUIRE_THROWS_AS(exception_type, ...)                                                                \
     BUGSPRAY_ASSERTION_IMPL_THROWS_AS(REQUIRE, exception_type, __VA_ARGS__)
