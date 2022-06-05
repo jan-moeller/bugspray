@@ -176,6 +176,19 @@ Bugspray supports the following assertion macros:
 - `FAIL()`: fails and aborts the test unconditionally.
 - `FAIL_CHECK()`: fails and continues the test unconditionally.
 - `SUCCEED()`: logs a successful assertion and continues.
+- `REQUIRE_NOTHROW(expression)`: fails and aborts the test if
+  expression throws.
+- `CHECK_NOTHROW(expression)`: fails and continues the test if
+  expression throws.
+- `REQUIRE_THROWS(expression)`: fails and aborts the test if
+  expression doesn't throw.
+- `CHECK_THROWS(expression)`: fails and continues the test if
+  expression doesn't throw.
+- `REQUIRE_THROWS_AS(type, expression)`: fails and aborts the
+  test if expression doesn't throw an expression of the given
+  type.
+- `CHECK_THROWS_AS(type, expression)`: fails and continues the test
+  if expression doesn't throw an expression of the given type.
 
 ### Additional Diagnostic Output
 
