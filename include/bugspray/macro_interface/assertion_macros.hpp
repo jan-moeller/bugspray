@@ -78,7 +78,7 @@
 #define BUGSPRAY_ASSERTION_IMPL_NOTHROW(type, ...)                                                                     \
     try                                                                                                                \
     {                                                                                                                  \
-        __VA_ARGS__;                                                                                                   \
+        (void)(__VA_ARGS__);                                                                                           \
     }                                                                                                                  \
     catch (...)                                                                                                        \
     {                                                                                                                  \
@@ -93,7 +93,7 @@
         bool did_throw = false;                                                                                        \
         try                                                                                                            \
         {                                                                                                              \
-            __VA_ARGS__;                                                                                               \
+            (void)(__VA_ARGS__);                                                                                       \
         }                                                                                                              \
         catch (...)                                                                                                    \
         {                                                                                                              \
@@ -110,7 +110,7 @@
         bool did_throw = false;                                                                                        \
         try                                                                                                            \
         {                                                                                                              \
-            __VA_ARGS__;                                                                                               \
+            (void)(__VA_ARGS__);                                                                                       \
         }                                                                                                              \
         catch (exception_type const&)                                                                                  \
         {                                                                                                              \
