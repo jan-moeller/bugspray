@@ -48,17 +48,22 @@
  *                                            expression of the given type.
  */
 
-#define BUGSPRAY_ASSERTION_IMPL(type, text, ...)                                                                       \
+#define BUGSPRAY_ASSERTION_IMPL2(type, text, decomp_str, result)                                                       \
     do                                                                                                                 \
     {                                                                                                                  \
-        ::bs::decomposition_result const decom = ::bs::decomposer{} % __VA_ARGS__;                                     \
-        bugspray_data.log_assertion(text, BUGSPRAY_THIS_LOCATION(), decom.str(), decom.result());                      \
-        if (!decom.result())                                                                                           \
+        bugspray_data.log_assertion(text, BUGSPRAY_THIS_LOCATION(), decomp_str, result);                               \
+        if (!result)                                                                                                   \
         {                                                                                                              \
             bugspray_data.mark_failed();                                                                               \
             if constexpr (std::string_view{#type} == "REQUIRE")                                                        \
                 return;                                                                                                \
         }                                                                                                              \
+    } while (false)
+#define BUGSPRAY_ASSERTION_IMPL(type, text, ...)                                                                       \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        ::bs::decomposition_result const decom = ::bs::decomposer{} % __VA_ARGS__;                                     \
+        BUGSPRAY_ASSERTION_IMPL2(type, text, decom.str(), decom.result());                                             \
     } while (false)
 #define BUGSPRAY_ASSERTION_IMPL_MAKE_TEXT(type, ...) #type "(" BUGSPRAY_STRINGIFY_EXPANSION(__VA_ARGS__) ")"
 
@@ -66,9 +71,9 @@
     BUGSPRAY_ASSERTION_IMPL(REQUIRE, BUGSPRAY_ASSERTION_IMPL_MAKE_TEXT(REQUIRE, __VA_ARGS__), __VA_ARGS__)
 #define BUGSPRAY_CHECK(...)                                                                                            \
     BUGSPRAY_ASSERTION_IMPL(CHECK, BUGSPRAY_ASSERTION_IMPL_MAKE_TEXT(CHECK, __VA_ARGS__), __VA_ARGS__)
-#define BUGSPRAY_FAIL() BUGSPRAY_ASSERTION_IMPL(REQUIRE, "FAIL()", false)
-#define BUGSPRAY_FAIL_CHECK() BUGSPRAY_ASSERTION_IMPL(CHECK, "FAIL_CHECK()", false)
-#define BUGSPRAY_SUCCEED() BUGSPRAY_ASSERTION_IMPL(REQUIRE, "SUCCEED()", true)
+#define BUGSPRAY_FAIL() BUGSPRAY_ASSERTION_IMPL2(REQUIRE, "FAIL()", "", false)
+#define BUGSPRAY_FAIL_CHECK() BUGSPRAY_ASSERTION_IMPL2(CHECK, "FAIL_CHECK()", "", false)
+#define BUGSPRAY_SUCCEED() BUGSPRAY_ASSERTION_IMPL2(REQUIRE, "SUCCEED()", "", true)
 
 #define BUGSPRAY_ASSERTION_IMPL_NOTHROW(type, ...)                                                                     \
     try                                                                                                                \
@@ -77,7 +82,7 @@
     }                                                                                                                  \
     catch (...)                                                                                                        \
     {                                                                                                                  \
-        BUGSPRAY_ASSERTION_IMPL(type, #type "_NOTHROW(" #__VA_ARGS__ ")", false);                                      \
+        BUGSPRAY_ASSERTION_IMPL2(type, #type "_NOTHROW(" #__VA_ARGS__ ")", "", false);                                 \
     }
 #define BUGSPRAY_REQUIRE_NOTHROW(...) BUGSPRAY_ASSERTION_IMPL_NOTHROW(REQUIRE, __VA_ARGS__)
 #define BUGSPRAY_CHECK_NOTHROW(...) BUGSPRAY_ASSERTION_IMPL_NOTHROW(CHECK, __VA_ARGS__)
@@ -94,7 +99,7 @@
         {                                                                                                              \
             did_throw = true;                                                                                          \
         }                                                                                                              \
-        BUGSPRAY_ASSERTION_IMPL(type, #type "_THROWS(" #__VA_ARGS__ ")", did_throw);                                   \
+        BUGSPRAY_ASSERTION_IMPL2(type, #type "_THROWS(" #__VA_ARGS__ ")", "", did_throw);                              \
     } while (false)
 #define BUGSPRAY_REQUIRE_THROWS(...) BUGSPRAY_ASSERTION_IMPL_THROWS(REQUIRE, __VA_ARGS__)
 #define BUGSPRAY_CHECK_THROWS(...) BUGSPRAY_ASSERTION_IMPL_THROWS(CHECK, __VA_ARGS__)
@@ -114,7 +119,7 @@
         catch (...)                                                                                                    \
         {                                                                                                              \
         }                                                                                                              \
-        BUGSPRAY_ASSERTION_IMPL(type, #type "_THROWS_AS(" #__VA_ARGS__ ")", did_throw);                                \
+        BUGSPRAY_ASSERTION_IMPL2(type, #type "_THROWS_AS(" #__VA_ARGS__ ")", "", did_throw);                           \
     } while (false)
 #define BUGSPRAY_REQUIRE_THROWS_AS(exception_type, ...)                                                                \
     BUGSPRAY_ASSERTION_IMPL_THROWS_AS(REQUIRE, exception_type, __VA_ARGS__)
