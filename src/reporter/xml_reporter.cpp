@@ -202,21 +202,32 @@ void xml_reporter::write_section(section_data const& sd)
             m_writer.write_content(std::string_view{msg});
             m_writer.close_element();
         }
-        m_writer.open_element("Expression");
-        m_writer.write_attribute("success", std::string_view{to_string(a.result)});
-        m_writer.write_attribute("type", "REQUIRE"); // TODO: improve
-        m_writer.write_attribute("filename", a.sloc.file_name);
-        m_writer.write_attribute("line", std::string_view{to_string(a.sloc.line)});
-        m_writer.close_attribute_section();
-        m_writer.open_element("Original");
-        m_writer.close_attribute_section();
-        m_writer.write_content(a.text);
-        m_writer.close_element();
-        m_writer.open_element("Expanded");
-        m_writer.close_attribute_section();
-        m_writer.write_content(a.expansion);
-        m_writer.close_element();
-        m_writer.close_element();
+        bool const use_failure_tag = !a.result && a.expansion.empty();
+        if (use_failure_tag)
+        {
+            m_writer.open_element("Failure");
+            m_writer.write_attribute("filename", a.sloc.file_name);
+            m_writer.write_attribute("line", std::string_view{to_string(a.sloc.line)});
+            m_writer.close_attribute_and_element();
+        }
+        else
+        {
+            m_writer.open_element("Expression");
+            m_writer.write_attribute("success", std::string_view{to_string(a.result)});
+            m_writer.write_attribute("type", "REQUIRE"); // TODO: improve
+            m_writer.write_attribute("filename", a.sloc.file_name);
+            m_writer.write_attribute("line", std::string_view{to_string(a.sloc.line)});
+            m_writer.close_attribute_section();
+            m_writer.open_element("Original");
+            m_writer.close_attribute_section();
+            m_writer.write_content(a.text);
+            m_writer.close_element();
+            m_writer.open_element("Expanded");
+            m_writer.close_attribute_section();
+            m_writer.write_content(a.expansion);
+            m_writer.close_element();
+            m_writer.close_element();
+        }
     }
 
     m_writer.open_element("OverallResults");
