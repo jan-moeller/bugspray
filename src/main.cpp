@@ -21,10 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-#include "bugspray/cli/argument_destination.hpp"
-#include "bugspray/cli/argument_parser.hpp"
-#include "bugspray/cli/parameter.hpp"
-#include "bugspray/cli/parameter_names.hpp"
+#include "bugspray/cli/main_test_runner_argparser.hpp"
 #include "bugspray/reporter/formatted_ostream_reporter.hpp"
 #include "bugspray/reporter/xml_reporter.hpp"
 #include "bugspray/test_evaluation/evaluate_test_case.hpp"
@@ -37,117 +34,10 @@
 #include <iostream>
 #include <random>
 
-struct config
-{
-    bool help    = false;
-    bool version = false;
-
-    enum class reporter_enum
-    {
-        console,
-        xml,
-    } reporter = reporter_enum::console;
-    std::string_view output;
-
-    enum class order_enum
-    {
-        declaration,
-        lexicographic,
-        random,
-    } order = order_enum::declaration;
-
-    bool        report_durations = false;
-    std::size_t seed             = std::random_device{}();
-
-    std::string_view test_spec;
-};
-
 auto main(int argc, char const** argv) -> int
 {
     using namespace bs;
-    constexpr parameter help_param{
-        .names       = parameter_names{"-h", "--help"},
-        .destination = argument_destination{&config::help},
-        .help        = structural_string{"show this help message and exit"},
-    };
-    constexpr parameter version_param{
-        .names       = parameter_names{"--version"},
-        .destination = argument_destination{&config::version},
-        .help        = structural_string{"show the bugspray version and exit"},
-    };
-    constexpr parameter reporter_param{
-        .names       = parameter_names{"-r", "--reporter"},
-        .destination = argument_destination{&config::reporter},
-        .parser =
-            [](std::string_view arg, config::reporter_enum& out)
-        {
-            if (arg == "console")
-            {
-                out = config::reporter_enum::console;
-                return true;
-            }
-            if (arg == "xml")
-            {
-                out = config::reporter_enum::xml;
-                return true;
-            }
-            return false;
-        },
-        .help = structural_string{"select reporter from [console, xml]"},
-    };
-    constexpr parameter output_param{
-        .names       = parameter_names{"-o", "--out"},
-        .destination = argument_destination{&config::output},
-        .help        = structural_string{"send all output to a file"},
-    };
-    constexpr parameter durations_param{
-        .names       = parameter_names{"-d", "--durations"},
-        .destination = argument_destination{&config::report_durations},
-        .help        = structural_string{"specify whether durations are reported"},
-    };
-    constexpr parameter order_param{
-        .names       = parameter_names{"--order"},
-        .destination = argument_destination{&config::order},
-        .parser =
-            [](std::string_view arg, config::order_enum& out)
-        {
-            if (arg == "decl")
-            {
-                out = config::order_enum::declaration;
-                return true;
-            }
-            if (arg == "lex")
-            {
-                out = config::order_enum::lexicographic;
-                return true;
-            }
-            if (arg == "rand")
-            {
-                out = config::order_enum::random;
-                return true;
-            }
-            return false;
-        },
-        .help = structural_string{"specify order of test case execution from [decl, lex, rand]"},
-    };
-    constexpr parameter order_rng_seed{
-        .names       = parameter_names{"--rng-seed"},
-        .destination = argument_destination{&config::seed},
-        .help        = structural_string{"specify the seed for the random number generator used by bugspray"},
-    };
-    constexpr parameter test_spec_param{
-        .names       = parameter_names{"test-spec"},
-        .destination = argument_destination{&config::test_spec},
-        .help        = structural_string{"specify which tests to run"},
-    };
-    using argparser = argument_parser<help_param,
-                                      version_param,
-                                      reporter_param,
-                                      output_param,
-                                      durations_param,
-                                      order_param,
-                                      order_rng_seed,
-                                      test_spec_param>;
+
     argparser parser;
 
     config c;
