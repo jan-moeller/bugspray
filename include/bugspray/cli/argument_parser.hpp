@@ -55,7 +55,7 @@ struct argument_parser
                 static_for<0, std::tuple_size_v<parameters_t>>(
                     [&](auto I)
                     {
-                        auto const& p = get<I>(parameters);
+                        constexpr auto p = get<I>(parameters);
                         if constexpr (p.names.is_unnamed)
                         {
                             if (!positional.empty())
@@ -85,8 +85,8 @@ struct argument_parser
                 static_for<0, std::tuple_size_v<parameters_t>>(
                     [&](auto I)
                     {
-                        auto const& p      = get<I>(parameters);
-                        bs::string* target = nullptr;
+                        constexpr auto p      = get<I>(parameters);
+                        bs::string*    target = nullptr;
                         if constexpr (p.names.is_unnamed)
                             target = &positional;
                         if constexpr (p.names.is_named)
@@ -95,13 +95,13 @@ struct argument_parser
                             *target += '\n';
                         *target += ' ';
                         bs::string list;
-                        static_for<0, p.names.size>(
-                            [&](auto J)
-                            {
-                                if (!list.empty())
-                                    list += ", ";
-                                list += get<J>(p.names.names).value;
-                            });
+                        auto       concatenate = [&list, names = p.names.names](auto J)
+                        {
+                            if (!list.empty())
+                                list += ", ";
+                            list += get<J>(names).value;
+                        };
+                        static_for<0, p.names.size>(concatenate);
                         *target += list;
                         *target += ' ';
                         auto const    w                 = list.size() + 2;
