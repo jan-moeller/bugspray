@@ -23,21 +23,23 @@
 #
 function(bs_target_setup target)
     set_target_properties(${target} PROPERTIES LINKER_LANGUAGE CXX)
-    target_compile_options(${target} PRIVATE
-            -Wall
-            -Wextra
-            -Wpedantic
-            -Wduplicated-cond
-            -Wno-duplicated-branches
-            -Wlogical-op
-            -Wnull-dereference
-            -Wno-old-style-cast
-            -Wuseless-cast
-            -Wdouble-promotion
-            -Wshadow
-            -Wformat=2
-            -Wuninitialized
-            )
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        target_compile_options(${target} PRIVATE
+                -Wall
+                -Wextra
+                -Wpedantic
+                -Wduplicated-cond
+                -Wno-duplicated-branches
+                -Wlogical-op
+                -Wnull-dereference
+                -Wno-old-style-cast
+                -Wuseless-cast
+                -Wdouble-promotion
+                -Wshadow
+                -Wformat=2
+                -Wuninitialized
+                )
+    endif ()
     set_target_properties(${target} PROPERTIES
             CXX_STANDARD 20
             CXX_STANDARD_REQUIRED YES
