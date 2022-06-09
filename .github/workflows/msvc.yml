@@ -1,0 +1,37 @@
+name: msvc
+
+on:
+  push:
+    branches: [ main, dev, test_github_workflows ]
+  pull_request:
+    branches: [ main, dev, test_github_workflows ]
+
+jobs:
+  build:
+    runs-on: windows-2022
+    strategy:
+      matrix:
+        build_type: [ Debug ]
+        dont_use_std_vector: [ ON ]
+        dont_use_std_string: [ ON ]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup environment
+        run: >
+          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat"
+
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/build
+          -D CMAKE_BUILD_TYPE=${{matrix.build_type}}
+          -D BUGSPRAY_DONT_USE_STD_VECTOR=${{matrix.dont_use_std_vector}}
+          -D BUGSPRAY_DONT_USE_STD_STRING=${{matrix.dont_use_std_string}}
+
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C ${{env.BUILD_TYPE}}
+
