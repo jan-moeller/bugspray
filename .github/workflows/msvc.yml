@@ -1,0 +1,48 @@
+name: msvc
+
+on:
+  push:
+    branches: [ main, dev, test_github_workflows ]
+  pull_request:
+    branches: [ main, dev, test_github_workflows ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        build_type: [ Debug ]
+        c_compiler: [ cl ]
+        dont_use_std_vector: [ ON ]
+        dont_use_std_string: [ ON ]
+        include:
+          - os: windows-latest
+            c_compiler: cl
+            cpp_compiler: cl
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set reusable strings
+        id: strings
+        shell: bash
+        run: |
+          echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+      - name: Configure CMake
+        run: >
+          cmake -B ${{ steps.strings.outputs.build-output-dir }}
+          -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DBUGSPRAY_DONT_USE_STD_VECTOR=${{ matrix.dont_use_std_vector }}
+          -DBUGSPRAY_DONT_USE_STD_STRING=${{ matrix.dont_use_std_string }}
+          -S ${{ github.workspace }}
+
+      - name: Build
+        run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+
+      - name: Test
+        working-directory: ${{ steps.strings.outputs.build-output-dir }}
+        run: ctest --build-config ${{ matrix.build_type }}
+
