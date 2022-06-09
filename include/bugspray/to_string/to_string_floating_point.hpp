@@ -62,7 +62,7 @@ constexpr auto to_string(T f) -> bs::string
                 return 2 + std::numeric_limits<T>::max_exponent10 + std::numeric_limits<T>::max_digits10;
         }();
         std::array<char, length> digits{};
-        auto [ptr, ec] = std::to_chars(digits.begin(), digits.end(), f, Format);
+        auto [ptr, ec] = std::to_chars(digits.data(), digits.data() + length, f, Format);
         assert(ec == std::errc());
         return bs::string{std::string_view{digits.data(), ptr}};
     }
