@@ -136,6 +136,9 @@ class naive_vector
     [[nodiscard]] constexpr auto end() const noexcept -> T const* { return m_end; }
     [[nodiscard]] constexpr auto end() noexcept -> T* { return m_end; }
 
+    [[nodiscard]] constexpr auto data() const noexcept -> T const* { return begin(); }
+    [[nodiscard]] constexpr auto data() noexcept -> T* { return begin(); }
+
     [[nodiscard]] constexpr auto size() const noexcept -> std::size_t { return m_begin ? m_end - m_begin : 0; }
     [[nodiscard]] constexpr auto capacity() const noexcept -> std::size_t
     {
