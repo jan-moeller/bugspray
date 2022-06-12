@@ -30,11 +30,13 @@
 template<std::chars_format Format, typename Out>
 auto from_str(bs::string const& str) -> Out
 {
-    Out r;
-    auto [ptr, ec] = std::from_chars(str.begin(), str.end(), r, Format);
+    Out        r;
+    auto const begin = str.c_str();
+    auto const end   = begin + str.size();
+    auto [ptr, ec]   = std::from_chars(begin, end, r, Format);
     if (ec != std::errc())
         throw std::make_error_code(ec).message();
-    if (ptr != str.end())
+    if (ptr != end)
         throw "unparsed characters left";
     return r;
 }
