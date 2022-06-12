@@ -34,6 +34,7 @@
 #include <type_traits>
 #include <utility>
 
+#include <cassert>
 #include <cstdint>
 
 namespace bs
@@ -44,7 +45,7 @@ constexpr auto log10ceil(auto num) -> int
 {
     return num < 10 ? 1 : 1 + log10ceil(num / 10);
 }
-}
+} // namespace detail
 
 template<std::chars_format Format = std::chars_format::general, std::floating_point T>
 constexpr auto to_string(T f) -> bs::string
