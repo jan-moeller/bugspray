@@ -46,11 +46,6 @@ struct parameter_names
 
     constexpr parameter_names() = delete;
 
-    constexpr explicit parameter_names(c_array<char const, Ns> const&... n)
-        : parameter_names(structural_string(n)...)
-    {
-    }
-
     constexpr explicit parameter_names(structural_string<Ns>... n)
         : names(n...)
         , is_unnamed(((!std::string_view(n.value).empty() && !std::string_view(n.value).starts_with('-')) || ...))
@@ -77,6 +72,8 @@ struct parameter_names
         return found;
     }
 };
+template<std::size_t... Ns>
+parameter_names(c_array<char, Ns> const&...) -> parameter_names<Ns...>;
 } // namespace bs
 
 #endif // BUGSPRAY_PARAMETER_NAMES_HPP
