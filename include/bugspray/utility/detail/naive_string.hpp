@@ -77,6 +77,10 @@ class naive_string
     [[nodiscard]] constexpr auto end() const noexcept -> char const* { return m_data.end() - 1; }
     [[nodiscard]] constexpr auto end() noexcept -> char* { return m_data.end() - 1; }
 
+    [[nodiscard]] constexpr auto data() const noexcept -> char const* { return m_data.data(); }
+    [[nodiscard]] constexpr auto data() noexcept -> char* { return m_data.data(); }
+    [[nodiscard]] constexpr auto c_str() const noexcept -> char const* { return data(); }
+
     [[nodiscard]] constexpr auto size() const noexcept -> std::size_t { return m_data.size() - 1; }
     [[nodiscard]] constexpr auto capacity() const noexcept -> std::size_t { return m_data.capacity(); }
     [[nodiscard]] constexpr auto empty() const noexcept -> bool { return size() == 0; }
