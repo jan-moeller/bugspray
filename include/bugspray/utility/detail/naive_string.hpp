@@ -77,6 +77,12 @@ class naive_string
     [[nodiscard]] constexpr auto end() const noexcept -> char const* { return m_data.end() - 1; }
     [[nodiscard]] constexpr auto end() noexcept -> char* { return m_data.end() - 1; }
 
+    [[nodiscard]] constexpr auto rbegin() const noexcept { return std::make_reverse_iterator(end()); }
+    [[nodiscard]] constexpr auto rbegin() noexcept { return std::make_reverse_iterator(end()); }
+
+    [[nodiscard]] constexpr auto rend() const noexcept { return std::make_reverse_iterator(begin()); }
+    [[nodiscard]] constexpr auto rend() noexcept { return std::make_reverse_iterator(begin()); }
+
     [[nodiscard]] constexpr auto data() const noexcept -> char const* { return m_data.data(); }
     [[nodiscard]] constexpr auto data() noexcept -> char* { return m_data.data(); }
     [[nodiscard]] constexpr auto c_str() const noexcept -> char const* { return data(); }
