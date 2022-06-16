@@ -34,14 +34,19 @@ namespace bs
 {
 template<std::ranges::forward_range T>
 constexpr auto to_string(T&& s) -> bs::string
-    requires std::same_as<std::ranges::range_value_t<T>,
-                          char>
+    requires std::same_as<std::ranges::range_value_t<T>, char>
 {
     bs::string result = "\"";
     for (auto&& c : s)
         result += char_to_printable_string(c);
     result += "\"";
     return result;
+}
+
+template<std::size_t N>
+constexpr auto to_string(const char (&s)[N]) -> bs::string
+{
+    return to_string(std::string_view{s});
 }
 } // namespace bs
 

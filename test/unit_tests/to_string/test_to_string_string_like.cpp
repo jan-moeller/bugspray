@@ -28,7 +28,7 @@
 TEST_CASE("to_string(string-like)", "[to_string]")
 {
 #define MAKE_TESTS(PREFIX)                                                                                             \
-    PREFIX##CHECK(bs::to_string("foo") == R"("foo\0")");                                                               \
+    PREFIX##CHECK(bs::to_string("foo") == R"("foo")");                                                                 \
     PREFIX##CHECK(bs::to_string(bs::string{"\n"}) == R"("\n")");                                                       \
     PREFIX##CHECK(bs::to_string(std::string_view{"foo\nbar"}) == R"("foo\nbar")");
 

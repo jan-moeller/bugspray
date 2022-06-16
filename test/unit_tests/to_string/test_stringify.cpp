@@ -84,7 +84,7 @@ TEST_CASE("stringify", "[to_string]")
     PREFIX##CHECK(bs::stringify(ns::bam{}) == "<?>");                                                                  \
     PREFIX##CHECK(bs::stringify(true) == "true");                                                                      \
     PREFIX##CHECK(bs::stringify('a') == R"('a')");                                                                     \
-    PREFIX##CHECK(bs::stringify("foo") == R"("foo\0")");                                                               \
+    PREFIX##CHECK(bs::stringify("foo") == R"("foo")");                                                                 \
     PREFIX##CHECK(bs::stringify(std::string_view{"foo"}) == R"("foo")");                                               \
     PREFIX##CHECK(bs::stringify(bs::string{"foo"}) == R"("foo")");                                                     \
     PREFIX##CHECK(bs::stringify(42) == R"(42)");
