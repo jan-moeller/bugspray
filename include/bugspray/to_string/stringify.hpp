@@ -30,6 +30,7 @@
 #include "bugspray/to_string/to_string_container.hpp"
 #include "bugspray/to_string/to_string_floating_point.hpp"
 #include "bugspray/to_string/to_string_integral.hpp"
+#include "bugspray/to_string/to_string_pointer.hpp"
 #include "bugspray/to_string/to_string_string_like.hpp"
 #include "bugspray/to_string/to_string_tag.hpp"
 #include "bugspray/utility/string.hpp"
