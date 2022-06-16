@@ -73,14 +73,42 @@ constexpr auto operator+(char const (&lhs)[N1], structural_string<N2> rhs) -> st
     return structural_string<N1>{lhs} + rhs;
 }
 
-template<structural_string S>
+template<structural_string S, char C = '\0'>
+constexpr auto trim_left() noexcept
+{
+    if constexpr (S.size() == 0)
+        return S;
+    else
+    {
+        constexpr auto          iter = std::ranges::find_if(S.value, [](char c) { return c != C; });
+        constexpr auto          size = std::end(S.value) - iter;
+        structural_string<size> result{};
+        std::ranges::copy_n(iter, size - 1, result.value);
+        return result;
+    }
+}
+
+template<structural_string S, char C = '\0'>
+constexpr auto trim_right() noexcept
+{
+    if constexpr (S.size() == 0)
+        return S;
+    else
+    {
+        constexpr auto          iter = std::ranges::find_if(std::rbegin(S.value) + 1, std::rend(S.value), [](char c) { return c != C; });
+        constexpr auto          size = -(iter - std::rend(S.value)) + 1; // +1 for '\0'
+        structural_string<size> result{};
+        std::ranges::copy_n(S.value, size - 1, result.value);
+        return result;
+    }
+}
+
+template<structural_string S, char C = '\0'>
 constexpr auto trim() noexcept
 {
-    constexpr auto          iter = std::ranges::find_if(S.value, [](char c) { return c == '\0'; });
-    constexpr auto          size = iter - std::begin(S.value) + 1;
-    structural_string<size> result{};
-    std::ranges::copy_n(S.value, size, result.value);
-    return result;
+    constexpr auto trim_right_result = trim_right<S, C>();
+    constexpr auto trim_left_result = trim_left<trim_right_result, C>();
+    return trim_left_result;
 }
 } // namespace bs
 

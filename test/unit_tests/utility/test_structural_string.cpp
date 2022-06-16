@@ -39,5 +39,10 @@ TEST_CASE("structural_string", "[utility]")
     STATIC_REQUIRE("foobar" == structural_string{"foobar"});
     STATIC_REQUIRE(foo<"bar">::str == "bar");
     STATIC_REQUIRE(structural_string{"foo"} + structural_string{"bar"} == "foobar");
-    STATIC_REQUIRE(trim<"foo\0\0">() == "foo");
+    REQUIRE(trim_left<"  foo", ' '>() == "foo");
+    REQUIRE(trim_right<"foo  ", ' '>() == "foo");
+    REQUIRE(trim<"foo\0\0">() == "foo");
+    REQUIRE(trim_right<" a ", ' '>() == " a");
+    REQUIRE(trim_left<" a ", ' '>() == "a ");
+    REQUIRE(trim<" a ", ' '>() == "a");
 }
