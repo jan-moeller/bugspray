@@ -33,6 +33,7 @@ add_executable(bugspray-unit-tests
         test_evaluation/decomposition/test_decomposer.cpp
         test_evaluation/test_evaluate_test_case.cpp
         test_evaluation/test_evaluate_test_case_target.cpp
+        test_evaluation/test_info_capture.cpp
         test_evaluation/test_parse_tag_string.cpp
         test_evaluation/test_test_case_filter.cpp
         test_evaluation/test_test_case_topology.cpp

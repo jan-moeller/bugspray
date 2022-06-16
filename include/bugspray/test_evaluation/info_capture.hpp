@@ -79,39 +79,50 @@ struct info_capture
 template<structural_string S>
 constexpr auto split_expression_string() // splits an expression by comma into std::array. To be used with #__VA_ARGS__.
 {
-    constexpr auto create = []
+    if constexpr (trim<S, ' '>().size() == 1) // 1 because of '\0'
+        return std::array<std::string_view, 0>{};
+    else
     {
-        std::size_t                  level = 0;
-        bs::vector<std::string_view> expressions;
-        auto                         begin = std::begin(S.value);
-        auto                         cur   = begin;
-        for (char c : S.value)
+        constexpr auto create = []
         {
-            if (c == '(')
-                ++level;
-            else if (c == ')')
-                --level;
-            else if (level == 0 && c == ',')
+            std::size_t                  level = 0;
+            bs::vector<std::string_view> expressions;
+            auto                         begin = std::begin(S.value);
+            auto                         cur   = begin;
+            for (char c : S.value)
             {
-                std::string_view v{begin, cur};
-                expressions.emplace_back(trim(v));
-                begin = ++cur;
+                if (c == '(')
+                {
+                    ++level;
+                    ++cur;
+                }
+                else if (c == ')')
+                {
+                    --level;
+                    ++cur;
+                }
+                else if (level == 0 && c == ',')
+                {
+                    std::string_view v{begin, cur};
+                    expressions.emplace_back(trim(v));
+                    begin = ++cur;
+                }
+                else
+                    ++cur;
             }
-            else
-                ++cur;
-        }
-        std::string_view v{begin, cur - 1}; // -1 since we do not want the closing \0
-        expressions.emplace_back(trim(v));
-        if (level != 0)
-            throw "Wrap expressions containing a comma in parentheses";
-        return expressions;
-    };
-    constexpr std::size_t size = create().size();
-    auto const            strs = create();
+            std::string_view v{begin, cur - 1}; // -1 since we do not want the closing \0
+            expressions.emplace_back(trim(v));
+            if (level != 0)
+                throw "Wrap expressions containing a comma in parentheses";
+            return expressions;
+        };
+        constexpr std::size_t size = create().size();
+        auto const            strs = create();
 
-    std::array<std::string_view, size> expressions;
-    std::ranges::copy(strs, expressions.begin());
-    return expressions;
+        std::array<std::string_view, size> expressions;
+        std::ranges::copy(strs, expressions.begin());
+        return expressions;
+    }
 }
 
 template<std::size_t I, typename... Ts>
