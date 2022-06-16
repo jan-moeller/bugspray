@@ -136,6 +136,12 @@ class naive_vector
     [[nodiscard]] constexpr auto end() const noexcept -> T const* { return m_end; }
     [[nodiscard]] constexpr auto end() noexcept -> T* { return m_end; }
 
+    [[nodiscard]] constexpr auto rbegin() const noexcept { return std::make_reverse_iterator(end()); }
+    [[nodiscard]] constexpr auto rbegin() noexcept { return std::make_reverse_iterator(end()); }
+
+    [[nodiscard]] constexpr auto rend() const noexcept { return std::make_reverse_iterator(begin()); }
+    [[nodiscard]] constexpr auto rend() noexcept { return std::make_reverse_iterator(begin()); }
+
     [[nodiscard]] constexpr auto data() const noexcept -> T const* { return begin(); }
     [[nodiscard]] constexpr auto data() noexcept -> T* { return begin(); }
 
