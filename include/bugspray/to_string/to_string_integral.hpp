@@ -30,6 +30,7 @@
 #include <algorithm>
 #include <array>
 #include <concepts>
+#include <type_traits>
 #include <utility>
 
 #include <cstdint>
@@ -60,6 +61,12 @@ constexpr auto to_string(std::integral auto i) -> bs::string
         result.push_back('-');
     std::ranges::reverse(result);
     return result;
+}
+
+template<unsigned Base = 10, unsigned MinDigits = 0, std::integral T, T value>
+constexpr auto to_string([[maybe_unused]] std::integral_constant<T, value> i) -> bs::string
+{
+    return to_string<Base, MinDigits>(value);
 }
 } // namespace bs
 

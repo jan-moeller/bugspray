@@ -39,7 +39,8 @@ TEST_CASE("to_string(integral)", "[to_string]")
     PREFIX##CHECK(bs::to_string<16>(-1) == "-1");                                                                      \
     PREFIX##CHECK(bs::to_string<16>(-10) == "-a");                                                                     \
     PREFIX##CHECK(bs::to_string<36>(35) == "z");                                                                       \
-    PREFIX##CHECK(bs::to_string<16, 2>(3) == "03");
+    PREFIX##CHECK(bs::to_string<16, 2>(3) == "03");                                                                    \
+    PREFIX##CHECK(bs::to_string<10, 3>(std::integral_constant<int, 42>{}) == "042");
 
     auto const max = std::numeric_limits<std::uintmax_t>::max();
     auto const min = std::numeric_limits<std::intmax_t>::min();

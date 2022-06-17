@@ -29,8 +29,9 @@ TEST_CASE("to_string(bool)", "[to_string]")
 {
 #define MAKE_TESTS(PREFIX)                                                                                             \
     PREFIX##CHECK(bs::to_string(true) == "true");                                                                      \
-    PREFIX##CHECK(bs::to_string(false) == "false");
-
+    PREFIX##CHECK(bs::to_string(false) == "false");                                                                    \
+    PREFIX##CHECK(bs::to_string(std::false_type{}) == "false");                                                        \
+    PREFIX##CHECK(bs::to_string(std::true_type{}) == "true");
     MAKE_TESTS()
     MAKE_TESTS(STATIC_)
 #undef MAKE_TESTS

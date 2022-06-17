@@ -27,6 +27,8 @@
 
 #include "bugspray/utility/string.hpp"
 
+#include <type_traits>
+
 namespace bs
 {
 constexpr auto to_string(bool b) -> bs::string
@@ -34,6 +36,12 @@ constexpr auto to_string(bool b) -> bs::string
     if (b)
         return "true";
     return "false";
+}
+
+template<bool B>
+constexpr auto to_string([[maybe_unused]] std::bool_constant<B> b) -> bs::string
+{
+    return to_string(B);
 }
 } // namespace bs
 

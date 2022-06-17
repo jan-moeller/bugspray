@@ -88,7 +88,9 @@ TEST_CASE("stringify", "[to_string]")
     PREFIX##CHECK(bs::stringify(std::string_view{"foo"}) == R"("foo")");                                               \
     PREFIX##CHECK(bs::stringify(bs::string{"foo"}) == R"("foo")");                                                     \
     PREFIX##CHECK(bs::stringify(42) == R"(42)");                                                                       \
-    PREFIX##CHECK(bs::stringify(nullptr) == R"(nullptr)");
+    PREFIX##CHECK(bs::stringify(nullptr) == R"(nullptr)");                                                             \
+    PREFIX##CHECK(bs::stringify(std::integral_constant<int, 42>{}) == R"(42)");                                        \
+    PREFIX##CHECK(bs::stringify(std::false_type{}) == R"(false)");
 
     CHECK(bs::stringify(42.1) == R"(42.1)"); // TODO: Add static check once constexpr to_string(double) is implemented
 
