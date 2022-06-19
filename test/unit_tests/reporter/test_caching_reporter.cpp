@@ -66,7 +66,7 @@ TEST_CASE("caching_reporter", "[reporter]")
         reporter.start_run(section_path{});
         reporter.stop_run();
 
-        reporter.start_run(section_path{section_name});
+        reporter.start_run(section_path{bs::string{section_name}});
         reporter.enter_section(section_name, source_location{.file_name = filename, .line = section_line});
 
         bs::vector<bs::string> messages{};
@@ -97,7 +97,7 @@ TEST_CASE("caching_reporter", "[reporter]")
     PREFIX##REQUIRE(test()[0].test_runs[0].target == section_path{});                                                  \
     PREFIX##REQUIRE(test()[0].test_runs[0].assertions.size() == 0);                                                    \
     PREFIX##REQUIRE(test()[0].test_runs[0].sections.size() == 0);                                                      \
-    PREFIX##REQUIRE(test()[0].test_runs[1].target == section_path{section_name});                                      \
+    PREFIX##REQUIRE(test()[0].test_runs[1].target == section_path{bs::string{section_name}});                          \
     PREFIX##REQUIRE(test()[0].test_runs[1].assertions.size() == 0);                                                    \
     PREFIX##REQUIRE(test()[0].test_runs[1].sections.size() == 1);                                                      \
     PREFIX##REQUIRE(test()[0].test_runs[1].sections[0].name == section_name);                                          \

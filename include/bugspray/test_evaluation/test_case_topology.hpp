@@ -44,7 +44,7 @@ struct test_case_topology
 {
     constexpr void chart(section_path path, std::string_view next)
     {
-        path.push_back(next);
+        path.push_back(bs::string{next});
         chart(path);
     }
 

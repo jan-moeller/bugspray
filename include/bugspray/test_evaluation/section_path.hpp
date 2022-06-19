@@ -25,9 +25,8 @@
 #ifndef BUGSPRAY_SECTION_PATH_HPP
 #define BUGSPRAY_SECTION_PATH_HPP
 
+#include "bugspray/utility/string.hpp"
 #include "bugspray/utility/vector.hpp"
-
-#include <string_view>
 
 /*
  * A path from the root to a specific subsection. An empty path refers to the root.
@@ -35,7 +34,7 @@
 
 namespace bs
 {
-using section_path = bs::vector<std::string_view>;
+using section_path = bs::vector<bs::string>;
 } // namespace bs
 
 #endif // BUGSPRAY_SECTION_PATH_HPP

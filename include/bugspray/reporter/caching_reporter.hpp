@@ -98,7 +98,7 @@ struct caching_reporter : reporter
     constexpr void enter_section(std::string_view name, source_location sloc) noexcept override
     {
         create_section(name, sloc);
-        m_current_section.push_back(name);
+        m_current_section.push_back(bs::string{name});
     }
 
     constexpr void leave_section() noexcept override { m_current_section.pop(); }
