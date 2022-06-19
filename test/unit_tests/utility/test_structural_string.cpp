@@ -82,6 +82,8 @@ TEST_CASE("structural_string", "[utility]")
     SECTION("simple string concatenation")
     {
         STATIC_REQUIRE(structural_string{"foo"} + structural_string{"bar"} == "foobar");
+        STATIC_REQUIRE(trim<structural_string{"foo"}>() + structural_string{"bar"} == "foobar");
+        STATIC_REQUIRE(trim<structural_string{"foo"}>() + trim<structural_string{"bar"}>() == "foobar");
     }
     SECTION("trim")
     {

@@ -80,22 +80,22 @@ struct structural_string
 };
 
 template<std::size_t N1, std::size_t N2>
-constexpr auto operator+(structural_string<N1> lhs, structural_string<N2> rhs) -> structural_string<N1 + N2 - 1>
+constexpr auto operator+(structural_string<N1> lhs, structural_string<N2> rhs) -> structural_string<N1 + N2>
 {
-    structural_string<N1 + N2 - 1> result;
-    std::copy_n(lhs.value, N1, result.value + 0);
-    std::copy_n(rhs.value, N2, result.value + N1 - 1);
+    structural_string<N1 + N2> result;
+    std::copy_n(lhs.value, lhs.size(), result.value + 0);
+    std::copy_n(rhs.value, rhs.size(), result.value + lhs.size());
     return result;
 }
 
 template<std::size_t N1, std::size_t N2>
-constexpr auto operator+(structural_string<N1> lhs, char const (&rhs)[N2]) -> structural_string<N1 + N2 - 1>
+constexpr auto operator+(structural_string<N1> lhs, char const (&rhs)[N2]) -> structural_string<N1 + N2>
 {
     return lhs + structural_string<N2>{rhs};
 }
 
 template<std::size_t N1, std::size_t N2>
-constexpr auto operator+(char const (&lhs)[N1], structural_string<N2> rhs) -> structural_string<N1 + N2 - 1>
+constexpr auto operator+(char const (&lhs)[N1], structural_string<N2> rhs) -> structural_string<N1 + N2>
 {
     return structural_string<N1>{lhs} + rhs;
 }
