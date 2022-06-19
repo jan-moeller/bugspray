@@ -100,6 +100,7 @@ add_library(bugspray STATIC
         include/bugspray/utility/macros/macro_warning_suppression.hpp
         include/bugspray/utility/source_location.hpp
         include/bugspray/utility/static_for.hpp
+        include/bugspray/utility/static_for_each_type.hpp
         include/bugspray/utility/string.hpp
         include/bugspray/utility/structural_string.hpp
         include/bugspray/utility/structural_tuple.hpp

@@ -54,6 +54,7 @@ add_executable(bugspray-unit-tests
         utility/macros/test_get_tail.cpp
         utility/macros/test_unique_identifier.cpp
         utility/test_source_location.cpp
+        utility/test_static_for_each_type.cpp
         utility/test_structural_string.cpp
         utility/test_structural_tuple.cpp
         )
