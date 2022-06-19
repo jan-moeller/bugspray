@@ -58,8 +58,8 @@ struct caching_reporter : reporter
     };
     struct section_data : assertion_and_section_holder
     {
-        std::string_view name;
-        source_location  sloc;
+        bs::string      name;
+        source_location sloc;
     };
     struct test_run_data : assertion_and_section_holder
     {
@@ -137,7 +137,7 @@ struct caching_reporter : reporter
     constexpr void create_section(std::string_view name, source_location const& sloc) noexcept
     {
         assertion_and_section_holder* cur = find_section(m_current_section);
-        cur->sections.push_back({{}, name, sloc});
+        cur->sections.push_back({{}, bs::string{name}, sloc});
     }
 
     bs::vector<test_case_data> m_test_cases;

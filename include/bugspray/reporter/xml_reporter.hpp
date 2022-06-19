@@ -79,9 +79,9 @@ struct xml_reporter : reporter
     };
     struct section_data : assertion_and_section_holder
     {
-        std::string_view name;
-        source_location  sloc;
-        double           runtime_in_seconds;
+        bs::string      name;
+        source_location sloc;
+        double          runtime_in_seconds;
     };
     section_data m_section_root;
     section_path m_current_target;

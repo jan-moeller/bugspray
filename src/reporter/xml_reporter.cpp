@@ -105,7 +105,7 @@ void xml_reporter::enter_section(std::string_view name, source_location sloc) no
 {
     if (name == m_current_target.back())
     {
-        current_data().name = name;
+        current_data().name = bs::string{name};
         current_data().sloc = sloc;
     }
 }
