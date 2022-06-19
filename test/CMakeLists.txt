@@ -42,7 +42,14 @@ function(add_build_test name)
             ${CMAKE_CURRENT_BINARY_DIR}/${folder}
             --build-target ${target}
             --build-generator ${CMAKE_GENERATOR}
-            --build-options -DBUGSPRAY_CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH} -DBUGSPRAY_LIB_DIR:STR=$<TARGET_PROPERTY:bugspray-with-main,BINARY_DIR> -DBUGSPRAY_INCLUDE_DIR:STR=$<TARGET_PROPERTY:bugspray-with-main,INCLUDE_DIRECTORIES>
+            --build-options
+                -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+                -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+                -DBUGSPRAY_CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}
+                -DBUGSPRAY_LIB_DIR:STR=$<TARGET_PROPERTY:bugspray-with-main,BINARY_DIR>
+                -DBUGSPRAY_INCLUDE_DIR:STR=$<TARGET_PROPERTY:bugspray-with-main,INCLUDE_DIRECTORIES>
+                -DBUGSPRAY_DONT_USE_STD_VECTOR:STR=${BUGSPRAY_DONT_USE_STD_VECTOR}
+                -DBUGSPRAY_DONT_USE_STD_STRING:STR=${BUGSPRAY_DONT_USE_STD_STRING}
             --test-command ${CMAKE_CTEST_COMMAND} --verbose
             )
     if (${ARGC} GREATER 1)

@@ -24,6 +24,8 @@
 cmake_minimum_required(VERSION 3.20)
 project(bugspray-examples-00-trivial)
 
+message(STATUS "BUGSPRAY_CMAKE_MODULE_PATH: ${BUGSPRAY_CMAKE_MODULE_PATH}")
+
 set(CMAKE_MODULE_PATH ${BUGSPRAY_CMAKE_MODULE_PATH} ${CMAKE_MODULE_PATH})
 include(bs_target_setup)
 include(bs_import_lib_for_testing)
