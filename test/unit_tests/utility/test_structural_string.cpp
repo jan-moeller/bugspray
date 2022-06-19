@@ -35,14 +35,61 @@ struct foo
 
 TEST_CASE("structural_string", "[utility]")
 {
-    STATIC_REQUIRE(structural_string{"foobar"} == "foobar");
-    STATIC_REQUIRE("foobar" == structural_string{"foobar"});
-    STATIC_REQUIRE(foo<"bar">::str == "bar");
-    STATIC_REQUIRE(structural_string{"foo"} + structural_string{"bar"} == "foobar");
-    REQUIRE(trim_left<"  foo", ' '>() == "foo");
-    REQUIRE(trim_right<"foo  ", ' '>() == "foo");
-    REQUIRE(trim<"foo\0\0">() == "foo");
-    REQUIRE(trim_right<" a ", ' '>() == " a");
-    REQUIRE(trim_left<" a ", ' '>() == "a ");
-    REQUIRE(trim<" a ", ' '>() == "a");
+    SECTION("default construct")
+    {
+        STATIC_REQUIRE(structural_string<15>{} == "");
+        STATIC_REQUIRE(structural_string<15>{}.size() == 0);
+    }
+    SECTION("infer size from literal")
+    {
+        STATIC_REQUIRE(structural_string{"foobar"}.size() == 6);
+        STATIC_REQUIRE(structural_string{"foobar"}.capacity() == 7);
+    }
+    SECTION("construct from string_view")
+    {
+        constexpr std::string_view const foo{"foo"};
+        STATIC_REQUIRE(structural_string<9>{foo}.size() == foo.size());
+        STATIC_REQUIRE(structural_string<9>{foo} == foo);
+    }
+    SECTION("compare structural_strings")
+    {
+        constexpr structural_string a{"foo"};
+        constexpr structural_string b{"bar"};
+        STATIC_REQUIRE(a != b);
+    }
+    SECTION("compare structural_strings to char const*")
+    {
+        constexpr structural_string a{"foo"};
+        constexpr char const*       b{"bar"};
+        STATIC_REQUIRE(a != b);
+    }
+    SECTION("compare structural_strings to string_view")
+    {
+        constexpr structural_string a{"foo"};
+        constexpr std::string_view  b{"bar"};
+        STATIC_REQUIRE(a != b);
+    }
+    SECTION("cast to string_view")
+    {
+        constexpr structural_string a{"foo"};
+        auto const                  b = static_cast<std::string_view>(a);
+        REQUIRE(a == b);
+    }
+    SECTION("usage as template argument")
+    {
+        STATIC_REQUIRE(foo<"bar">::str == "bar");
+    }
+    SECTION("simple string concatenation")
+    {
+        STATIC_REQUIRE(structural_string{"foo"} + structural_string{"bar"} == "foobar");
+    }
+    SECTION("trim")
+    {
+        STATIC_REQUIRE(trim_left<"  foo", ' '>() == "foo");
+        STATIC_REQUIRE(trim_right<"foo  ", ' '>() == "foo");
+        STATIC_REQUIRE(trim<"foo\0\0">() == "foo");
+        STATIC_REQUIRE(trim_right<" a ", ' '>() == " a");
+        STATIC_REQUIRE(trim_left<" a ", ' '>() == "a ");
+        STATIC_REQUIRE(trim<" a ", ' '>() == "a");
+    }
 }

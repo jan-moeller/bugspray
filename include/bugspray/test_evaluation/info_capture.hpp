@@ -79,7 +79,7 @@ struct info_capture
 template<structural_string S>
 constexpr auto split_expression_string() // splits an expression by comma into std::array. To be used with #__VA_ARGS__.
 {
-    if constexpr (trim<S, ' '>().size() == 1) // 1 because of '\0'
+    if constexpr (trim<S, ' '>().size() == 0)
         return std::array<std::string_view, 0>{};
     else
     {

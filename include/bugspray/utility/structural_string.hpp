@@ -35,6 +35,8 @@
  * literals.
  */
 
+// TODO: Elevate this to a proper, generally useful facility with less gotchas
+
 namespace bs
 {
 template<std::size_t N>
@@ -42,14 +44,39 @@ struct structural_string
 {
     constexpr structural_string() { std::fill_n(value, N, '\0'); }
     constexpr structural_string(char const (&str)[N]) { std::copy_n(str, N, value); }
-    constexpr structural_string(std::string_view sv) { std::copy_n(sv.data(), std::min(N, sv.size()), value); }
+    constexpr structural_string(std::string_view sv)
+    {
+        auto const n = std::min(N, sv.size());
+        std::copy_n(sv.data(), n, value);
+        std::fill(&value[n], &value[N], '\0');
+    }
     char value[N];
 
-    constexpr auto operator==(structural_string const& rhs) const -> bool = default;
-    constexpr auto operator==(char const* rhs) const -> bool { return std::string_view{value} == rhs; }
-    constexpr auto operator==(std::string_view rhs) const -> bool { return std::string_view{value} == rhs; }
+    constexpr auto operator==(structural_string const& rhs) const -> bool
+    {
+        auto const other = static_cast<std::string_view>(rhs);
+        return *this == other;
+    }
+    constexpr auto operator==(char const* rhs) const -> bool { return *this == std::string_view{rhs}; }
+    constexpr auto operator==(std::string_view rhs) const -> bool
+    {
+        auto const self = static_cast<std::string_view>(*this);
+        return self == rhs;
+    }
 
-    [[nodiscard]] constexpr static auto size() noexcept -> std::size_t { return N; }
+    [[nodiscard]] constexpr auto size() const noexcept -> std::size_t
+    {
+        return static_cast<std::string_view>(*this).size();
+    }
+    [[nodiscard]] constexpr static auto capacity() noexcept -> std::size_t { return N; }
+
+    constexpr explicit operator std::string_view() const noexcept
+    {
+        std::string_view self = {value, N};
+        while (self.ends_with('\0'))
+            self.remove_suffix(1);
+        return self;
+    }
 };
 
 template<std::size_t N1, std::size_t N2>
@@ -76,7 +103,7 @@ constexpr auto operator+(char const (&lhs)[N1], structural_string<N2> rhs) -> st
 template<structural_string S, char C = '\0'>
 constexpr auto trim_left() noexcept
 {
-    if constexpr (S.size() == 0)
+    if constexpr (S.capacity() == 0)
         return S;
     else
     {
@@ -91,11 +118,13 @@ constexpr auto trim_left() noexcept
 template<structural_string S, char C = '\0'>
 constexpr auto trim_right() noexcept
 {
-    if constexpr (S.size() == 0)
+    if constexpr (S.capacity() == 0)
         return S;
     else
     {
-        constexpr auto          iter = std::ranges::find_if(std::rbegin(S.value) + 1, std::rend(S.value), [](char c) { return c != C; });
+        constexpr auto          iter = std::ranges::find_if(std::rbegin(S.value) + 1,
+                                                   std::rend(S.value),
+                                                   [](char c) { return c != C; });
         constexpr auto          size = -(iter - std::rend(S.value)) + 1; // +1 for '\0'
         structural_string<size> result{};
         std::ranges::copy_n(S.value, size - 1, result.value);
@@ -107,7 +136,7 @@ template<structural_string S, char C = '\0'>
 constexpr auto trim() noexcept
 {
     constexpr auto trim_right_result = trim_right<S, C>();
-    constexpr auto trim_left_result = trim_left<trim_right_result, C>();
+    constexpr auto trim_left_result  = trim_left<trim_right_result, C>();
     return trim_left_result;
 }
 } // namespace bs
