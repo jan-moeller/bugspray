@@ -34,6 +34,12 @@
  * Arguments:
  *   <name>: Required name string. String must be unique among sections of the same nesting level.
  *   <qualifier>: Optional qualifier. One of [runtime, compiletime, both]. Defaults to both.
+ *
+ * BUGSPRAY_DYNAMIC_SECTION(<dynamic name>, <OPT: qualifier>) defines a section with a dynamic (non-literal) name in a
+ * test case.
+ * Arguments:
+ *   <dynamic name>: A structural_string
+ *   <qualifier>: Optional qualifier. One of [runtime, compiletime, both]. Defaults to both.
  */
 
 #define BUGSPRAY_SECTION_IMPL_SECTION_NAME(...) BUGSPRAY_GET_1ST_ARG(__VA_ARGS__)
@@ -51,8 +57,15 @@
 #define BUGSPRAY_SECTION_IMPL_EXTRA_COND_both true
 #define BUGSPRAY_SECTION(...) if (BUGSPRAY_SECTION_IMPL_TRACKER(__VA_ARGS__))
 
+#define BUGSPRAY_DYNAMIC_SECTION_IMPL(storage_id, name, ...)                                                           \
+    constexpr ::bs::structural_string storage_id{name};                                                                \
+    BUGSPRAY_SECTION(std::string_view{storage_id}, __VA_ARGS__)
+#define BUGSPRAY_DYNAMIC_SECTION(...)                                                                                  \
+    BUGSPRAY_DYNAMIC_SECTION_IMPL(BUGSPRAY_UNIQUE_IDENTIFIER(dynamic_section), __VA_ARGS__)
+
 #ifndef BUGSPRAY_NO_SHORT_MACROS
 #define SECTION(...) BUGSPRAY_SECTION(__VA_ARGS__)
+#define DYNAMIC_SECTION(...) BUGSPRAY_DYNAMIC_SECTION(__VA_ARGS__)
 #endif
 
 #endif // BUGSPRAY_SECTION_MACRO_HPP
