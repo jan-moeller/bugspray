@@ -64,6 +64,13 @@ struct structural_string
         return self == rhs;
     }
 
+    constexpr void append_as_fit(std::string_view sv) noexcept
+    {
+        auto const length_available = capacity() - size();
+        auto const length_to_copy   = std::min(sv.size(), length_available);
+        std::ranges::copy_n(sv.begin(), length_to_copy, value + size());
+    }
+
     [[nodiscard]] constexpr auto size() const noexcept -> std::size_t
     {
         return static_cast<std::string_view>(*this).size();
