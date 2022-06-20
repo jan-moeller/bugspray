@@ -62,6 +62,7 @@ add_build_test(failing-examples/00-simple "42 == 0.*other_var: 6.*static asserti
 add_build_test(failing-examples/01-fibonacci "fib\\(i\\) == expected_values\\[i\\].*1 == 0.*i: 0.*static assertion failed: Test evaluation failed.")
 add_build_test(failing-examples/02-invalid-tag-string "Invalid tag string")
 add_build_test(failing-examples/03-utf8-codeunit-categorization "categorize_utf8_codeunit\\(0xF8u\\) == invalid.*00001110 == invalid")
+add_build_test(failing-examples/04-undefined-behavior "undefined behavior.*outside the bounds of array")
 
 add_subdirectory(unit_tests)
 
