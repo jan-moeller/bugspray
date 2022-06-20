@@ -31,6 +31,7 @@
 
 #include <algorithm>
 #include <array>
+#include <ranges>
 
 /*
  * Reporter to be used for constexpr evaluation. It stores the first n messages of the first failed assertion in a
@@ -47,18 +48,22 @@ struct constexpr_reporter : reporter
     constexpr ~constexpr_reporter(){};
 #endif
 
-    constexpr void enter_test_case(std::string_view /*name*/,
+    constexpr void enter_test_case(std::string_view name,
                                    std::span<std::string_view const> /*tags*/,
-                                   source_location /*sloc*/) noexcept override
+                                   source_location sloc) noexcept override
     {
+        m_sections.emplace_back(bs::string{name}, sloc);
     }
-    constexpr void leave_test_case() noexcept override {}
+    constexpr void leave_test_case() noexcept override { m_sections.pop(); }
 
     constexpr void start_run(section_path const& /*target*/) noexcept override {}
     constexpr void stop_run() noexcept override {}
 
-    constexpr void enter_section(std::string_view /*name*/, source_location /*sloc*/) noexcept override {}
-    constexpr void leave_section() noexcept override {}
+    constexpr void enter_section(std::string_view name, source_location sloc) noexcept override
+    {
+        m_sections.emplace_back(bs::string{name}, sloc);
+    }
+    constexpr void leave_section() noexcept override { m_sections.pop(); }
 
     constexpr void log_assertion(std::string_view            assertion,
                                  source_location             sloc,
@@ -67,7 +72,7 @@ struct constexpr_reporter : reporter
                                  bool                        result) noexcept override
     {
         if (!result)
-            m_messages = compose_messages(assertion, sloc, expansion, messages);
+            compose_messages(assertion, sloc, expansion, messages);
     }
 
     constexpr void finalize() noexcept override {}
@@ -78,29 +83,30 @@ struct constexpr_reporter : reporter
     static constexpr std::size_t            s_max_message_length = 1024;
     structural_string<s_max_message_length> m_messages;
 
-    constexpr auto compose_messages(std::string_view            assertion,
+    struct section_info
+    {
+        bs::string      name;
+        source_location sloc;
+    };
+    bs::vector<section_info> m_sections;
+
+    constexpr void compose_messages(std::string_view            assertion,
                                     source_location             sloc,
                                     std::string_view            expansion,
-                                    std::span<bs::string const> messages) -> structural_string<s_max_message_length>
+                                    std::span<bs::string const> messages)
     {
-        structural_string<s_max_message_length> result;
-
-        std::size_t cur_idx = 0;
-        auto        append  = [&result, &cur_idx](auto&& s)
-        {
-            auto const length_available = s_max_message_length - cur_idx;
-            auto const length_to_copy   = std::min(s.size(), length_available);
-            std::ranges::copy_n(s.begin(), length_to_copy, result.value + cur_idx);
-            cur_idx += length_to_copy;
-        };
-
-        append(bs::string{sloc.file_name} + ':' + to_string(sloc.line) + ": " + bs::string{assertion});
+        if (m_messages.size() > 0)
+            m_messages.append_as_fit(" ### ");
+        m_messages.append_as_fit("FAILURE: ");
+        m_messages.append_as_fit(bs::string{sloc.file_name} + ':' + to_string(sloc.line) + ": "
+                                 + bs::string{assertion});
         if (!expansion.empty())
-            append(bs::string{" ### WITH EXPANSION: "} + bs::string{expansion});
+            m_messages.append_as_fit(bs::string{"; WITH EXPANSION: "} + bs::string{expansion});
         for (auto&& m : messages)
-            append(bs::string{" ### WITH: "} + m);
-
-        return result;
+            m_messages.append_as_fit(bs::string{"; WITH: "} + m);
+        for (auto&& s : std::ranges::reverse_view(m_sections))
+            m_messages.append_as_fit(bs::string{"; IN: "} + bs::string{s.sloc.file_name} + ':' + to_string(s.sloc.line)
+                                     + ": " + s.name);
     }
 };
 } // namespace bs
