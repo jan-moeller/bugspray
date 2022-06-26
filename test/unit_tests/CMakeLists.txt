@@ -62,5 +62,6 @@ add_executable(bugspray-unit-tests
         )
 target_link_libraries(bugspray-unit-tests PRIVATE bugspray Catch2::Catch2WithMain)
 bs_target_setup(bugspray-unit-tests)
+set_target_properties(bugspray-unit-tests PROPERTIES COMPILE_FLAGS -save-temps)
 
 catch_discover_tests(bugspray-unit-tests)
