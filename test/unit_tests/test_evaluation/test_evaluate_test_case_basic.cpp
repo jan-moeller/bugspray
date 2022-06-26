@@ -32,7 +32,7 @@
 
 using namespace bs;
 
-constexpr void a_test_case_fn(test_run_data& bugspray_data)
+static constexpr void a_test_case_fn(test_run_data& bugspray_data)
 {
     BUGSPRAY_REQUIRE(bugspray_data.current() == section_path{});
     BUGSPRAY_SECTION("t1")
@@ -68,7 +68,7 @@ constexpr void a_test_case_fn(test_run_data& bugspray_data)
     }
 }
 
-TEST_CASE("evaluate_test_case", "[test_evaluation]")
+TEST_CASE("evaluate_test_case (basic)", "[test_evaluation]")
 {
     constexpr std::string_view test_name = "foo";
     constexpr source_location  test_sloc{"some_file.cpp", 42};
@@ -168,5 +168,5 @@ TEST_CASE("evaluate_test_case", "[test_evaluation]")
     PREFIX##REQUIRE(test(return_cache)[0].test_runs[4].assertions[0].result == true);
 
     MAKE_TESTS()
-    //MAKE_TESTS(STATIC_)
+    MAKE_TESTS(STATIC_)
 }

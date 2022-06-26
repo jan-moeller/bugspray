@@ -59,7 +59,25 @@
     (__VA_ARGS__) ? (BUGSPRAY_SECTION_IMPL_EXTRA_COND_runtime) : (BUGSPRAY_SECTION_IMPL_EXTRA_COND_compiletime)
 #define BUGSPRAY_SECTION_IMPL_EXTRA_COND_compiletime_if(...)                                                           \
     (__VA_ARGS__) ? (BUGSPRAY_SECTION_IMPL_EXTRA_COND_compiletime) : (BUGSPRAY_SECTION_IMPL_EXTRA_COND_runtime)
-#define BUGSPRAY_SECTION(...) if (BUGSPRAY_SECTION_IMPL_TRACKER(__VA_ARGS__))
+#define BUGSPRAY_SECTION_IMPL_EXTRA_COND_only_if(...) (__VA_ARGS__)
+#define BUGSPRAY_SECTION_IMPL_EXTRA_COND_only_runtime_if(...) BUGSPRAY_SECTION_IMPL_EXTRA_COND_runtime
+#define BUGSPRAY_SECTION_IMPL_EXTRA_COND_only_compiletime_if(...) BUGSPRAY_SECTION_IMPL_EXTRA_COND_compiletime
+#define BUGSPRAY_SECTION_IMPL_EXTRA_COND_disabled false
+
+#define BUGSPRAY_SECTION_IMPL_CONSTEXPR_CONDITION_runtime true
+#define BUGSPRAY_SECTION_IMPL_CONSTEXPR_CONDITION_compiletime true
+#define BUGSPRAY_SECTION_IMPL_CONSTEXPR_CONDITION_both true
+#define BUGSPRAY_SECTION_IMPL_CONSTEXPR_CONDITION_runtime_if(...) true
+#define BUGSPRAY_SECTION_IMPL_CONSTEXPR_CONDITION_compiletime_if(...) true
+#define BUGSPRAY_SECTION_IMPL_CONSTEXPR_CONDITION_only_if(...) (__VA_ARGS__)
+#define BUGSPRAY_SECTION_IMPL_CONSTEXPR_CONDITION_only_runtime_if(...) (__VA_ARGS__)
+#define BUGSPRAY_SECTION_IMPL_CONSTEXPR_CONDITION_only_compiletime_if(...) (__VA_ARGS__)
+#define BUGSPRAY_SECTION_IMPL_CONSTEXPR_CONDITION_disabled false
+
+#define BUGSPRAY_SECTION(...)                                                                                          \
+    if constexpr (BUGSPRAY_CONCATENATE_EXPANSION(BUGSPRAY_SECTION_IMPL_CONSTEXPR_CONDITION_,                           \
+                                                 BUGSPRAY_GET_2ND_ARG_OR(both, __VA_ARGS__)))                          \
+        if (BUGSPRAY_SECTION_IMPL_TRACKER(__VA_ARGS__))
 
 #define BUGSPRAY_DYNAMIC_SECTION_IMPL(storage_id, name, ...)                                                           \
     constexpr ::bs::structural_string storage_id{name};                                                                \

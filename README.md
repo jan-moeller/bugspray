@@ -143,6 +143,13 @@ It can be one of three values:
   expression evaluates to true, compiletime otherwise.
 - compiletime_if({boolean-expression}): compiletime, if the
   boolean expression evaluates to true, runtime otherwise.
+- only_if({boolean-expression}): both, if the boolean expression
+  evaluates to true, disabled otherwise.
+- only_runtime_if({boolean-expression}): runtime, if the boolean
+  expression evaluates to true, disabled otherwise.
+- only_compiletime_if({boolean-expression}): compiletime, if the
+  boolean expression evaluates to true, disabled otherwise.
+- disabled: Entirely disabled; this section never runs.
 
 The default is both.
 

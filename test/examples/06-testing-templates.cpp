@@ -63,6 +63,14 @@ TEST_CASE("template test")
                     FAIL(); // Will never get called due to runtime_if() above
                 CHECK(T{"foo"}.size() == 3);
             }
+            DYNAMIC_SECTION("v.remove_prefix() (" + stringify_typename<T>() + ")",
+                            only_if(std::same_as<T, std::string_view>))
+            {
+                // Will only be executed with string_view due to only_if() above
+                T s{"foo"};
+                s.remove_prefix(2);
+                CHECK(s == "o");
+            }
         });
 }
 EVAL_TEST_CASE("template test");
