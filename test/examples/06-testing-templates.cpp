@@ -53,5 +53,16 @@ TEST_CASE("template test")
                     CHECK(my_abs(std::numeric_limits<T>::lowest()) == std::numeric_limits<T>::max());
             }
         });
+
+    static_for_each_type<std::string_view, std::string>(
+        [&]<typename T>()
+        {
+            DYNAMIC_SECTION("v.size() (" + stringify_typename<T>() + ")", runtime_if(std::same_as<T, std::string>))
+            {
+                if (std::is_constant_evaluated() && std::same_as<T, std::string>)
+                    FAIL(); // Will never get called due to runtime_if() above
+                CHECK(T{"foo"}.size() == 3);
+            }
+        });
 }
 EVAL_TEST_CASE("template test");

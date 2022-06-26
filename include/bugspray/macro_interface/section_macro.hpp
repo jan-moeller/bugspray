@@ -55,6 +55,10 @@
 #define BUGSPRAY_SECTION_IMPL_EXTRA_COND_runtime !std::is_constant_evaluated()
 #define BUGSPRAY_SECTION_IMPL_EXTRA_COND_compiletime std::is_constant_evaluated()
 #define BUGSPRAY_SECTION_IMPL_EXTRA_COND_both true
+#define BUGSPRAY_SECTION_IMPL_EXTRA_COND_runtime_if(...)                                                               \
+    (__VA_ARGS__) ? (BUGSPRAY_SECTION_IMPL_EXTRA_COND_runtime) : (BUGSPRAY_SECTION_IMPL_EXTRA_COND_compiletime)
+#define BUGSPRAY_SECTION_IMPL_EXTRA_COND_compiletime_if(...)                                                           \
+    (__VA_ARGS__) ? (BUGSPRAY_SECTION_IMPL_EXTRA_COND_compiletime) : (BUGSPRAY_SECTION_IMPL_EXTRA_COND_runtime)
 #define BUGSPRAY_SECTION(...) if (BUGSPRAY_SECTION_IMPL_TRACKER(__VA_ARGS__))
 
 #define BUGSPRAY_DYNAMIC_SECTION_IMPL(storage_id, name, ...)                                                           \

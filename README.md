@@ -131,9 +131,7 @@ it is part of section `"b"` and therefore sees all of its changes.
 
 The `SECTION` macro supports an optional second argument. Just
 like with test cases, you can specify an evaluation constraint:
-The `TEST_CASE` macro supports an optional third argument that
-specifies when the test case can be run. It can be one of three
-values:
+It can be one of three values:
 
 - runtime: the section is only executed at run time. It will be
   skipped during compile time evaluation.
@@ -141,6 +139,10 @@ values:
   will be skipped during run time evaluation.
 - both: the section is executed during both compile time and
   run time evaluation.
+- runtime_if({boolean-expression}): runtime, if the boolean
+  expression evaluates to true, compiletime otherwise.
+- compiletime_if({boolean-expression}): compiletime, if the
+  boolean expression evaluates to true, runtime otherwise.
 
 The default is both.
 
