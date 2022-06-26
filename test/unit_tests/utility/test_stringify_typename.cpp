@@ -50,17 +50,11 @@ TEST_CASE("stringify_typename", "[utility]")
     {
         std::string_view name_of_int;
         {
-            constexpr std::string_view typename_of_int = stringify_typename<int>();
+            constexpr std::string_view typename_of_int = stringify_typename<int, std::string_view>();
             name_of_int                                = typename_of_int;
         }
         return name_of_int;
     };
     STATIC_CHECK(lifetime_test() == "int");
-
-    constexpr auto create_structural_string_test = []
-    {
-        constexpr std::string_view sv = stringify_typename<int>();
-        return structural_string<sv.size()>{sv};
-    };
-    STATIC_CHECK(create_structural_string_test() == "int");
+    STATIC_CHECK(stringify_typename<int>() == "int");
 }

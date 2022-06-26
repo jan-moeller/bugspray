@@ -25,6 +25,8 @@
 #ifndef BUGSPRAY_STRINGIFY_TYPENAME_HPP
 #define BUGSPRAY_STRINGIFY_TYPENAME_HPP
 
+#include "bugspray/utility/structural_string.hpp"
+
 #include <array>
 #include <string_view>
 #include <tuple>
@@ -80,15 +82,42 @@ constexpr auto compute_pretty_function_metadata() -> pretty_function_metadata
     return pretty_function_metadata{prefix, suffix};
 }
 constexpr auto pretty_function_metadata = compute_pretty_function_metadata();
-} // namespace detail
+
+template<typename T, typename As>
+struct stringifier;
 
 template<typename T>
-[[nodiscard]] constexpr auto stringify_typename() -> std::string_view
+struct stringifier<T, std::string_view>
+{
+    [[nodiscard]] constexpr static auto stringify() -> std::string_view
+    {
+        constexpr auto name = pretty_function<T>();
+        constexpr auto meta = compute_pretty_function_metadata();
+        return name.substr(meta.prefix, name.size() - meta.prefix - meta.suffix);
+    }
+};
+
+template<typename T>
+struct stringifier<T, void>
+{
+    [[nodiscard]] constexpr static auto stringify()
+    {
+        constexpr auto sv = stringifier<T, std::string_view>::stringify();
+        return structural_string<sv.size()>{sv};
+    }
+};
+} // namespace detail
+
+/*
+ * Returns a string representation of the type T. The optional second template parameter can either be std::string_view
+ * of void, where void is a stand-in for a structural_string of the correct size.
+ */
+
+template<typename T, typename As = void>
+[[nodiscard]] constexpr auto stringify_typename()
 {
     using namespace detail;
-    constexpr auto name = pretty_function<T>();
-    constexpr auto meta = compute_pretty_function_metadata();
-    return name.substr(meta.prefix, name.size() - meta.prefix - meta.suffix);
+    return stringifier<T, As>::stringify();
 }
 } // namespace bs
 

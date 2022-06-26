@@ -43,10 +43,7 @@ TEST_CASE("template test")
     static_for_each_type<signed int, unsigned int, float, double>(
         [&]<typename T>()
         {
-            // Note: the usage of DYNAMIC_SECTION is currently still a little awkward.
-            constexpr auto typename_sv  = stringify_typename<T>();
-            constexpr auto typename_str = structural_string<typename_sv.size()>{typename_sv};
-            DYNAMIC_SECTION("my_abs(" + typename_str + ")")
+            DYNAMIC_SECTION("my_abs(" + stringify_typename<T>() + ")")
             {
                 CHECK(my_abs(0) == 0);
                 CHECK(my_abs(std::numeric_limits<T>::max()) == std::numeric_limits<T>::max());
