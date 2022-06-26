@@ -30,6 +30,7 @@
 #include <array>
 #include <charconv>
 #include <concepts>
+#include <limits>
 #include <string_view>
 #include <type_traits>
 #include <utility>
