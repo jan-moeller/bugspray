@@ -34,9 +34,26 @@ TEST_CASE("static_for_each_type", "[utility]")
     int num_double     = 0;
     int num_unexpected = 0;
 
-    static_for_each_type<int, float, double>(
-        [&]<typename T>()
-        {
+    SECTION("without I")
+    {
+        static_for_each_type<int, float, double>(
+            [&]<typename T>()
+            {
+                if constexpr (std::same_as<T, int>)
+                    ++num_int;
+                else if constexpr (std::same_as<T, float>)
+                    ++num_float;
+                else if constexpr (std::same_as<T, double>)
+                    ++num_double;
+                else
+                    ++num_unexpected;
+            });
+    }
+    SECTION("with I")
+    {
+        std::vector<int> indices;
+        static_for_each_type<int, float, double>([&]<typename T, auto I>() {
+            indices.push_back(I);
             if constexpr (std::same_as<T, int>)
                 ++num_int;
             else if constexpr (std::same_as<T, float>)
@@ -46,6 +63,8 @@ TEST_CASE("static_for_each_type", "[utility]")
             else
                 ++num_unexpected;
         });
+        REQUIRE(indices == std::vector<int>{0, 1, 2});
+    }
 
     CHECK(num_int == 1);
     CHECK(num_float == 1);

@@ -40,7 +40,10 @@ constexpr void static_for_each_type(Fn&& fn)
         [&fn](auto I)
         {
             using T = std::tuple_element_t<I, types>;
-            std::forward<Fn>(fn).template operator()<T>();
+            if constexpr (requires(Fn f) { f.template operator()<T, I>(); })
+                std::forward<Fn>(fn).template operator()<T, I>();
+            else
+                std::forward<Fn>(fn).template operator()<T>();
         });
 }
 } // namespace bs
