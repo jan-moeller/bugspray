@@ -82,6 +82,11 @@ TEST_CASE("naive_vector", "[utility][detail]")
         STATIC_REQUIRE(naive_vector<int>{1, 2, 3} == naive_vector<int>{1, 2, 3});
         STATIC_REQUIRE(naive_vector<int>{1, 2, 3} != naive_vector<int>{1, 2, 3, 4});
     }
+    SECTION("can three-way compare")
+    {
+        STATIC_REQUIRE((naive_vector<int>{1, 2, 3} <=> naive_vector<int>{1, 2, 3}) == std::strong_ordering::equal);
+        STATIC_REQUIRE((naive_vector<int>{1, 2, 3} <=> naive_vector<int>{1, 3}) == std::strong_ordering::less);
+    }
     SECTION("can copy it")
     {
         constexpr auto test = []()

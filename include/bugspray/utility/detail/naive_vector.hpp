@@ -205,6 +205,10 @@ class naive_vector
     {
         return std::ranges::equal(lhs, rhs);
     }
+    friend constexpr auto operator<=>(naive_vector<T> const& lhs, naive_vector<T> const& rhs) noexcept
+    {
+        return std::lexicographical_compare_three_way(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+    }
 
   private:
     std::allocator<T> m_allocator{};
