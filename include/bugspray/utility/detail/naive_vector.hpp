@@ -174,7 +174,7 @@ class naive_vector
             m_end          = m_begin + s;
             m_capacity_end = m_begin + new_c;
         }
-        std::construct_at(m_end, T{std::forward<Ts>(values)...});
+        std::construct_at(m_end, std::forward<Ts>(values)...);
         return *(m_end++);
     }
 
