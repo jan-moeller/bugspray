@@ -63,4 +63,9 @@ TEST_CASE("naive_string", "[utility][detail]")
         STATIC_REQUIRE(naive_string{"foo"} == naive_string{"foo"});
         STATIC_REQUIRE(naive_string{"foo"} != naive_string{"bar"});
     }
+    SECTION("can three-way compare")
+    {
+        STATIC_REQUIRE((naive_string{"foo"} <=> naive_string{"foo"}) == std::strong_ordering::equal);
+        STATIC_REQUIRE((naive_string{"foo"} <=> naive_string{"bar"}) == std::strong_ordering::greater);
+    }
 }

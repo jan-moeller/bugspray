@@ -128,6 +128,7 @@ class naive_string
     constexpr auto operator[](std::size_t idx) noexcept -> reference { return m_data[idx]; }
 
     constexpr auto operator==(naive_string const&) const noexcept -> bool = default;
+    constexpr auto operator<=>(naive_string const&) const noexcept        = default;
 
   private:
     bs::vector<char> m_data{'\0'};
