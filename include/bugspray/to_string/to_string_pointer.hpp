@@ -44,7 +44,7 @@ constexpr auto to_string([[maybe_unused]] T ptr) -> bs::string
     return to_string<16>(reinterpret_cast<std::uintptr_t>(ptr));
 }
 
-constexpr auto to_string(nullptr_t) -> bs::string
+constexpr auto to_string(std::nullptr_t) -> bs::string
 {
     return "nullptr";
 }
