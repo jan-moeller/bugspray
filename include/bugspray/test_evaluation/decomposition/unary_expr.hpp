@@ -85,6 +85,7 @@ struct unary_expr
     MAKE_OPERATOR(|)
     MAKE_OPERATOR(&&)
     MAKE_OPERATOR(||)
+    MAKE_OPERATOR(<=>)
     MAKE_ASSIGNMENT_OPERATOR(=)
     MAKE_ASSIGNMENT_OPERATOR(+=)
     MAKE_ASSIGNMENT_OPERATOR(-=)
@@ -99,14 +100,8 @@ struct unary_expr
 #undef MAKE_ASSIGNMENT_OPERATOR
 #undef MAKE_OPERATOR
 
-    [[nodiscard]] constexpr auto result() const noexcept -> value_type const&
-    {
-        return *m_value;
-    }
-    [[nodiscard]] constexpr auto str() const noexcept -> bs::string
-    {
-        return stringify(*m_value);
-    }
+    [[nodiscard]] constexpr auto result() const noexcept -> value_type const& { return *m_value; }
+    [[nodiscard]] constexpr auto str() const noexcept -> bs::string { return stringify(*m_value); }
 
   private:
     value_type const* m_value;

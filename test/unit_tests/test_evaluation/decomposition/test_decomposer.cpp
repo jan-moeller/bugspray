@@ -71,6 +71,7 @@ TEST_CASE("decomposer", "[test_evaluation][decomposition]")
     MAKE_SECTION(prefix, 3 >= 2)                                                                                       \
     MAKE_SECTION(prefix, 3 == 2)                                                                                       \
     MAKE_SECTION(prefix, 3 != 2)                                                                                       \
+    MAKE_SECTION(prefix, 3 <=> 2)                                                                                       \
     MAKE_SECTION(prefix, 1 & 2)                                                                                        \
     MAKE_SECTION(prefix, 1 ^ 2)                                                                                        \
     MAKE_SECTION(prefix, 1 | 2)                                                                                        \

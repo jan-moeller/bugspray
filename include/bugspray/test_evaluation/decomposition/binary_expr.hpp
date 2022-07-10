@@ -34,6 +34,43 @@
 
 namespace bs
 {
+namespace detail
+{
+template<structural_string Op>
+constexpr auto make_binary_expr_result(auto lhs, auto rhs) -> decltype(auto)
+{
+    if constexpr (Op == ",")
+        return (*lhs, *rhs);
+
+        // clang-format off
+#define MAKE_RESULT(op)                                                                                                \
+    if constexpr (Op == #op)                                                                                           \
+        return (*lhs op *rhs);
+    // clang-format on
+
+    MAKE_RESULT(*)
+    MAKE_RESULT(/)
+    MAKE_RESULT(%)
+    MAKE_RESULT(+)
+    MAKE_RESULT(-)
+    MAKE_RESULT(<<)
+    MAKE_RESULT(>>)
+    MAKE_RESULT(<)
+    MAKE_RESULT(<=)
+    MAKE_RESULT(>)
+    MAKE_RESULT(>=)
+    MAKE_RESULT(==)
+    MAKE_RESULT(!=)
+    MAKE_RESULT(&)
+    MAKE_RESULT(^)
+    MAKE_RESULT(|)
+    MAKE_RESULT(&&)
+    MAKE_RESULT(||)
+    MAKE_RESULT(<=>)
+#undef MAKE_RESULT
+}
+} // namespace detail
+
 template<structural_string Op, typename T, typename U, typename V>
 struct binary_expr
 {
@@ -44,53 +81,14 @@ struct binary_expr
     constexpr binary_expr(lhs_value_type const* lhs, rhs_value_type const* rhs)
         : m_lhs(lhs)
         , m_rhs(rhs)
+        , m_result(detail::make_binary_expr_result<Op>(lhs, rhs))
     {
-        if constexpr (Op == ",")
-            m_result = (*m_lhs, *m_rhs);
-
-            // clang-format off
-#define MAKE_RESULT(op)                                                                                                \
-    if constexpr (Op == #op)                                                                                           \
-        m_result = (*m_lhs op *m_rhs);
-        // clang-format on
-
-        MAKE_RESULT(*)
-        MAKE_RESULT(/)
-        MAKE_RESULT(%)
-        MAKE_RESULT(+)
-        MAKE_RESULT(-)
-        MAKE_RESULT(<<)
-        MAKE_RESULT(>>)
-        MAKE_RESULT(<)
-        MAKE_RESULT(<=)
-        MAKE_RESULT(>)
-        MAKE_RESULT(>=)
-        MAKE_RESULT(==)
-        MAKE_RESULT(!=)
-        MAKE_RESULT(&)
-        MAKE_RESULT(^)
-        MAKE_RESULT(|)
-        MAKE_RESULT(&&)
-        MAKE_RESULT(||)
-#undef MAKE_RESULT
     }
 
-    [[nodiscard]] constexpr auto result() const -> result_value_type const&
-    {
-        return m_result;
-    }
-    [[nodiscard]] constexpr auto str_lhs() const noexcept -> bs::string
-    {
-        return stringify(*m_lhs);
-    }
-    [[nodiscard]] constexpr auto str_rhs() const noexcept -> bs::string
-    {
-        return stringify(*m_rhs);
-    }
-    [[nodiscard]] constexpr auto str_op() const noexcept -> bs::string
-    {
-        return Op.value;
-    }
+    [[nodiscard]] constexpr auto result() const -> result_value_type const& { return m_result; }
+    [[nodiscard]] constexpr auto str_lhs() const noexcept -> bs::string { return stringify(*m_lhs); }
+    [[nodiscard]] constexpr auto str_rhs() const noexcept -> bs::string { return stringify(*m_rhs); }
+    [[nodiscard]] constexpr auto str_op() const noexcept -> bs::string { return Op.value; }
     [[nodiscard]] constexpr auto str() const noexcept -> bs::string
     {
         return str_lhs() + " " + str_op() + " " + str_rhs();
@@ -124,6 +122,7 @@ struct binary_expr
     MAKE_REGULAR_OPERATOR(|)
     MAKE_REGULAR_OPERATOR(&&)
     MAKE_REGULAR_OPERATOR(||)
+    MAKE_REGULAR_OPERATOR(<=>)
     MAKE_ASSIGNMENT_OPERATOR(=)
     MAKE_ASSIGNMENT_OPERATOR(+=)
     MAKE_ASSIGNMENT_OPERATOR(-=)
