@@ -26,6 +26,7 @@
 #define BUGSPRAY_TO_STRING_STRING_LIKE_HPP
 
 #include "bugspray/to_string/char_to_printable_string.hpp"
+#include "bugspray/utility/character.hpp"
 #include "bugspray/utility/string.hpp"
 
 #include <ranges>
@@ -34,7 +35,7 @@ namespace bs
 {
 template<std::ranges::forward_range T>
 constexpr auto to_string(T&& s) -> bs::string
-    requires std::same_as<std::ranges::range_value_t<T>, char>
+    requires character<std::ranges::range_value_t<T>>
 {
     bs::string result = "\"";
     for (auto&& c : s)
@@ -43,10 +44,10 @@ constexpr auto to_string(T&& s) -> bs::string
     return result;
 }
 
-template<std::size_t N>
-constexpr auto to_string(const char (&s)[N]) -> bs::string
+template<std::size_t N, character CharT>
+constexpr auto to_string(CharT const (&s)[N]) -> bs::string
 {
-    return to_string(std::string_view{s});
+    return to_string(std::basic_string_view<CharT>{s});
 }
 } // namespace bs
 

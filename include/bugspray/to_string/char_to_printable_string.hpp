@@ -61,6 +61,35 @@ constexpr auto char_to_printable_string(char c) -> bs::string
     }
     return bs::string{c};
 }
+
+constexpr auto char_to_printable_string(wchar_t c) -> bs::string
+{
+    auto const s = to_string<16, 8>(static_cast<std::uint32_t>(c));
+    return R"(\x)" + s;
+}
+
+constexpr auto char_to_printable_string(char8_t c) -> bs::string
+{
+    return char_to_printable_string(static_cast<char>(c));
+}
+
+constexpr auto char_to_printable_string(char16_t c) -> bs::string
+{
+    auto const i = static_cast<std::uint16_t>(c);
+    if (i < 128u)
+        return char_to_printable_string(static_cast<char>(c));
+    auto const s = to_string<16, 4>(i);
+    return R"(\x)" + s;
+}
+
+constexpr auto char_to_printable_string(char32_t c) -> bs::string
+{
+    auto const i = static_cast<std::uint32_t>(c);
+    if (i < 128u)
+        return char_to_printable_string(static_cast<char>(c));
+    auto const s = to_string<16, 8>(i);
+    return R"(\x)" + s;
+}
 } // namespace bs
 
 #endif // BUGSPRAY_CHAR_TO_PRINTABLE_STRING_HPP
