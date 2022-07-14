@@ -84,6 +84,7 @@ add_library(bugspray STATIC
         include/bugspray/to_string/to_string_string_like.hpp
         include/bugspray/to_string/to_string_tag.hpp
         include/bugspray/utility/c_array.hpp
+        include/bugspray/utility/character.hpp
         include/bugspray/utility/dependent_false.hpp
         include/bugspray/utility/detail/naive_string.hpp
         include/bugspray/utility/detail/naive_vector.hpp
