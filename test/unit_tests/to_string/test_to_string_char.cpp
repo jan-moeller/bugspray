@@ -30,7 +30,11 @@ TEST_CASE("to_string(char)", "[to_string]")
 #define MAKE_TESTS(PREFIX)                                                                                             \
     PREFIX##CHECK(bs::to_string('a') == "'a'");                                                                        \
     PREFIX##CHECK(bs::to_string('0') == "'0'");                                                                        \
-    PREFIX##CHECK(bs::to_string('\0') == R"('\0')");
+    PREFIX##CHECK(bs::to_string('\0') == R"('\0')");                                                                   \
+    PREFIX##CHECK(bs::to_string(L'w') == R"('\x00000077')");                                                           \
+    PREFIX##CHECK(bs::to_string(u8'w') == R"('w')");                                                                   \
+    PREFIX##CHECK(bs::to_string(u'w') == R"('w')");                                                                    \
+    PREFIX##CHECK(bs::to_string(U'w') == R"('w')");
 
     MAKE_TESTS()
     MAKE_TESTS(STATIC_)

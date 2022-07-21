@@ -34,6 +34,22 @@ constexpr auto to_string(char c) -> bs::string
 {
     return R"(')" + char_to_printable_string(c) + R"(')";
 }
+constexpr auto to_string(wchar_t c) -> bs::string
+{
+    return R"(')" + char_to_printable_string(c) + R"(')";
+}
+constexpr auto to_string(char8_t c) -> bs::string
+{
+    return to_string(static_cast<char>(c));
+}
+constexpr auto to_string(char16_t c) -> bs::string
+{
+    return R"(')" + char_to_printable_string(c) + R"(')";
+}
+constexpr auto to_string(char32_t c) -> bs::string
+{
+    return R"(')" + char_to_printable_string(c) + R"(')";
+}
 } // namespace bs
 
 #endif // BUGSPRAY_TO_STRING_CHAR_HPP
