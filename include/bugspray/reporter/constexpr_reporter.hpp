@@ -80,7 +80,7 @@ struct constexpr_reporter : reporter
     [[nodiscard]] constexpr auto messages() const noexcept { return m_messages; }
 
   private:
-    static constexpr std::size_t            s_max_message_length = 1024;
+    static constexpr std::size_t            s_max_message_length = 2048;
     structural_string<s_max_message_length> m_messages;
     section_path                            m_target;
 
