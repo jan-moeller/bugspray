@@ -95,7 +95,10 @@ class naive_vector
 
     constexpr auto operator=(naive_vector const& other) -> naive_vector&
     {
+#if defined(__GNUC__) and __GNUC__ > 11
+        // GCC 11 chokes on this check
         if (this != &other)
+#endif
         {
             if (capacity() > 0)
             {
