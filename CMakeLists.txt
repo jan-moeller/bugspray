@@ -146,5 +146,11 @@ add_custom_target(
 )
 add_dependencies(bugspray generate_version_header)
 
+message(STATUS "BUGSPRAY_VERSION_MAJOR: ${BUGSPRAY_VERSION_MAJOR}")
+message(STATUS "BUGSPRAY_VERSION_MINOR: ${BUGSPRAY_VERSION_MINOR}")
+message(STATUS "BUGSPRAY_VERSION_PATCH: ${BUGSPRAY_VERSION_PATCH}")
+message(STATUS "BUGSPRAY_DONT_USE_STD_VECTOR: ${BUGSPRAY_DONT_USE_STD_VECTOR}")
+message(STATUS "BUGSPRAY_DONT_USE_STD_STRING: ${BUGSPRAY_DONT_USE_STD_STRING}")
+
 enable_testing()
 add_subdirectory(test)
