@@ -1,6 +1,6 @@
 # Bugspray
 
-![Bugspay logo](https://jan.fam-moe.de/bugspray_512.jpg)
+![Bugspay logo](https://jan.fam-moe.de/bugspray_512.png)
 
 [![GCC](https://github.com/jan-moeller/bugspray/actions/workflows/gcc.yml/badge.svg)](https://github.com/jan-moeller/bugspray/actions/workflows/gcc.yml)
 
