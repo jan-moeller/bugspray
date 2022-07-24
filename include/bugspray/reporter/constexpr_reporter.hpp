@@ -115,7 +115,7 @@ struct constexpr_reporter : reporter
         }
         else
         {
-            m_messages.append_as_fit(bs::string{"; BEFORE REACHING TARGET."});
+            m_messages.append_as_fit(bs::string{"; BEFORE REACHING TARGET"});
         }
         for (auto&& s : std::ranges::reverse_view(m_sections))
             m_messages.append_as_fit(bs::string{"; IN: "} + bs::string{s.sloc.file_name} + ':' + to_string(s.sloc.line)
