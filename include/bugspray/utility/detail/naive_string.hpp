@@ -57,10 +57,8 @@ class naive_string
     }
     constexpr explicit naive_string(std::string_view sv)
     {
-        --m_data.m_end;
         for (auto c : sv)
-            m_data.push_back(c);
-        m_data.push_back('\0');
+            push_back(c);
     }
 
     constexpr auto operator=(char const* str) -> naive_string&
@@ -93,7 +91,7 @@ class naive_string
 
     constexpr void push_back(char value)
     {
-        --m_data.m_end;
+        --m_data.m_size;
         m_data.push_back(value);
         m_data.push_back('\0');
     }

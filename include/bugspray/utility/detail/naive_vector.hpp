@@ -79,8 +79,8 @@ class naive_vector
 
     constexpr naive_vector(naive_vector const& other)
         : m_begin(other.capacity() > 0 ? m_allocator.allocate(other.capacity()) : nullptr)
-        , m_end(m_begin ? m_begin + other.size() : nullptr)
-        , m_capacity_end(m_begin ? m_begin + other.capacity() : nullptr)
+        , m_size(other.m_size)
+        , m_capacity(other.m_capacity)
     {
         for (std::size_t i = 0; i < other.size(); ++i)
             std::construct_at(m_begin + i, other[i]);
@@ -88,26 +88,23 @@ class naive_vector
 
     constexpr naive_vector(naive_vector&& other) noexcept
         : m_begin(std::exchange(other.m_begin, nullptr))
-        , m_end(std::exchange(other.m_end, nullptr))
-        , m_capacity_end(std::exchange(other.m_capacity_end, nullptr))
+        , m_size(std::exchange(other.m_size, 0))
+        , m_capacity(std::exchange(other.m_capacity, 0))
     {
     }
 
     constexpr auto operator=(naive_vector const& other) -> naive_vector&
     {
-#if defined(__GNUC__) and __GNUC__ > 11
-        // GCC 11 chokes on this check
         if (this != &other)
-#endif
         {
             if (capacity() > 0)
             {
                 std::destroy_n(m_begin, size());
                 m_allocator.deallocate(m_begin, capacity());
             }
-            m_begin        = other.capacity() > 0 ? m_allocator.allocate(other.capacity()) : nullptr;
-            m_end          = m_begin ? m_begin + other.size() : nullptr;
-            m_capacity_end = m_begin ? m_begin + other.capacity() : nullptr;
+            m_begin    = other.capacity() > 0 ? m_allocator.allocate(other.capacity()) : nullptr;
+            m_size     = other.m_size;
+            m_capacity = other.m_capacity;
             for (std::size_t i = 0; i < other.size(); ++i)
                 std::construct_at(m_begin + i, other[i]);
         }
@@ -120,11 +117,10 @@ class naive_vector
         {
             std::destroy_n(m_begin, size());
             m_allocator.deallocate(m_begin, capacity());
-            m_begin = m_end = m_capacity_end = nullptr;
         }
-        m_begin        = std::exchange(other.m_begin, nullptr);
-        m_end          = std::exchange(other.m_end, nullptr);
-        m_capacity_end = std::exchange(other.m_capacity_end, nullptr);
+        m_begin    = std::exchange(other.m_begin, nullptr);
+        m_size     = std::exchange(other.m_size, 0);
+        m_capacity = std::exchange(other.m_capacity, 0);
         return *this;
     }
 
@@ -136,8 +132,8 @@ class naive_vector
     [[nodiscard]] constexpr auto begin() const noexcept -> T const* { return m_begin; }
     [[nodiscard]] constexpr auto begin() noexcept -> T* { return m_begin; }
 
-    [[nodiscard]] constexpr auto end() const noexcept -> T const* { return m_end; }
-    [[nodiscard]] constexpr auto end() noexcept -> T* { return m_end; }
+    [[nodiscard]] constexpr auto end() const noexcept -> T const* { return begin() + size(); }
+    [[nodiscard]] constexpr auto end() noexcept -> T* { return begin() + size(); }
 
     [[nodiscard]] constexpr auto rbegin() const noexcept { return std::make_reverse_iterator(end()); }
     [[nodiscard]] constexpr auto rbegin() noexcept { return std::make_reverse_iterator(end()); }
@@ -148,11 +144,8 @@ class naive_vector
     [[nodiscard]] constexpr auto data() const noexcept -> T const* { return begin(); }
     [[nodiscard]] constexpr auto data() noexcept -> T* { return begin(); }
 
-    [[nodiscard]] constexpr auto size() const noexcept -> std::size_t { return m_begin ? m_end - m_begin : 0; }
-    [[nodiscard]] constexpr auto capacity() const noexcept -> std::size_t
-    {
-        return m_begin ? m_capacity_end - m_begin : 0;
-    }
+    [[nodiscard]] constexpr auto size() const noexcept -> std::size_t { return m_size; }
+    [[nodiscard]] constexpr auto capacity() const noexcept -> std::size_t { return m_capacity; }
     [[nodiscard]] constexpr auto empty() const noexcept -> bool { return size() == 0; }
 
     constexpr void push_back(T const& value) { emplace_back(value); }
@@ -160,7 +153,7 @@ class naive_vector
     template<typename... Ts>
     constexpr auto emplace_back(Ts&&... values) -> reference
     {
-        if (m_capacity_end == m_end)
+        if (m_capacity == m_size)
         {
             auto const s         = size();
             auto const c         = capacity();
@@ -173,12 +166,12 @@ class naive_vector
                 std::destroy_n(m_begin, s);
                 m_allocator.deallocate(m_begin, c);
             }
-            m_begin        = new_begin;
-            m_end          = m_begin + s;
-            m_capacity_end = m_begin + new_c;
+            m_begin    = new_begin;
+            m_capacity = new_c;
         }
-        std::construct_at(m_end, std::forward<Ts>(values)...);
-        return *(m_end++);
+        std::construct_at(end(), std::forward<Ts>(values)...);
+        ++m_size;
+        return back();
     }
 
     constexpr auto insert(const_iterator pos, T const& value) -> iterator
@@ -188,8 +181,8 @@ class naive_vector
         if (size() == 1)
             return begin();
         auto b = begin() + idx;
-        auto m = m_end - 1;
-        auto e = m_end;
+        auto m = end() - 1;
+        auto e = end();
         std::ranges::rotate(b, m, e);
         return b;
     }
@@ -198,7 +191,7 @@ class naive_vector
     {
         assert(!empty());
         std::destroy_at(&back());
-        --m_end;
+        --m_size;
     }
 
     constexpr auto operator[](std::size_t idx) const noexcept -> const_reference { return *(begin() + idx); }
@@ -216,9 +209,9 @@ class naive_vector
   private:
     std::allocator<T> m_allocator{};
 
-    T* m_begin        = nullptr;
-    T* m_end          = nullptr;
-    T* m_capacity_end = nullptr;
+    T*          m_begin    = nullptr;
+    std::size_t m_size     = 0;
+    std::size_t m_capacity = 0;
 
     friend class naive_string;
 };
