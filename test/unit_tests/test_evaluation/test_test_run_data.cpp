@@ -37,17 +37,16 @@ TEST_CASE("test_run_data", "[test_evaluation]")
 
         caching_reporter reporter;
         reporter.enter_test_case("", {}, source_location{});
-        reporter.start_run(target);
+        reporter.start_run();
 
         test_case_topology topo;
         topo.chart(target);
 
-        test_run_data data{reporter, topo, 1};
+        test_run_data data{reporter, topo};
 
-        assert((data.target() == target));
+        assert((data.target() == std::nullopt));
         assert((data.current() == section_path{}));
 
-        assert(!data.can_enter_section("bar"));
         assert(data.can_enter_section("foo"));
 
         data.log_assertion("test", source_location{}, {}, true);
@@ -55,7 +54,12 @@ TEST_CASE("test_run_data", "[test_evaluation]")
         data.enter_section("foo", source_location{});
 
         assert(data.can_enter_section("bar"));
+        data.enter_section("bar", source_location{});
+        data.leave_section();
+
+        assert((*data.target() == target));
         assert(!data.can_enter_section("foo"));
+        assert(data.can_enter_section("bar"));
 
         data.log_assertion("test2", source_location{}, {}, true);
         data.leave_section();

@@ -50,12 +50,20 @@ constexpr auto evaluate_test_case(test_case const& tc, reporter& the_reporter, s
     test_case_topology topo;
 
     the_reporter.enter_test_case(tc.name, tc.tags, tc.source_location);
-    for (std::size_t i = 0; i < topo.size(); ++i)
+    while (!topo.all_done())
     {
-        the_reporter.start_run(topo[i]);
+        the_reporter.start_run();
 
-        test_run_data data{the_reporter, topo, i};
+        test_run_data data{the_reporter, topo};
         success &= evaluate_test_case_target(tc, data);
+
+        if (data.target())
+            topo.mark_done(*data.target());
+        else if (topo.node_count() == 1)
+        {
+            the_reporter.log_target({}); // The target was the root section
+            topo.mark_done({});
+        }
 
         the_reporter.stop_run();
 

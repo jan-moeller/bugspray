@@ -90,28 +90,34 @@ void xml_reporter::leave_test_case() noexcept
     m_section_root = section_data{};
 }
 
-void xml_reporter::start_run(section_path const& target) noexcept
+void xml_reporter::start_run() noexcept
 {
-    m_current_target = target;
     m_stopwatch.start_section_timer();
 }
 
 void xml_reporter::stop_run() noexcept
 {
     current_data().runtime_in_seconds = m_stopwatch.stop_section_timer().count() / 1000.;
+    m_current_target.reset();
+}
+
+void xml_reporter::log_target(section_path const& target) noexcept
+{
+    m_current_target = target;
 }
 
 void xml_reporter::enter_section(std::string_view name, source_location sloc) noexcept
 {
-    if (name == m_current_target.back())
-    {
-        current_data().name = bs::string{name};
-        current_data().sloc = sloc;
-    }
+    m_current_path.push_back(bs::string{name});
+
+    auto& d = current_data();
+    d.name  = bs::string{name};
+    d.sloc  = sloc;
 }
 
 void xml_reporter::leave_section() noexcept
 {
+    m_current_path.pop();
 }
 
 void xml_reporter::log_assertion(std::string_view            assertion,
@@ -157,7 +163,7 @@ void xml_reporter::finalize() noexcept
 auto xml_reporter::current_data() -> section_data&
 {
     section_data* p = &m_section_root;
-    for (auto&& s : m_current_target)
+    for (auto&& s : m_current_path)
     {
         auto* iter = std::ranges::find_if(p->sections, [s](section_data const& sd) { return sd.name == s; });
         if (iter == p->sections.end())
@@ -165,7 +171,7 @@ auto xml_reporter::current_data() -> section_data&
             BUGSPRAY_DISABLE_WARNING_PUSH
             BUGSPRAY_DISABLE_WARNING_MISSING_FIELD_INITIALIZERS
             // Missing field initializers is okay in this instance. The other fields are supposed to be
-            // default-initialized (vectors), or will be overridden later (timing, sloc).
+            // default-initialized (vectors), or will be overwritten later (timing, sloc).
             iter = &p->sections.emplace_back(section_data{.name = s});
             BUGSPRAY_DISABLE_WARNING_POP
         }

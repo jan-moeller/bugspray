@@ -40,12 +40,28 @@ TEST_CASE("test_case_topology", "[test_evaluation]")
         t.chart(section_path{"foo", "bam", "blerp"});
         return t;
     };
-    CAPTURE(test());
-    STATIC_REQUIRE(test().size() == 6);
-    STATIC_REQUIRE(test()[0] == section_path{});
-    STATIC_REQUIRE(test()[1] == section_path{"foo"});
-    STATIC_REQUIRE(test()[2] == section_path{"foo", "bar"});
-    STATIC_REQUIRE(test()[3] == section_path{"foo", "bar", "baz"});
-    STATIC_REQUIRE(test()[4] == section_path{"foo", "bam"});
-    STATIC_REQUIRE(test()[5] == section_path{"foo", "bam", "blerp"});
+    STATIC_REQUIRE(test().leaf_count() == 2);
+    STATIC_REQUIRE(test().node_count() == 6);
+    STATIC_REQUIRE(!test().is_done(section_path{}));
+    STATIC_REQUIRE(!test().is_done(section_path{"foo"}));
+    STATIC_REQUIRE(!test().is_done(section_path{"foo", "bar"}));
+    STATIC_REQUIRE(!test().is_done(section_path{"foo", "bar", "baz"}));
+    STATIC_REQUIRE(!test().is_done(section_path{"foo", "bam"}));
+    STATIC_REQUIRE(!test().is_done(section_path{"foo", "bam", "blerp"}));
+    STATIC_REQUIRE(
+        [&]
+        {
+            auto t = test();
+            t.mark_done(section_path{"foo", "bam", "blerp"});
+            assert(t.is_done(section_path{"foo", "bam", "blerp"}));
+            assert(t.is_done(section_path{"foo", "bam"}));
+            assert(!t.is_done(section_path{"foo"}));
+            t.mark_done(section_path{"foo", "bar", "baz"});
+            assert(t.is_done(section_path{"foo", "bar", "baz"}));
+            assert(t.is_done(section_path{"foo", "bar"}));
+            assert(t.is_done(section_path{"foo"}));
+            assert(t.is_done(section_path{}));
+            assert(t.all_done());
+            return true;
+        }());
 }

@@ -31,6 +31,7 @@
 #include "bugspray/utility/vector.hpp"
 
 #include <algorithm>
+#include <optional>
 #include <span>
 #include <string_view>
 
@@ -63,7 +64,7 @@ struct caching_reporter : reporter
     };
     struct test_run_data : assertion_and_section_holder
     {
-        section_path target;
+        std::optional<section_path> target;
     };
     struct test_case_data
     {
@@ -88,12 +89,14 @@ struct caching_reporter : reporter
 
     constexpr void leave_test_case() noexcept override {}
 
-    constexpr void start_run(section_path const& target) noexcept override
-    {
-        m_test_cases.back().test_runs.push_back({{}, target});
-    }
+    constexpr void start_run() noexcept override { m_test_cases.back().test_runs.push_back({{}, {}}); }
 
     constexpr void stop_run() noexcept override {}
+
+    constexpr void log_target(section_path const& target) noexcept override
+    {
+        m_test_cases.back().test_runs.back().target = target;
+    }
 
     constexpr void enter_section(std::string_view name, source_location sloc) noexcept override
     {

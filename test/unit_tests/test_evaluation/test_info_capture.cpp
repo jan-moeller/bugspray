@@ -45,7 +45,7 @@ TEST_CASE("info_capture", "[test_evaluation]")
 {
     noop_reporter      reporter{};
     test_case_topology topo;
-    test_run_data      data{reporter, topo, 0};
+    test_run_data      data{reporter, topo};
     info_capture       ic{data, std::array{bs::string{"msg1"}, bs::string{"msg2"}}};
 
     REQUIRE(ic.m_count == 2);

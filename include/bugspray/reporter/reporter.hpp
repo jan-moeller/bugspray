@@ -53,8 +53,8 @@ struct reporter
                                            source_location                   sloc) noexcept = 0;
     virtual constexpr void leave_test_case() noexcept                     = 0;
 
-    virtual constexpr void start_run(section_path const& target) noexcept = 0;
-    virtual constexpr void stop_run() noexcept                            = 0;
+    virtual constexpr void start_run() noexcept = 0;
+    virtual constexpr void stop_run() noexcept  = 0;
 
     virtual constexpr void enter_section(std::string_view name, source_location sloc) noexcept = 0;
     virtual constexpr void leave_section() noexcept                                            = 0;
@@ -63,7 +63,8 @@ struct reporter
                                          source_location             sloc,
                                          std::string_view            expansion,
                                          std::span<bs::string const> messages,
-                                         bool                        result) noexcept = 0;
+                                         bool                        result) noexcept             = 0;
+    virtual constexpr void log_target(section_path const& target) noexcept = 0;
 
     virtual constexpr void finalize() noexcept = 0;
 };

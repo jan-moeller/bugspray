@@ -63,10 +63,11 @@ TEST_CASE("caching_reporter", "[reporter]")
                                  test_case_tags,
                                  source_location{.file_name = filename, .line = test_case_line});
 
-        reporter.start_run(section_path{});
+        reporter.start_run();
+        reporter.log_target({});
         reporter.stop_run();
 
-        reporter.start_run(section_path{bs::string{section_name}});
+        reporter.start_run();
         reporter.enter_section(section_name, source_location{.file_name = filename, .line = section_line});
 
         bs::vector<bs::string> messages{};
@@ -80,6 +81,7 @@ TEST_CASE("caching_reporter", "[reporter]")
                                assertion_result);
 
         reporter.leave_section();
+        reporter.log_target(section_path{bs::string{section_name}});
         reporter.stop_run();
         reporter.leave_test_case();
 

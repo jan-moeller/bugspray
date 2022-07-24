@@ -93,49 +93,50 @@ TEST_CASE("evaluate_test_case (section constraints)", "[test_evaluation]")
     PREFIX##CHECK(test(return_result) == true);                                                                        \
     PREFIX##CHECK(test(return_cache).size() == 1);                                                                     \
     PREFIX##CHECK(                                                                                                     \
-        std::ranges::any_of(test(return_cache)[0].test_runs, [](auto const& trd) { return trd.target.empty(); })       \
-        == true);                                                                                                      \
+        std::ranges::any_of(test(return_cache)[0].test_runs, [](auto const& trd) { return trd.target->empty(); })      \
+        == false);                                                                                                     \
     PREFIX##CHECK(std::ranges::any_of(test(return_cache)[0].test_runs,                                                 \
                                       [](auto const& trd)                                                              \
-                                      { return trd.target.size() == 1 && trd.target.front() == "both"; })              \
+                                      { return trd.target->size() == 1 && trd.target->front() == "both"; })            \
                   == true);                                                                                            \
     PREFIX##CHECK(std::ranges::any_of(test(return_cache)[0].test_runs,                                                 \
                                       [](auto const& trd)                                                              \
-                                      { return trd.target.size() == 1 && trd.target.front() == "runtime"; })           \
+                                      { return trd.target->size() == 1 && trd.target->front() == "runtime"; })         \
                   == !std::is_constant_evaluated());                                                                   \
     PREFIX##CHECK(std::ranges::any_of(test(return_cache)[0].test_runs,                                                 \
                                       [](auto const& trd)                                                              \
-                                      { return trd.target.size() == 1 && trd.target.front() == "compiletime"; })       \
+                                      { return trd.target->size() == 1 && trd.target->front() == "compiletime"; })     \
                   == std::is_constant_evaluated());                                                                    \
     PREFIX##CHECK(std::ranges::any_of(test(return_cache)[0].test_runs,                                                 \
-                                      [](auto const& trd)                                                              \
-                                      { return trd.target.size() == 1 && trd.target.front() == "runtime_if(true)"; })  \
+                                      [](auto const& trd) {                                                            \
+                                          return trd.target->size() == 1 && trd.target->front() == "runtime_if(true)"; \
+                                      })                                                                               \
                   == !std::is_constant_evaluated());                                                                   \
     PREFIX##CHECK(std::ranges::any_of(test(return_cache)[0].test_runs,                                                 \
                                       [](auto const& trd) {                                                            \
-                                          return trd.target.size() == 1                                                \
-                                                 && trd.target.front() == "compiletime_if(true)";                      \
+                                          return trd.target->size() == 1                                               \
+                                                 && trd.target->front() == "compiletime_if(true)";                     \
                                       })                                                                               \
                   == std::is_constant_evaluated());                                                                    \
     PREFIX##CHECK(std::ranges::any_of(test(return_cache)[0].test_runs,                                                 \
                                       [](auto const& trd)                                                              \
-                                      { return trd.target.size() == 1 && trd.target.front() == "only_if(true)"; })     \
+                                      { return trd.target->size() == 1 && trd.target->front() == "only_if(true)"; })   \
                   == true);                                                                                            \
     PREFIX##CHECK(std::ranges::any_of(test(return_cache)[0].test_runs,                                                 \
                                       [](auto const& trd) {                                                            \
-                                          return trd.target.size() == 1                                                \
-                                                 && trd.target.front() == "only_runtime_if(true)";                     \
+                                          return trd.target->size() == 1                                               \
+                                                 && trd.target->front() == "only_runtime_if(true)";                    \
                                       })                                                                               \
                   == !std::is_constant_evaluated());                                                                   \
     PREFIX##CHECK(std::ranges::any_of(test(return_cache)[0].test_runs,                                                 \
                                       [](auto const& trd) {                                                            \
-                                          return trd.target.size() == 1                                                \
-                                                 && trd.target.front() == "only_compiletime_if(true)";                 \
+                                          return trd.target->size() == 1                                               \
+                                                 && trd.target->front() == "only_compiletime_if(true)";                \
                                       })                                                                               \
                   == std::is_constant_evaluated());                                                                    \
     PREFIX##CHECK(std::ranges::any_of(test(return_cache)[0].test_runs,                                                 \
                                       [](auto const& trd)                                                              \
-                                      { return trd.target.size() == 1 && trd.target.front() == "disabled"; })          \
+                                      { return trd.target->size() == 1 && trd.target->front() == "disabled"; })        \
                   == false);
 
     MAKE_TESTS()

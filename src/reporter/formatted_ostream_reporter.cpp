@@ -50,13 +50,18 @@ void formatted_ostream_reporter::leave_test_case() noexcept
 {
 }
 
-void formatted_ostream_reporter::start_run(section_path const& target) noexcept
+void formatted_ostream_reporter::start_run() noexcept
 {
-    m_cur_target = target;
 }
 
 void formatted_ostream_reporter::stop_run() noexcept
 {
+    m_cur_target.reset();
+}
+
+void formatted_ostream_reporter::log_target(section_path const& target) noexcept
+{
+    m_cur_target = target;
 }
 
 void formatted_ostream_reporter::enter_section(std::string_view name, source_location sloc) noexcept
@@ -87,15 +92,22 @@ void formatted_ostream_reporter::log_assertion(std::string_view            asser
         ++m_stats.m_num_failed_test_cases;
     }
 
-    if (m_cur_target.size() > 0)
+    if (m_cur_target)
     {
-        m_stream << "When evaluating section " << m_cur_target[0];
-        if (m_cur_target.size() > 1)
+        if (m_cur_target->size() > 0)
         {
-            for (std::size_t i = 1; i < m_cur_target.size(); ++i)
-                m_stream << " --> " << m_cur_target[i];
+            m_stream << "When evaluating section " << (*m_cur_target)[0];
+            if (m_cur_target->size() > 1)
+            {
+                for (std::size_t i = 1; i < m_cur_target->size(); ++i)
+                    m_stream << " --> " << (*m_cur_target)[i];
+            }
+            m_stream << ":\n";
         }
-        m_stream << ":\n";
+    }
+    else
+    {
+        m_stream << "Before reaching target section\n";
     }
 
     m_stream << sloc.file_name << ':' << sloc.line << ": FAILED:\n";

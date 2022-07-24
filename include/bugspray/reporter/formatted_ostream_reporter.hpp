@@ -27,6 +27,7 @@
 
 #include "bugspray/reporter/reporter.hpp"
 
+#include <optional>
 #include <ostream>
 
 /*
@@ -43,8 +44,9 @@ struct formatted_ostream_reporter : reporter
                          std::span<std::string_view const> tags,
                          source_location                   sloc) noexcept override;
     void leave_test_case() noexcept override;
-    void start_run(section_path const& target) noexcept override;
+    void start_run() noexcept override;
     void stop_run() noexcept override;
+    void log_target(section_path const& target) noexcept override;
     void enter_section(std::string_view name, source_location sloc) noexcept override;
     void leave_section() noexcept override;
     void log_assertion(std::string_view            assertion,
@@ -76,12 +78,12 @@ struct formatted_ostream_reporter : reporter
 
     void report_test_case_head(test_case_data const& data);
 
-    test_case_data           m_cur_test_case;
-    section_path             m_cur_target;
-    bs::vector<section_data> m_cur_section;
-    statistics               m_stats;
-    bool                     m_failed_assertion_in_this_test_case = false;
-    std::ostream&            m_stream;
+    test_case_data              m_cur_test_case;
+    std::optional<section_path> m_cur_target;
+    bs::vector<section_data>    m_cur_section;
+    statistics                  m_stats;
+    bool                        m_failed_assertion_in_this_test_case = false;
+    std::ostream&               m_stream;
 };
 } // namespace bs
 

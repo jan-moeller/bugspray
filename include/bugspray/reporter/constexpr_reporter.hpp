@@ -56,8 +56,10 @@ struct constexpr_reporter : reporter
     }
     constexpr void leave_test_case() noexcept override { m_sections.pop(); }
 
-    constexpr void start_run(section_path const& target) noexcept override { m_target = target; }
+    constexpr void start_run() noexcept override {}
     constexpr void stop_run() noexcept override {}
+
+    constexpr void log_target(section_path const& target) noexcept override { m_target = target; }
 
     constexpr void enter_section(std::string_view name, source_location sloc) noexcept override
     {
@@ -82,7 +84,7 @@ struct constexpr_reporter : reporter
   private:
     static constexpr std::size_t            s_max_message_length = 2048;
     structural_string<s_max_message_length> m_messages;
-    section_path                            m_target;
+    std::optional<section_path>             m_target;
 
     struct section_info
     {
@@ -105,9 +107,16 @@ struct constexpr_reporter : reporter
             m_messages.append_as_fit(bs::string{"; WITH EXPANSION: "} + bs::string{expansion});
         for (auto&& m : messages)
             m_messages.append_as_fit(bs::string{"; WITH: "} + m);
-        m_messages.append_as_fit(bs::string{"; WHEN TARGETING: "} + m_sections.front().name);
-        for (auto&& s : m_target)
-            m_messages.append_as_fit(bs::string{"->"} + s);
+        if (m_target)
+        {
+            m_messages.append_as_fit(bs::string{"; AFTER RUNNING: "} + m_sections.front().name);
+            for (auto&& s : *m_target)
+                m_messages.append_as_fit(bs::string{"->"} + s);
+        }
+        else
+        {
+            m_messages.append_as_fit(bs::string{"; BEFORE REACHING TARGET."});
+        }
         for (auto&& s : std::ranges::reverse_view(m_sections))
             m_messages.append_as_fit(bs::string{"; IN: "} + bs::string{s.sloc.file_name} + ':' + to_string(s.sloc.line)
                                      + ": " + s.name);

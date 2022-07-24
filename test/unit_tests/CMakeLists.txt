@@ -34,6 +34,7 @@ add_executable(bugspray-unit-tests
         test_evaluation/test_evaluate_test_case_basic.cpp
         test_evaluation/test_evaluate_test_case_section_constraints.cpp
         test_evaluation/test_evaluate_test_case_target.cpp
+        test_evaluation/test_evaluate_test_case_with_loops.cpp
         test_evaluation/test_info_capture.cpp
         test_evaluation/test_parse_tag_string.cpp
         test_evaluation/test_test_case_filter.cpp

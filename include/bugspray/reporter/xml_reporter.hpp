@@ -30,6 +30,7 @@
 #include "bugspray/utility/xml_writer.hpp"
 
 #include <chrono>
+#include <optional>
 #include <ostream>
 
 /*
@@ -48,8 +49,10 @@ struct xml_reporter : reporter
 
     void leave_test_case() noexcept override;
 
-    void start_run(section_path const& target) noexcept override;
+    void start_run() noexcept override;
     void stop_run() noexcept override;
+
+    void log_target(section_path const& target) noexcept override;
 
     void enter_section(std::string_view name, source_location sloc) noexcept override;
     void leave_section() noexcept override;
@@ -83,8 +86,9 @@ struct xml_reporter : reporter
         source_location sloc;
         double          runtime_in_seconds;
     };
-    section_data m_section_root;
-    section_path m_current_target;
+    section_data                m_section_root;
+    section_path                m_current_path;
+    std::optional<section_path> m_current_target;
 
     auto current_data() -> section_data&;
     void write_section(section_data const& sd);

@@ -121,6 +121,7 @@ TEST_CASE("test") {
         ++i;
         SECTION("c") {}
     }
+    REQUIRE(i == 1);
 }
 ```
 
@@ -128,6 +129,13 @@ In section `"a"`, `i` is incremented from `0` to `1`. In section
 `"b"`, `i` is _also_ incremented from `0` to `1`, because it does
 not depend on section `"a"`. Section `"c"` sees `i` as `1` because
 it is part of section `"b"` and therefore sees all of its changes.
+At the end of the test case, `i` is going to be `1` no matter
+what - because either section `"a"` or `"b" -> "c"` has been
+executed. Therefore, postconditions can naturally be tested after
+sections.
+
+In total, this test case will be executed twice; once for every
+leaf section.
 
 The `SECTION` macro supports an optional second argument. Just
 like with test cases, you can specify an evaluation constraint:

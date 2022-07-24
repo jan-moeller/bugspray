@@ -31,6 +31,7 @@
 #include "bugspray/utility/source_location.hpp"
 #include "bugspray/utility/string.hpp"
 
+#include <optional>
 #include <span>
 #include <string_view>
 
@@ -50,36 +51,53 @@ namespace bs
 {
 struct test_run_data
 {
-    constexpr explicit test_run_data(reporter& the_reporter, test_case_topology& topo, std::size_t target_idx)
+    constexpr explicit test_run_data(reporter& the_reporter, test_case_topology& topo)
         : m_reporter(the_reporter)
         , m_topology(topo)
-        , m_target_idx(target_idx)
     {
     }
 
     [[nodiscard]] constexpr auto topology() noexcept -> test_case_topology& { return m_topology; }
-    [[nodiscard]] constexpr auto target() const noexcept -> section_path const& { return m_topology[m_target_idx]; }
-    [[nodiscard]] constexpr auto current() const noexcept -> section_path
-    {
-        return section_path{target().begin(), target().begin() + m_cur_level};
-    }
+    [[nodiscard]] constexpr auto target() const noexcept -> std::optional<section_path> const& { return m_target; }
+    [[nodiscard]] constexpr auto current() const noexcept -> section_path const& { return m_cur_path; }
 
     [[nodiscard]] constexpr auto can_enter_section(std::string_view name) const noexcept -> bool
     {
-        return target().size() > m_cur_level && target()[m_cur_level] == name;
+        section_path const proj_path = [&]
+        {
+            auto p = m_cur_path;
+            p.push_back(bs::string{name});
+            return p;
+        }();
+        if (m_target)
+        {
+            // Allow re-entering sections already entered this run
+            // This is to support loops in the test case
+            if (proj_path.size() > m_target->size())
+                return false;
+            return std::ranges::equal(m_target->begin(),
+                                      m_target->begin() + proj_path.size(),
+                                      proj_path.begin(),
+                                      proj_path.end());
+        }
+        return !m_topology.is_done(proj_path);
     }
 
     constexpr void enter_section(std::string_view name, source_location sloc) noexcept
     {
-        assert(target()[m_cur_level] == name);
-        ++m_cur_level;
+        m_cur_path.push_back(bs::string{name});
         m_reporter.enter_section(name, sloc);
     }
 
     constexpr void leave_section() noexcept
     {
-        assert(m_cur_level > 0);
-        --m_cur_level;
+        assert(!m_cur_path.empty());
+        if (!m_target)
+        {
+            m_target = m_cur_path;
+            m_reporter.log_target(m_target.value());
+        }
+        m_cur_path.pop();
         m_reporter.leave_section();
     }
 
@@ -108,12 +126,12 @@ struct test_run_data
     constexpr auto operator=(test_run_data&&) -> test_run_data&      = delete;
 
   private:
-    reporter&              m_reporter;
-    test_case_topology&    m_topology;
-    std::size_t const      m_target_idx;
-    std::size_t            m_cur_level = 0;
-    bool                   m_success   = true;
-    bs::vector<bs::string> m_messages;
+    reporter&                   m_reporter;
+    test_case_topology&         m_topology;
+    section_path                m_cur_path;
+    std::optional<section_path> m_target;
+    bool                        m_success = true;
+    bs::vector<bs::string>      m_messages;
 };
 } // namespace bs
 

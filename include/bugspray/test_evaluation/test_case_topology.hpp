@@ -29,6 +29,7 @@
 #include "bugspray/utility/vector.hpp"
 
 #include <algorithm>
+#include <span>
 
 /*
  * test_case_topology is a helper class to be used when discovering the topology of a test case; i.e. when running
@@ -47,42 +48,93 @@ struct test_case_topology
         path.push_back(bs::string{next});
         chart(path);
     }
+    constexpr void chart(section_path const& path) { chart(m_root, std::span<bs::string const>(path)); }
 
-    constexpr void chart(section_path const& path)
+    [[nodiscard]] constexpr auto all_done() const noexcept -> bool { return m_root.done; }
+    [[nodiscard]] constexpr auto is_done(section_path const& path) const -> bool
     {
-        section_path const* insert_iter    = nullptr;
-        std::size_t         matching_depth = 0;
-        for (auto* iter = m_paths.begin(); iter != m_paths.end(); ++iter)
-        {
-            if (*iter == path)
-            {
-                insert_iter = nullptr;
-                break;
-            }
-            auto const [i1, i2] = std::ranges::mismatch(*iter, path);
-            auto const d        = i2 - path.begin();
-            if (std::cmp_greater_equal(d, matching_depth))
-            {
-                insert_iter    = iter;
-                matching_depth = d;
-            }
-            else
-                break;
-        }
-        if (insert_iter)
-            m_paths.insert(insert_iter + 1, path);
+        return is_done(m_root, std::span<bs::string const>(path));
     }
+    constexpr void mark_done(section_path const& path) { mark_done(m_root, std::span<bs::string const>(path)); }
 
-    [[nodiscard]] constexpr auto size() const noexcept -> std::size_t { return m_paths.size(); }
+    [[nodiscard]] constexpr auto node_count() const noexcept -> std::size_t { return node_count(m_root); }
+    [[nodiscard]] constexpr auto leaf_count() const noexcept -> std::size_t { return leaf_count(m_root); }
 
-    [[nodiscard]] constexpr auto begin() const noexcept { return m_paths.begin(); }
-    [[nodiscard]] constexpr auto end() const noexcept { return m_paths.end(); }
-
-    constexpr auto operator[](std::size_t idx) const noexcept -> section_path const& { return m_paths[idx]; }
     constexpr auto operator==(test_case_topology const&) const noexcept -> bool = default;
 
   private:
-    bs::vector<section_path> m_paths{{}};
+    struct node
+    {
+        bs::string       name;
+        bool             done = false;
+        bs::vector<node> children{};
+
+        constexpr auto operator==(node const& other) const noexcept -> bool
+        {
+            auto const same          = name == other.name && done == other.done;
+            auto const children_same = [&]
+            {
+                if (children.size() != other.children.size())
+                    return false;
+                for (std::size_t i = 0; i < children.size(); ++i)
+                    if (children[i] != other.children[i])
+                        return false;
+                return true;
+            }();
+            return same && children_same;
+        }
+    };
+
+    constexpr void chart(node& n, std::span<bs::string const> sections)
+    {
+        if (sections.empty())
+            return;
+        auto* iter = std::ranges::find_if(n.children, [&](node const& c) { return c.name == sections.front(); });
+        if (iter == n.children.end())
+            iter = n.children.insert(n.children.end(), node{sections.front()});
+        chart(*iter, sections.subspan(1));
+    }
+
+    [[nodiscard]] constexpr auto is_done(node const& n, std::span<bs::string const> sections) const -> bool
+    {
+        if (sections.empty())
+            return n.done;
+        auto* iter = std::ranges::find_if(n.children, [&](node const& c) { return c.name == sections.front(); });
+        assert(iter != n.children.end());
+        return is_done(*iter, sections.subspan(1));
+    }
+
+    constexpr void mark_done(node& n, std::span<bs::string const> sections)
+    {
+        if (sections.empty())
+        {
+            n.done = true;
+            return;
+        }
+        auto* iter = std::ranges::find_if(n.children, [&](node const& c) { return c.name == sections.front(); });
+        assert(iter != n.children.end());
+        mark_done(*iter, sections.subspan(1));
+        if (std::ranges::all_of(n.children, [](auto const& c) { return c.done; }))
+            n.done = true;
+    }
+
+    [[nodiscard]] constexpr auto node_count(node const& n) const -> std::size_t
+    {
+        std::size_t count = 1;
+        for (auto&& c : n.children)
+            count += node_count(c);
+        return count;
+    }
+
+    [[nodiscard]] constexpr auto leaf_count(node const& n) const -> std::size_t
+    {
+        std::size_t count = n.children.empty() ? 1 : 0;
+        for (auto&& c : n.children)
+            count += leaf_count(c);
+        return count;
+    }
+
+    node m_root;
 };
 } // namespace bs
 

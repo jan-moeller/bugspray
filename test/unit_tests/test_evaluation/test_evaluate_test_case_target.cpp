@@ -62,10 +62,10 @@ CATCH_TEST_CASE("evaluate_test_case_target", "[test_evaluation]")
             };
             caching_reporter   reporter;
             test_case_topology topo;
-            test_run_data      data{reporter, topo, 0};
+            test_run_data      data{reporter, topo};
 
             reporter.enter_test_case(tc.name, tc.tags, tc.source_location);
-            reporter.start_run(data.target());
+            reporter.start_run();
 
             evaluate_test_case_target(tc, data);
 
@@ -87,10 +87,8 @@ CATCH_TEST_CASE("evaluate_test_case_target", "[test_evaluation]")
         CATCH_SECTION("topology is discovered correctly")
         {
 #define MAKE_TESTS(PREFIX)                                                                                             \
-    CATCH_##PREFIX##REQUIRE(test(get_topology).size() == 3);                                                           \
-    CATCH_##PREFIX##REQUIRE(test(get_topology)[0] == section_path{});                                                  \
-    CATCH_##PREFIX##REQUIRE(test(get_topology)[1] == section_path{"first"});                                           \
-    CATCH_##PREFIX##REQUIRE(test(get_topology)[2] == section_path{std::is_constant_evaluated() ? "third" : "second"});
+    CATCH_##PREFIX##REQUIRE(test(get_topology).leaf_count() == 2);                                                     \
+    CATCH_##PREFIX##REQUIRE(test(get_topology).node_count() == 3);
 
             MAKE_TESTS(STATIC_)
             MAKE_TESTS()
@@ -105,11 +103,14 @@ CATCH_TEST_CASE("evaluate_test_case_target", "[test_evaluation]")
     CATCH_##PREFIX##REQUIRE(test(get_cache)[0].name == test_name);                                                     \
     CATCH_##PREFIX##REQUIRE(test(get_cache)[0].sloc == test_location);                                                 \
     CATCH_##PREFIX##REQUIRE(test(get_cache)[0].test_runs.size() == 1);                                                 \
-    CATCH_##PREFIX##REQUIRE(test(get_cache)[0].test_runs[0].target == section_path{});                                 \
+    CATCH_##PREFIX##REQUIRE(test(get_cache)[0].test_runs[0].target == section_path{"first"});                          \
     CATCH_##PREFIX##REQUIRE(test(get_cache)[0].test_runs[0].assertions.size() == 1);                                   \
     CATCH_##PREFIX##REQUIRE(test(get_cache)[0].test_runs[0].assertions[0].text == "SUCCEED()");                        \
     CATCH_##PREFIX##REQUIRE(test(get_cache)[0].test_runs[0].assertions[0].result == true);                             \
-    CATCH_##PREFIX##REQUIRE(test(get_cache)[0].test_runs[0].sections.size() == 0);
+    CATCH_##PREFIX##REQUIRE(test(get_cache)[0].test_runs[0].sections.size() == 1);                                     \
+    CATCH_##PREFIX##REQUIRE(test(get_cache)[0].test_runs[0].sections[0].assertions.size() == 1);                       \
+    CATCH_##PREFIX##REQUIRE(test(get_cache)[0].test_runs[0].sections[0].assertions[0].text == "SUCCEED()");            \
+    CATCH_##PREFIX##REQUIRE(test(get_cache)[0].test_runs[0].sections[0].assertions[0].result == true);
 
             MAKE_TESTS(STATIC_)
             MAKE_TESTS()
@@ -131,10 +132,10 @@ CATCH_TEST_CASE("evaluate_test_case_target", "[test_evaluation]")
             };
             caching_reporter   reporter;
             test_case_topology topo;
-            test_run_data      data{reporter, topo, 0};
+            test_run_data      data{reporter, topo};
 
             reporter.enter_test_case(tc.name, tc.tags, tc.source_location);
-            reporter.start_run(data.target());
+            reporter.start_run();
 
             evaluate_test_case_target(tc, data);
 

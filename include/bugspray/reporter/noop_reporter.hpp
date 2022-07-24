@@ -47,7 +47,7 @@ struct noop_reporter : reporter
     }
     constexpr void leave_test_case() noexcept override {}
 
-    constexpr void start_run(section_path const& /*target*/) noexcept override {}
+    constexpr void start_run() noexcept override {}
     constexpr void stop_run() noexcept override {}
 
     constexpr void enter_section(std::string_view /*name*/, source_location /*sloc*/) noexcept override {}
@@ -60,6 +60,7 @@ struct noop_reporter : reporter
                                  bool /*result*/) noexcept override
     {
     }
+    constexpr void log_target(section_path const& /*target*/) noexcept override {}
 
     constexpr void finalize() noexcept override {}
 };
