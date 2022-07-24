@@ -54,9 +54,13 @@
         bugspray_data.log_assertion(text, BUGSPRAY_THIS_LOCATION(), decomp_str, result);                               \
         if (!result)                                                                                                   \
         {                                                                                                              \
+            constexpr bool aborting = std::string_view{#type} == "REQUIRE";                                            \
             bugspray_data.mark_failed();                                                                               \
-            if constexpr (std::string_view{#type} == "REQUIRE")                                                        \
+            if constexpr (aborting)                                                                                    \
+            {                                                                                                          \
+                bugspray_data.mark_aborted();                                                                          \
                 return;                                                                                                \
+            }                                                                                                          \
         }                                                                                                              \
     } while (false)
 #define BUGSPRAY_ASSERTION_IMPL(type, text, ...)                                                                       \

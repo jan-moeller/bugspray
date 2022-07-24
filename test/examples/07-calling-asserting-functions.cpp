@@ -21,15 +21,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
+#include "bugspray/bugspray.hpp"
 
-#ifndef BUGSPRAY_BUGSPRAY_HPP
-#define BUGSPRAY_BUGSPRAY_HPP
+ASSERTING_FUNCTION(test1)
+{
+    SUCCEED();
+}
 
-#include "bugspray/macro_interface/asserting_function_macros.hpp"
-#include "bugspray/macro_interface/assertion_macros.hpp"
-#include "bugspray/macro_interface/capture_macro.hpp"
-#include "bugspray/macro_interface/section_macro.hpp"
-#include "bugspray/macro_interface/test_case_macros.hpp"
-#include "bugspray/version.hpp"
+TEST_CASE("calling asserting functions")
+{
+    CALL(test1);
+}
+EVAL_TEST_CASE("calling asserting functions");
 
-#endif // BUGSPRAY_BUGSPRAY_HPP
+template<typename T>
+ASSERTING_FUNCTION(templated_function, (T a, T b))
+{
+    REQUIRE(a == b);
+}
+
+TEST_CASE("calling templated asserting functions")
+{
+    CALL(templated_function<int>, 1, 1);
+}
+EVAL_TEST_CASE("calling templated asserting functions");

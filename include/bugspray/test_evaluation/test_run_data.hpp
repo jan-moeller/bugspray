@@ -102,7 +102,9 @@ struct test_run_data
     }
 
     constexpr void               mark_failed() noexcept { m_success = false; }
+    constexpr void               mark_aborted() noexcept { m_abort = true; }
     [[nodiscard]] constexpr auto success() const noexcept -> bool { return m_success; }
+    [[nodiscard]] constexpr auto aborted() const noexcept -> bool { return m_abort; }
 
     constexpr void
     log_assertion(std::string_view assertion, source_location sloc, std::string_view expansion, bool result) noexcept
@@ -131,6 +133,7 @@ struct test_run_data
     section_path                m_cur_path;
     std::optional<section_path> m_target;
     bool                        m_success = true;
+    bool                        m_abort   = false;
     bs::vector<bs::string>      m_messages;
 };
 } // namespace bs

@@ -46,6 +46,7 @@ add_library(bugspray STATIC
         include/bugspray/cli/parsers/parse_bool.hpp
         include/bugspray/cli/parsers/parse_integral.hpp
         include/bugspray/cli/parsers/parse_string_view.hpp
+        include/bugspray/macro_interface/asserting_function_macros.hpp
         include/bugspray/macro_interface/assertion_macros.hpp
         include/bugspray/macro_interface/capture_macro.hpp
         include/bugspray/macro_interface/section_macro.hpp
