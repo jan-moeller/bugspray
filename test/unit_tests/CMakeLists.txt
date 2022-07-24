@@ -55,6 +55,7 @@ add_executable(bugspray-unit-tests
         utility/macros/test_get_nth_arg_or.cpp
         utility/macros/test_get_tail.cpp
         utility/macros/test_unique_identifier.cpp
+        utility/macros/test_unwrap.cpp
         utility/test_source_location.cpp
         utility/test_static_for_each_type.cpp
         utility/test_stringify_typename.cpp

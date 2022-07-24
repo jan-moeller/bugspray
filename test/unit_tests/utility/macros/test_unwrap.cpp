@@ -21,18 +21,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
+#include "bugspray/utility/macros/macro_stringify.hpp"
+#include "bugspray/utility/macros/macro_unwrap.hpp"
 
-#ifndef BUGSPRAY_MACROS_HPP
-#define BUGSPRAY_MACROS_HPP
+#include <catch2/catch_all.hpp>
 
-#include "macros/macro_concatenate.hpp"
-#include "macros/macro_get_nth_arg.hpp"
-#include "macros/macro_get_nth_arg_or.hpp"
-#include "macros/macro_get_tail.hpp"
-#include "macros/macro_identity.hpp"
-#include "macros/macro_stringify.hpp"
-#include "macros/macro_unique_identifier.hpp"
-#include "macros/macro_unwrap.hpp"
-#include "macros/macro_warning_suppression.hpp"
-
-#endif // BUGSPRAY_MACROS_HPP
+TEST_CASE("unwrap", "[utility][macros]")
+{
+#define TEST_ARG (a)
+    STATIC_REQUIRE(BUGSPRAY_STRINGIFY_EXPANSION(TEST_ARG) == std::string_view{"(a)"});
+    STATIC_REQUIRE(BUGSPRAY_STRINGIFY_EXPANSION(BUGSPRAY_UNWRAP(TEST_ARG)) == std::string_view{"a"});
+#undef TEST_ARG
+}

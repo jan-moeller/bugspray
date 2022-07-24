@@ -22,17 +22,16 @@
 // SOFTWARE.
 //
 
-#ifndef BUGSPRAY_MACROS_HPP
-#define BUGSPRAY_MACROS_HPP
+#ifndef BUGSPRAY_MACRO_UNWRAP_HPP
+#define BUGSPRAY_MACRO_UNWRAP_HPP
 
-#include "macros/macro_concatenate.hpp"
-#include "macros/macro_get_nth_arg.hpp"
-#include "macros/macro_get_nth_arg_or.hpp"
-#include "macros/macro_get_tail.hpp"
-#include "macros/macro_identity.hpp"
-#include "macros/macro_stringify.hpp"
-#include "macros/macro_unique_identifier.hpp"
-#include "macros/macro_unwrap.hpp"
-#include "macros/macro_warning_suppression.hpp"
+#include "bugspray/utility/macros/macro_concatenate.hpp"
 
-#endif // BUGSPRAY_MACROS_HPP
+/*
+ * BUGSPRAY_UNWRAP(paranthesized-expr) Removes the outer layer of parentheses
+ */
+
+#define BUGSPRAY_UNWRAP_IMPL(...) __VA_ARGS__
+#define BUGSPRAY_UNWRAP(...) BUGSPRAY_UNWRAP_IMPL __VA_ARGS__
+
+#endif // BUGSPRAY_MACRO_UNWRAP_HPP
