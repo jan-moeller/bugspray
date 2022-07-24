@@ -30,6 +30,9 @@
 #include "bugspray/macro_interface/capture_macro.hpp"
 #include "bugspray/macro_interface/section_macro.hpp"
 #include "bugspray/macro_interface/test_case_macros.hpp"
+#include "bugspray/utility/static_for.hpp"
+#include "bugspray/utility/static_for_each_type.hpp"
+#include "bugspray/utility/stringify_typename.hpp"
 #include "bugspray/version.hpp"
 
 #endif // BUGSPRAY_BUGSPRAY_HPP
