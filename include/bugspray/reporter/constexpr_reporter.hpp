@@ -57,7 +57,7 @@ struct constexpr_reporter : reporter
     constexpr void leave_test_case() noexcept override { m_sections.pop(); }
 
     constexpr void start_run() noexcept override {}
-    constexpr void stop_run() noexcept override {}
+    constexpr void stop_run() noexcept override { m_target.reset(); }
 
     constexpr void log_target(section_path const& target) noexcept override { m_target = target; }
 
