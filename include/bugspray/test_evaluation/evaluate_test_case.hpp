@@ -79,10 +79,10 @@ constexpr auto evaluate_test_case(test_case const& tc, reporter& the_reporter, s
 }
 
 template<auto>
-constexpr auto evaluate_test_case_constexpr(test_case const& tc)
+constexpr auto evaluate_test_case_constexpr(test_case const& tc, std::string_view test_spec = "")
 {
     ::bs::constexpr_reporter reporter;
-    auto const               result = evaluate_test_case<true>(tc, reporter);
+    auto const               result = evaluate_test_case<true>(tc, reporter, test_spec);
     return std::make_pair(result, reporter.messages());
 }
 

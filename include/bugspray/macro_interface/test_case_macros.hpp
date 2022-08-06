@@ -53,6 +53,10 @@
  *   <name>: Name of the test case as string.
  */
 
+#ifndef BUGSPRAY_COMPILE_EVAL_TEST_SPEC
+#define BUGSPRAY_COMPILE_EVAL_TEST_SPEC ""
+#endif
+
 // clang-format off
 #define BUGSPRAY_REGISTER_TEST_CASE_IMPL_runtime(name, test_case_id)                                                   \
     static bool const BUGSPRAY_UNIQUE_IDENTIFIER(bugspray_registration)                                                \
@@ -64,7 +68,8 @@
     {                                                                                                                  \
         constexpr auto operator()() -> bool                                                                            \
         {                                                                                                              \
-            constexpr auto results = ::bs::evaluate_test_case_constexpr<Bogus>(test_case_id);                          \
+            constexpr auto results = ::bs::evaluate_test_case_constexpr<Bogus>(test_case_id,                           \
+                                                                               BUGSPRAY_COMPILE_EVAL_TEST_SPEC);       \
             if constexpr (!results.first)                                                                              \
             {                                                                                                          \
                 constexpr auto m = ::bs::trim<results.second>();                                                       \
