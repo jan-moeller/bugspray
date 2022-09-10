@@ -78,6 +78,8 @@ void xml_reporter::leave_test_case() noexcept
 
     for (auto&& s : m_section_root.sections)
         write_section(s);
+    results r;
+    write_assertions(r, m_section_root.assertions);
 
     m_writer.open_element("OverallResult");
     m_writer.write_attribute("success", m_failed ? "false" : "true");
@@ -192,7 +194,23 @@ void xml_reporter::write_section(section_data const& sd)
         write_section(sub);
 
     results r;
-    for (auto&& a : sd.assertions)
+    write_assertions(r, sd.assertions);
+
+    m_writer.open_element("OverallResults");
+    m_writer.write_attribute("successes", std::string_view{to_string(r.successes)});
+    m_writer.write_attribute("failures", std::string_view{to_string(r.failures)});
+    m_writer.write_attribute("expectedFailures", std::string_view{to_string(r.expected_failures)});
+
+    if (m_report_timings)
+        m_writer.write_attribute("durationInSeconds", std::string_view{to_string(sd.runtime_in_seconds)});
+
+    m_writer.close_attribute_and_element();
+    m_writer.close_element();
+}
+
+void xml_reporter::write_assertions(results& r, bs::vector<assertion_data> const& ad)
+{
+    for (auto&& a : ad)
     {
         if (a.result)
         {
@@ -235,16 +253,5 @@ void xml_reporter::write_section(section_data const& sd)
             m_writer.close_element();
         }
     }
-
-    m_writer.open_element("OverallResults");
-    m_writer.write_attribute("successes", std::string_view{to_string(r.successes)});
-    m_writer.write_attribute("failures", std::string_view{to_string(r.failures)});
-    m_writer.write_attribute("expectedFailures", std::string_view{to_string(r.expected_failures)});
-
-    if (m_report_timings)
-        m_writer.write_attribute("durationInSeconds", std::string_view{to_string(sd.runtime_in_seconds)});
-
-    m_writer.close_attribute_and_element();
-    m_writer.close_element();
 }
 } // namespace bs
