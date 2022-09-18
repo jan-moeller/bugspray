@@ -54,7 +54,7 @@ struct constexpr_reporter : reporter
     {
         m_sections.emplace_back(bs::string{name}, sloc);
     }
-    constexpr void leave_test_case() noexcept override { m_sections.pop(); }
+    constexpr void leave_test_case() noexcept override { m_sections.pop_back(); }
 
     constexpr void start_run() noexcept override {}
     constexpr void stop_run() noexcept override { m_target.reset(); }
@@ -65,7 +65,7 @@ struct constexpr_reporter : reporter
     {
         m_sections.emplace_back(bs::string{name}, sloc);
     }
-    constexpr void leave_section() noexcept override { m_sections.pop(); }
+    constexpr void leave_section() noexcept override { m_sections.pop_back(); }
 
     constexpr void log_assertion(std::string_view            assertion,
                                  source_location             sloc,

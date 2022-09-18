@@ -97,7 +97,7 @@ struct test_run_data
             m_target = m_cur_path;
             m_reporter.log_target(m_target.value());
         }
-        m_cur_path.pop();
+        m_cur_path.pop_back();
         m_reporter.leave_section();
     }
 
@@ -117,7 +117,7 @@ struct test_run_data
     constexpr void pop_message()
     {
         assert(!m_messages.empty());
-        m_messages.pop();
+        m_messages.pop_back();
     }
 
     constexpr ~test_run_data() = default;

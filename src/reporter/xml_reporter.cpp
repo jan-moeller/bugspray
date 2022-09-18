@@ -119,7 +119,7 @@ void xml_reporter::enter_section(std::string_view name, source_location sloc) no
 
 void xml_reporter::leave_section() noexcept
 {
-    m_current_path.pop();
+    m_current_path.pop_back();
 }
 
 void xml_reporter::log_assertion(std::string_view            assertion,

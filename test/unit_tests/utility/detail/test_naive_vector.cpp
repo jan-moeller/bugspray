@@ -70,7 +70,7 @@ TEST_CASE("naive_vector", "[utility][detail]")
         constexpr auto test = []()
         {
             naive_vector<int> v{1, 2, 3};
-            v.pop();
+            v.pop_back();
             return v;
         };
         STATIC_REQUIRE(test().size() == 2);

@@ -106,7 +106,7 @@ struct caching_reporter : reporter
         m_current_section.push_back(bs::string{name});
     }
 
-    constexpr void leave_section() noexcept override { m_current_section.pop(); }
+    constexpr void leave_section() noexcept override { m_current_section.pop_back(); }
 
     constexpr void log_assertion(std::string_view            assertion,
                                  source_location             sloc,
