@@ -31,6 +31,8 @@
 #include <algorithm>
 #include <span>
 
+#include <cassert>
+
 /*
  * test_case_topology is a helper class to be used when discovering the topology of a test case; i.e. when running
  * a test case, the contained sections are discovered on the fly, and can then be run on subsequent executions.

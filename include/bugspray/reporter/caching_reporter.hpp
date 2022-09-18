@@ -35,6 +35,8 @@
 #include <span>
 #include <string_view>
 
+#include <cassert>
+
 /*
  * This reporter simply caches all data for later use.
  */
