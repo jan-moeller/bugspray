@@ -167,17 +167,18 @@ auto xml_reporter::current_data() -> section_data&
     section_data* p = &m_section_root;
     for (auto&& s : m_current_path)
     {
-        auto* iter = std::ranges::find_if(p->sections, [s](section_data const& sd) { return sd.name == s; });
+        auto iter = std::ranges::find_if(p->sections, [s](section_data const& sd) { return sd.name == s; });
         if (iter == p->sections.end())
         {
             BUGSPRAY_DISABLE_WARNING_PUSH
             BUGSPRAY_DISABLE_WARNING_MISSING_FIELD_INITIALIZERS
             // Missing field initializers is okay in this instance. The other fields are supposed to be
             // default-initialized (vectors), or will be overwritten later (timing, sloc).
-            iter = &p->sections.emplace_back(section_data{.name = s});
+            p = &p->sections.emplace_back(section_data{.name = s});
             BUGSPRAY_DISABLE_WARNING_POP
         }
-        p = iter;
+        else
+            p = &*iter;
     }
     return *p;
 }

@@ -131,10 +131,10 @@ struct caching_reporter : reporter
         for (std::size_t i = 0; i < path.size(); ++i)
         {
             auto const s    = path[i];
-            auto*      iter = std::ranges::find_if(cur_section->sections,
-                                              [&s](section_data& subsection) { return subsection.name == s; });
+            auto       iter = std::ranges::find_if(cur_section->sections,
+                                             [&s](section_data& subsection) { return subsection.name == s; });
             assert(iter != cur_section->sections.end());
-            cur_section = iter;
+            cur_section = &*iter;
         }
         return cur_section;
     }
