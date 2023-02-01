@@ -51,6 +51,7 @@ add_executable(bugspray-unit-tests
         to_string/test_to_string_optional.cpp
         to_string/test_to_string_pointer.cpp
         to_string/test_to_string_string_like.cpp
+        to_string/test_to_string_variant.cpp
         utility/detail/test_naive_string.cpp
         utility/detail/test_naive_vector.cpp
         utility/macros/test_get_nth_arg.cpp
