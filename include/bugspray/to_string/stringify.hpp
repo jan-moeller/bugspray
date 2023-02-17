@@ -35,6 +35,7 @@
 #include "bugspray/to_string/to_string_pointer.hpp"
 #include "bugspray/to_string/to_string_string_like.hpp"
 #include "bugspray/to_string/to_string_tag.hpp"
+#include "bugspray/to_string/to_string_tuple.hpp"
 #include "bugspray/to_string/to_string_variant.hpp"
 #include "bugspray/utility/string.hpp"
 
