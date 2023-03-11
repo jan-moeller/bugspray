@@ -44,3 +44,23 @@ in a `constexpr` context.
 TEST_CASE("foo must be barking"){}
 BUGSPRAY_EVAL_TEST_CASE("foo must be barking");
 ```
+
+## BUGSPRAY_COMPILE_EVAL_TEST_SPEC
+
+To skip some tests during compile time evaluation, define the macro
+`BUGSPRAY_COMPILE_EVAL_TEST_SPEC` to a string valid test spec when compiling
+your tests.
+
+Example:
+
+```c++
+#define BUGSPRAY_COMPILE_EVAL_TEST_SPEC "exclude:bar"
+#include <bugspray/bugspray.hpp>
+
+TEST_CASE("foo") {}
+EVAL_TEST_CASE("foo") // Will be evaluated at compile time
+TEST_CASE("bar") {}
+EVAL_TEST_CASE("bar") // Will be skipped at compile time
+```
+
+For a description of the test spec format, see [Runtime Evaluation](./runtime-evaluation.md).

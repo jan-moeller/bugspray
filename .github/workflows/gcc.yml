@@ -44,6 +44,7 @@ jobs:
           -D CMAKE_BUILD_TYPE=${{matrix.build_type}}
           -D BUGSPRAY_DONT_USE_STD_VECTOR=${{matrix.dont_use_std_vector}}
           -D BUGSPRAY_DONT_USE_STD_STRING=${{matrix.dont_use_std_string}}
+          -D BUGSPRAY_BUILD_TESTS=ON
           -D CMAKE_CXX_COMPILER=${{matrix.compiler}}
 
       - name: Build

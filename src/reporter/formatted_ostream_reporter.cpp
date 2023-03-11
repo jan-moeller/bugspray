@@ -71,7 +71,7 @@ void formatted_ostream_reporter::enter_section(std::string_view name, source_loc
 
 void formatted_ostream_reporter::leave_section() noexcept
 {
-    m_cur_section.pop();
+    m_cur_section.pop_back();
 }
 
 void formatted_ostream_reporter::log_assertion(std::string_view            assertion,

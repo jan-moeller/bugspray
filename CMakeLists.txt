@@ -26,12 +26,13 @@ project(bugspray)
 
 option(BUGSPRAY_DONT_USE_STD_VECTOR "Forces bugspray to use its own vector implementation rather than std::vector" OFF)
 option(BUGSPRAY_DONT_USE_STD_STRING "Forces bugspray to use its own string implementation rather than std::string" OFF)
+option(BUGSPRAY_BUILD_TESTS "Build the bugspray test suite" OFF)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 include(bs_target_setup)
 
 set(BUGSPRAY_VERSION_MAJOR 0)
-set(BUGSPRAY_VERSION_MINOR 1)
+set(BUGSPRAY_VERSION_MINOR 2)
 set(BUGSPRAY_VERSION_PATCH 0)
 
 add_library(bugspray STATIC
@@ -81,9 +82,13 @@ add_library(bugspray STATIC
         include/bugspray/to_string/to_string_container.hpp
         include/bugspray/to_string/to_string_floating_point.hpp
         include/bugspray/to_string/to_string_integral.hpp
+        include/bugspray/to_string/to_string_optional.hpp
+        include/bugspray/to_string/to_string_pair.hpp
         include/bugspray/to_string/to_string_pointer.hpp
         include/bugspray/to_string/to_string_string_like.hpp
         include/bugspray/to_string/to_string_tag.hpp
+        include/bugspray/to_string/to_string_tuple.hpp
+        include/bugspray/to_string/to_string_variant.hpp
         include/bugspray/utility/c_array.hpp
         include/bugspray/utility/character.hpp
         include/bugspray/utility/dependent_false.hpp
@@ -153,6 +158,9 @@ message(STATUS "BUGSPRAY_VERSION_MINOR: ${BUGSPRAY_VERSION_MINOR}")
 message(STATUS "BUGSPRAY_VERSION_PATCH: ${BUGSPRAY_VERSION_PATCH}")
 message(STATUS "BUGSPRAY_DONT_USE_STD_VECTOR: ${BUGSPRAY_DONT_USE_STD_VECTOR}")
 message(STATUS "BUGSPRAY_DONT_USE_STD_STRING: ${BUGSPRAY_DONT_USE_STD_STRING}")
+message(STATUS "BUGSPRAY_BUILD_TESTS: ${BUGSPRAY_BUILD_TESTS}")
 
-enable_testing()
-add_subdirectory(test)
+if (${BUGSPRAY_BUILD_TESTS})
+    enable_testing()
+    add_subdirectory(test)
+endif ()

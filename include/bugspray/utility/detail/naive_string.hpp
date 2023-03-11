@@ -69,11 +69,11 @@ class naive_string
 
     constexpr operator std::string_view() const { return std::string_view{&m_data.front(), size()}; }
 
-    [[nodiscard]] constexpr auto begin() const noexcept -> char const* { return m_data.begin(); }
-    [[nodiscard]] constexpr auto begin() noexcept -> char* { return m_data.begin(); }
+    [[nodiscard]] constexpr auto begin() const noexcept -> const_iterator { return m_data.begin(); }
+    [[nodiscard]] constexpr auto begin() noexcept -> iterator { return m_data.begin(); }
 
-    [[nodiscard]] constexpr auto end() const noexcept -> char const* { return m_data.end() - 1; }
-    [[nodiscard]] constexpr auto end() noexcept -> char* { return m_data.end() - 1; }
+    [[nodiscard]] constexpr auto end() const noexcept -> const_iterator { return m_data.end() - 1; }
+    [[nodiscard]] constexpr auto end() noexcept -> iterator { return m_data.end() - 1; }
 
     [[nodiscard]] constexpr auto rbegin() const noexcept { return std::make_reverse_iterator(end()); }
     [[nodiscard]] constexpr auto rbegin() noexcept { return std::make_reverse_iterator(end()); }
@@ -91,7 +91,7 @@ class naive_string
 
     constexpr void push_back(char value)
     {
-        --m_data.m_size;
+        m_data.pop_back();
         m_data.push_back(value);
         m_data.push_back('\0');
     }

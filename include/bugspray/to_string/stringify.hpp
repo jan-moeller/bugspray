@@ -30,9 +30,13 @@
 #include "bugspray/to_string/to_string_container.hpp"
 #include "bugspray/to_string/to_string_floating_point.hpp"
 #include "bugspray/to_string/to_string_integral.hpp"
+#include "bugspray/to_string/to_string_optional.hpp"
+#include "bugspray/to_string/to_string_pair.hpp"
 #include "bugspray/to_string/to_string_pointer.hpp"
 #include "bugspray/to_string/to_string_string_like.hpp"
 #include "bugspray/to_string/to_string_tag.hpp"
+#include "bugspray/to_string/to_string_tuple.hpp"
+#include "bugspray/to_string/to_string_variant.hpp"
 #include "bugspray/utility/string.hpp"
 
 #include <sstream>
@@ -59,7 +63,7 @@ constexpr auto stringify(T&& thing) -> bs::string
         return to_string(std::forward<T>(thing));
     else if constexpr (requires { to_string(bs::to_string_tag{}, std::forward<T>(thing)); })
         return to_string(bs::to_string_tag{}, std::forward<T>(thing));
-    else if constexpr (requires(std::ostringstream & ss) { ss << std::forward<T>(thing); })
+    else if constexpr (requires(std::ostringstream& ss) { ss << std::forward<T>(thing); })
     {
         if (!std::is_constant_evaluated())
             return detail::stringify_using_ostream(std::forward<T>(thing));

@@ -187,7 +187,7 @@ class naive_vector
         return b;
     }
 
-    constexpr void pop()
+    constexpr void pop_back()
     {
         assert(!empty());
         std::destroy_at(&back());

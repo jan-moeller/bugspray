@@ -31,6 +31,8 @@
 #include <algorithm>
 #include <span>
 
+#include <cassert>
+
 /*
  * test_case_topology is a helper class to be used when discovering the topology of a test case; i.e. when running
  * a test case, the contained sections are discovered on the fly, and can then be run on subsequent executions.
@@ -89,7 +91,7 @@ struct test_case_topology
     {
         if (sections.empty())
             return;
-        auto* iter = std::ranges::find_if(n.children, [&](node const& c) { return c.name == sections.front(); });
+        auto iter = std::ranges::find_if(n.children, [&](node const& c) { return c.name == sections.front(); });
         if (iter == n.children.end())
             iter = n.children.insert(n.children.end(), node{sections.front()});
         chart(*iter, sections.subspan(1));
@@ -99,7 +101,7 @@ struct test_case_topology
     {
         if (sections.empty())
             return n.done;
-        auto* iter = std::ranges::find_if(n.children, [&](node const& c) { return c.name == sections.front(); });
+        auto iter = std::ranges::find_if(n.children, [&](node const& c) { return c.name == sections.front(); });
         assert(iter != n.children.end());
         return is_done(*iter, sections.subspan(1));
     }
@@ -111,7 +113,7 @@ struct test_case_topology
             n.done = true;
             return;
         }
-        auto* iter = std::ranges::find_if(n.children, [&](node const& c) { return c.name == sections.front(); });
+        auto iter = std::ranges::find_if(n.children, [&](node const& c) { return c.name == sections.front(); });
         assert(iter != n.children.end());
         mark_done(*iter, sections.subspan(1));
         if (std::ranges::all_of(n.children, [](auto const& c) { return c.done; }))

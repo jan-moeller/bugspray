@@ -86,12 +86,6 @@ struct xml_reporter : reporter
         source_location sloc;
         double          runtime_in_seconds;
     };
-    section_data                m_section_root;
-    section_path                m_current_path;
-    std::optional<section_path> m_current_target;
-
-    auto current_data() -> section_data&;
-    void write_section(section_data const& sd);
 
     struct results
     {
@@ -99,6 +93,14 @@ struct xml_reporter : reporter
         std::size_t failures          = 0;
         std::size_t expected_failures = 0;
     };
+
+    section_data                m_section_root;
+    section_path                m_current_path;
+    std::optional<section_path> m_current_target;
+
+    auto current_data() -> section_data&;
+    void write_section(section_data const& sd);
+    void write_assertions(results& r, bs::vector<assertion_data> const& ad);
 
     xml_writer m_writer;
 

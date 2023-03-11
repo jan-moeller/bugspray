@@ -78,6 +78,8 @@ void xml_reporter::leave_test_case() noexcept
 
     for (auto&& s : m_section_root.sections)
         write_section(s);
+    results r;
+    write_assertions(r, m_section_root.assertions);
 
     m_writer.open_element("OverallResult");
     m_writer.write_attribute("success", m_failed ? "false" : "true");
@@ -117,7 +119,7 @@ void xml_reporter::enter_section(std::string_view name, source_location sloc) no
 
 void xml_reporter::leave_section() noexcept
 {
-    m_current_path.pop();
+    m_current_path.pop_back();
 }
 
 void xml_reporter::log_assertion(std::string_view            assertion,
@@ -165,17 +167,18 @@ auto xml_reporter::current_data() -> section_data&
     section_data* p = &m_section_root;
     for (auto&& s : m_current_path)
     {
-        auto* iter = std::ranges::find_if(p->sections, [s](section_data const& sd) { return sd.name == s; });
+        auto iter = std::ranges::find_if(p->sections, [s](section_data const& sd) { return sd.name == s; });
         if (iter == p->sections.end())
         {
             BUGSPRAY_DISABLE_WARNING_PUSH
             BUGSPRAY_DISABLE_WARNING_MISSING_FIELD_INITIALIZERS
             // Missing field initializers is okay in this instance. The other fields are supposed to be
             // default-initialized (vectors), or will be overwritten later (timing, sloc).
-            iter = &p->sections.emplace_back(section_data{.name = s});
+            p = &p->sections.emplace_back(section_data{.name = s});
             BUGSPRAY_DISABLE_WARNING_POP
         }
-        p = iter;
+        else
+            p = &*iter;
     }
     return *p;
 }
@@ -192,7 +195,23 @@ void xml_reporter::write_section(section_data const& sd)
         write_section(sub);
 
     results r;
-    for (auto&& a : sd.assertions)
+    write_assertions(r, sd.assertions);
+
+    m_writer.open_element("OverallResults");
+    m_writer.write_attribute("successes", std::string_view{to_string(r.successes)});
+    m_writer.write_attribute("failures", std::string_view{to_string(r.failures)});
+    m_writer.write_attribute("expectedFailures", std::string_view{to_string(r.expected_failures)});
+
+    if (m_report_timings)
+        m_writer.write_attribute("durationInSeconds", std::string_view{to_string(sd.runtime_in_seconds)});
+
+    m_writer.close_attribute_and_element();
+    m_writer.close_element();
+}
+
+void xml_reporter::write_assertions(results& r, bs::vector<assertion_data> const& ad)
+{
+    for (auto&& a : ad)
     {
         if (a.result)
         {
@@ -235,16 +254,5 @@ void xml_reporter::write_section(section_data const& sd)
             m_writer.close_element();
         }
     }
-
-    m_writer.open_element("OverallResults");
-    m_writer.write_attribute("successes", std::string_view{to_string(r.successes)});
-    m_writer.write_attribute("failures", std::string_view{to_string(r.failures)});
-    m_writer.write_attribute("expectedFailures", std::string_view{to_string(r.expected_failures)});
-
-    if (m_report_timings)
-        m_writer.write_attribute("durationInSeconds", std::string_view{to_string(sd.runtime_in_seconds)});
-
-    m_writer.close_attribute_and_element();
-    m_writer.close_element();
 }
 } // namespace bs
