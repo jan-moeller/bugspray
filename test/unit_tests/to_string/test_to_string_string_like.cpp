@@ -27,6 +27,8 @@
 
 TEST_CASE("to_string(string-like)", "[to_string]")
 {
+    constexpr char const* test_cstr = "foobar";
+
 #define MAKE_TESTS(PREFIX)                                                                                             \
     PREFIX##CHECK(bs::to_string("foo") == R"("foo")");                                                                 \
     PREFIX##CHECK(bs::to_string(bs::string{"\n"}) == R"("\n")");                                                       \
@@ -38,7 +40,8 @@ TEST_CASE("to_string(string-like)", "[to_string]")
     PREFIX##CHECK(bs::to_string(u"\u2665") == R"("\x2665")");                                                          \
     PREFIX##CHECK(bs::to_string(u"\U0001f970") == R"("\xd83e\xdd70")");                                                \
     PREFIX##CHECK(bs::to_string(U"\u2665") == R"("\x00002665")");                                                      \
-    PREFIX##CHECK(bs::to_string(U"\U0001f970") == R"("\x0001f970")");
+    PREFIX##CHECK(bs::to_string(U"\U0001f970") == R"("\x0001f970")");                                                  \
+    PREFIX##CHECK(bs::to_string(test_cstr) == R"("foobar")");
 
     MAKE_TESTS()
     MAKE_TESTS(STATIC_)

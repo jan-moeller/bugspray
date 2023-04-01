@@ -44,8 +44,8 @@ constexpr auto to_string(T&& s) -> bs::string
     return result;
 }
 
-template<std::size_t N, character CharT>
-constexpr auto to_string(CharT const (&s)[N]) -> bs::string
+template<character CharT>
+constexpr auto to_string(CharT const* s) -> bs::string
 {
     return to_string(std::basic_string_view<CharT>{s});
 }
