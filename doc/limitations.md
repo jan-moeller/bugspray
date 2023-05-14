@@ -49,6 +49,6 @@ I have not yet found a way to convince it otherwise.
 
 ## Compiler support
 
-Bugspray is tested against gcc-11, gcc-12, and clang-17. Last time I checked,
+Bugspray is tested against gcc (11, 12, 13), and clang (17). Last time I checked,
 msvc's C++20 support wasn't sufficient to compile Bugspray. I am re-evaluating
 this as soon as new versions are published.
