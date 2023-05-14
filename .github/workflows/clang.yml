@@ -1,0 +1,51 @@
+name: clang
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  build:
+    # 22.04 required for latest compiler versions
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        compiler:
+          - clang++-17
+        build_type: [ Debug, Release ]
+        dont_use_std_vector: [ ON, OFF ]
+        dont_use_std_string: [ ON, OFF ]
+        exclude:
+          # gcc-12's constexpr string implementation has bugs: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105440
+          - compiler: clang++-17
+            dont_use_std_string: OFF
+        include:
+          - compiler: clang++-17
+            required_pkgs: clang-17 g++-12
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup environment
+        run: wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - &&
+          sudo add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy main' &&
+          sudo apt update &&
+          sudo apt-get install -y ${{matrix.required_pkgs}}
+
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/build
+          -D CMAKE_BUILD_TYPE=${{matrix.build_type}}
+          -D BUGSPRAY_DONT_USE_STD_VECTOR=${{matrix.dont_use_std_vector}}
+          -D BUGSPRAY_DONT_USE_STD_STRING=${{matrix.dont_use_std_string}}
+          -D BUGSPRAY_BUILD_TESTS=ON
+          -D CMAKE_CXX_COMPILER=${{matrix.compiler}}
+
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C ${{matrix.build_type}} --output-on-failure --exclude-regex 'failing-examples.*(00|01|04)'
+
