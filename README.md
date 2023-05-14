@@ -3,6 +3,7 @@
 ![Bugspay logo](https://jan.fam-moe.de/bugspray_512.png)
 
 [![GCC](https://github.com/jan-moeller/bugspray/actions/workflows/gcc.yml/badge.svg)](https://github.com/jan-moeller/bugspray/actions/workflows/gcc.yml)
+[![clang](https://github.com/jan-moeller/bugspray/actions/workflows/clang.yml/badge.svg)](https://github.com/jan-moeller/bugspray/actions/workflows/clang.yml)
 
 Bugspray is a C++20 unit testing framework. It's partially
 [Catch2](https://github.com/catchorg/Catch2)-compatible
