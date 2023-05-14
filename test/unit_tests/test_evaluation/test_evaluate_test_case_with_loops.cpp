@@ -32,6 +32,13 @@
 
 using namespace bs;
 
+constexpr auto my_abs(auto n) noexcept
+{
+    if (std::cmp_less(n, 0))
+        return -n;
+    return n;
+}
+
 static constexpr void a_test_case_fn(test_run_data& bugspray_data)
 {
     int k = 0;
@@ -48,14 +55,14 @@ static constexpr void a_test_case_fn(test_run_data& bugspray_data)
                 --k;
             }
         }
-        BUGSPRAY_REQUIRE(std::abs(k) == 3);
+        BUGSPRAY_REQUIRE(my_abs(k) == 3);
     }
     BUGSPRAY_SECTION("x")
     {
         BUGSPRAY_REQUIRE(k == 0);
         k += 3;
     }
-    BUGSPRAY_REQUIRE(std::abs(k) == 3);
+    BUGSPRAY_REQUIRE(my_abs(k) == 3);
 }
 
 TEST_CASE("evaluate_test_case (with loops)", "[test_evaluation]")

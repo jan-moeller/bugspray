@@ -113,9 +113,9 @@ struct constexpr_reporter : reporter
             for (auto&& s : *m_target)
                 m_messages.append_as_fit(bs::string{"->"} + s);
         }
-        for (auto&& s : std::ranges::reverse_view(m_sections))
-            m_messages.append_as_fit(bs::string{"; IN: "} + bs::string{s.sloc.file_name} + ':' + to_string(s.sloc.line)
-                                     + ": " + s.name);
+        for (auto iter = m_sections.rbegin(); iter != m_sections.rend(); ++iter)
+            m_messages.append_as_fit(bs::string{"; IN: "} + bs::string{iter->sloc.file_name} + ':'
+                                     + to_string(iter->sloc.line) + ": " + iter->name);
     }
 };
 } // namespace bs

@@ -120,8 +120,8 @@ void formatted_ostream_reporter::log_assertion(std::string_view            asser
         m_stream << m << '\n';
     m_stream << '\n';
 
-    for (auto&& parent : std::ranges::reverse_view(m_cur_section))
-        m_stream << "IN: " << parent.sloc.file_name << ':' << parent.sloc.line << ": " << parent.name << '\n';
+    for (auto iter = m_cur_section.rbegin(); iter != m_cur_section.rend(); ++iter)
+        m_stream << "IN: " << iter->sloc.file_name << ':' << iter->sloc.line << ": " << iter->name << '\n';
     m_stream << '\n';
 }
 

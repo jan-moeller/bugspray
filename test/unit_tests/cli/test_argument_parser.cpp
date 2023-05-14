@@ -50,16 +50,21 @@ TEST_CASE("argument_parser", "[cli]")
         } bar;
     };
 
-    argument_parser<parameter{
+    argument_parser<parameter<decltype(parameter_names{"-h", "--help"}),
+                              decltype(argument_destination{&config::help}),
+                              parsers::arg_parser,
+                              structural_string{"show this help message and exit"}.size() + 1>{
                         .names       = parameter_names{"-h", "--help"},
                         .destination = argument_destination{&config::help},
                         .help        = structural_string{"show this help message and exit"},
                     },
-                    parameter{
+                    parameter<decltype(parameter_names{"-s", "--sticky"}),
+                              decltype(argument_destination{&config::foo, &config::foo::sticky})>{
                         .names       = parameter_names{"-s", "--sticky"},
                         .destination = argument_destination{&config::foo, &config::foo::sticky},
                     },
-                    parameter{
+                    parameter<decltype(parameter_names{"amount"}),
+                              decltype(argument_destination{&config::foo, &config::foo::amount})>{
                         .names       = parameter_names{"amount"},
                         .destination = argument_destination{&config::foo, &config::foo::amount},
                     }>

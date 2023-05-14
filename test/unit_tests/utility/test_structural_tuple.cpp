@@ -109,13 +109,13 @@ TEST_CASE("structural_tuple", "[utility]")
     SECTION("comparison")
     {
         REQUIRE(t == t);
-        REQUIRE(structural_tuple(v3, v2, v1) != t);
-        REQUIRE(structural_tuple(v1, v2, alt_v3) > t);
+        REQUIRE(structural_tuple<decltype(v3), decltype(v2), decltype(v1)>(v3, v2, v1) != t);
+        REQUIRE(structural_tuple<decltype(v1), decltype(v2), decltype(alt_v3)>(v1, v2, alt_v3) > t);
     }
 
     SECTION("structurality")
     {
-        test_structurality<structural_tuple{v1, v2, v3}> some_t;
+        test_structurality<structural_tuple<int, float, char>{v1, v2, v3}> some_t;
         REQUIRE(some_t.value == t);
     }
 }

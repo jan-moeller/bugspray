@@ -37,7 +37,7 @@ constexpr void static_for_each_type(Fn&& fn)
 {
     using types = structural_tuple<Types...>;
     static_for<0, sizeof...(Types)>(
-        [&fn](auto I)
+        [&fn]<typename F, F I>(std::integral_constant<F, I>)
         {
             using T = std::tuple_element_t<I, types>;
             if constexpr (requires(Fn f) { f.template operator()<T, I>(); })

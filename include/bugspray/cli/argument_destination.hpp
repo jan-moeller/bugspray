@@ -48,7 +48,7 @@ struct argument_destination
 
 namespace detail
 {
-constexpr auto argument_destination_ref(auto const& dest, auto& base, auto I) -> decltype(auto)
+constexpr auto argument_destination_ref(auto dest, auto& base, auto I) -> decltype(auto)
 {
     if constexpr (std::cmp_less(I.value, dest.size))
     {

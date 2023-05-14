@@ -36,13 +36,13 @@ struct baz;
 TEST_CASE("stringify_typename", "[utility]")
 {
     STATIC_CHECK(stringify_typename<int>() == "int");
-    STATIC_CHECK(stringify_typename<int*>() == "int*");
-    STATIC_CHECK(stringify_typename<int[3]>() == "int [3]");
+    STATIC_CHECK(stringify_typename<int*>() == "int*" || stringify_typename<int*>() == "int *");
+    STATIC_CHECK(stringify_typename<int[3]>() == "int [3]" || stringify_typename<int[3]>() == "int[3]");
     STATIC_CHECK(stringify_typename<const int>() == "const int");
-    STATIC_CHECK(stringify_typename<const int*>() == "const int*");
-    STATIC_CHECK(stringify_typename<const int&>() == "const int&");
-    STATIC_CHECK(stringify_typename<const int* const>() == "const int* const");
-    STATIC_CHECK(stringify_typename<const volatile int* const>() == "const volatile int* const");
+    STATIC_CHECK(stringify_typename<const int*>() == "const int*" || stringify_typename<const int*>() == "const int *");
+    STATIC_CHECK(stringify_typename<const int&>() == "const int&" || stringify_typename<const int&>() == "const int &");
+    STATIC_CHECK(stringify_typename<const int* const>() == "const int* const" || stringify_typename<const int* const>() == "const int *const");
+    STATIC_CHECK(stringify_typename<const volatile int* const>() == "const volatile int* const" || stringify_typename<const volatile int* const>() == "const volatile int *const");
     STATIC_CHECK(stringify_typename<foobar::baz>() == "foobar::baz");
     STATIC_CHECK(stringify_typename<std::vector<int>>() == "std::vector<int>");
 
