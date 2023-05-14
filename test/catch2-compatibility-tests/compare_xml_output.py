@@ -23,6 +23,15 @@ def hide_run_specific_data(content):
     # application name and filenames are allowed to differ
     content = re.sub(r'<Catch2TestRun name=".*?"', '<Catch2TestRun name="program_name"', content)
     content = re.sub(r'filename=".*?"', 'filename="some_file"', content)
+
+    # TODO: for the time being, we ignore these added fields to the Catch2TestRun element. Probably bugspray should
+    # generate compatible elements.
+    content = re.sub(r' xml-format-version="2" catch2-version="3.3.2">', '>', content)
+
+    # TODO: for the time being, we ignore these added fields to the OverallResult(s) element. Probably bugspray should
+    # generate compatible elements.
+    content = re.sub(r' skipped="false"/>', '/>', content)
+    content = re.sub(r' skips="0"/>', '/>', content)
     return content
 
 

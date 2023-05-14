@@ -28,7 +28,7 @@ include(FetchContent)
 fetchcontent_declare(
         Catch2
         GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-        GIT_TAG 797c3e731883bfb80dff5e237f2559232314310c
+        GIT_TAG v3.3.2
 )
 fetchcontent_makeavailable(Catch2)
 
