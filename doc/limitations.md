@@ -44,9 +44,11 @@ On the other hand, gcc formats the message in a very usable way (scroll right):
       |                   ~~~~~~~~~~~~~~~~~~~~^~~~~~~~
 ```
 
+Clang unfortunately elides almost the entire compile-time error report, and
+I have not yet found a way to convince it otherwise.
+
 ## Compiler support
 
-Bugspray is tested against gcc-11 and gcc-12. Unfortunately, neither clang
-nor msvc currently implement enough of C++20 (or the implementation is too
-bug-ridden to be useful). I am re-evaluating this as soon as new versions
-are published.
+Bugspray is tested against gcc-11, gcc-12, and clang-17. Last time I checked,
+msvc's C++20 support wasn't sufficient to compile Bugspray. I am re-evaluating
+this as soon as new versions are published.
