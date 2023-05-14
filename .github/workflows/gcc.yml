@@ -15,6 +15,7 @@ jobs:
         compiler:
           - g++-11
           - g++-12
+          - g++-13
         build_type: [ Debug, Release ]
         dont_use_std_vector: [ ON, OFF ]
         dont_use_std_string: [ ON, OFF ]
@@ -24,20 +25,26 @@ jobs:
             dont_use_std_vector: OFF
           - compiler: g++-11
             dont_use_std_string: OFF
-          # gcc-12's constexpr string implementation has bugs: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105440
+          # gcc-12's and gcc-13's constexpr string implementation has bugs: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105440
           - compiler: g++-12
+            dont_use_std_string: OFF
+          - compiler: g++-13
             dont_use_std_string: OFF
         include:
           - compiler: g++-11
             required_pkgs: g++-11
           - compiler: g++-12
             required_pkgs: g++-12
+          - compiler: g++-13
+            required_pkgs: g++-13
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Setup environment
-        run: sudo apt-get install -y ${{matrix.required_pkgs}}
+        run: sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa &&
+          sudo apt update &&
+          sudo apt-get install -y ${{matrix.required_pkgs}}
 
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build
