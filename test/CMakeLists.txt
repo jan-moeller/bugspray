@@ -23,14 +23,7 @@
 #
 include(CTest)
 
-include(FetchContent)
-
-fetchcontent_declare(
-        Catch2
-        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-        GIT_TAG v3.3.2
-)
-fetchcontent_makeavailable(Catch2)
+CPMAddPackage("gh:catchorg/Catch2@3.3.2")
 
 function(add_build_test name)
     set(target all)

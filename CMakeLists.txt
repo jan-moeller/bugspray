@@ -22,20 +22,49 @@
 # SOFTWARE.
 #
 cmake_minimum_required(VERSION 3.20)
-project(bugspray)
+project(bugspray
+        VERSION 0.2.0
+        LANGUAGES CXX
+)
 
+#############################################################################################################
+# Prevent in-source builds
+#############################################################################################################
+if (PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
+    message(
+            FATAL_ERROR
+            "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there."
+    )
+endif ()
+
+#############################################################################################################
+# Dependencies
+#############################################################################################################
+include(cmake/CPM.cmake)
+
+# None for now
+
+#############################################################################################################
+# Build configuration
+#############################################################################################################
 option(BUGSPRAY_DONT_USE_STD_VECTOR "Forces bugspray to use its own vector implementation rather than std::vector" OFF)
 option(BUGSPRAY_DONT_USE_STD_STRING "Forces bugspray to use its own string implementation rather than std::string" OFF)
 option(BUGSPRAY_BUILD_TESTS "Build the bugspray test suite" OFF)
 
+message(STATUS "------------------------------------------------------------------------------")
+message(STATUS "    ${PROJECT_NAME} (${PROJECT_VERSION})")
+message(STATUS "------------------------------------------------------------------------------")
+message(STATUS "Build type:                ${CMAKE_BUILD_TYPE}")
+message(STATUS "DONT_USE_STD_VECTOR:       ${BUGSPRAY_DONT_USE_STD_VECTOR}")
+message(STATUS "DONT_USE_STD_STRING:       ${BUGSPRAY_DONT_USE_STD_STRING}")
+message(STATUS "BUILD_TESTS:               ${BUGSPRAY_BUILD_TESTS}")
+
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
-include(bs_target_setup)
-
-set(BUGSPRAY_VERSION_MAJOR 0)
-set(BUGSPRAY_VERSION_MINOR 2)
-set(BUGSPRAY_VERSION_PATCH 0)
-
-add_library(bugspray STATIC
+#############################################################################################################
+# Targets
+#############################################################################################################
+include(cmake/bs_target_setup.cmake)
+add_library(${PROJECT_NAME} STATIC
         include/bugspray/bugspray.hpp
         include/bugspray/cli/argument_destination.hpp
         include/bugspray/cli/argument_parser.hpp
@@ -120,46 +149,45 @@ add_library(bugspray STATIC
         src/reporter/formatted_ostream_reporter.cpp
         src/reporter/xml_reporter.cpp
         src/utility/xml_writer.cpp
-        )
-target_include_directories(bugspray PUBLIC include/ ${CMAKE_CURRENT_BINARY_DIR}/generated)
-bs_target_setup(bugspray)
+)
+target_include_directories(${PROJECT_NAME} PUBLIC include/ ${CMAKE_CURRENT_BINARY_DIR}/generated)
+bs_target_setup(${PROJECT_NAME})
 
-add_library(bugspray-with-main STATIC src/main.cpp)
-target_link_libraries(bugspray-with-main PUBLIC bugspray)
-bs_target_setup(bugspray-with-main)
+add_library(${PROJECT_NAME}-with-main STATIC src/main.cpp)
+target_link_libraries(${PROJECT_NAME}-with-main PUBLIC ${PROJECT_NAME})
+bs_target_setup(${PROJECT_NAME}-with-main)
 
+#############################################################################################################
+# Make it installable
+#############################################################################################################
 set(BUGSPRAY_INPUT_VERSION_FILE ${CMAKE_CURRENT_LIST_DIR}/include/bugspray/version.hpp.in)
 set(BUGSPRAY_OUTPUT_VERSION_FILE ${CMAKE_CURRENT_BINARY_DIR}/generated/bugspray/version.hpp)
 add_custom_command(
         OUTPUT
-            ${BUGSPRAY_OUTPUT_VERSION_FILE}
-            ALL
+        ${BUGSPRAY_OUTPUT_VERSION_FILE}
+        ALL
         COMMAND
-            ${CMAKE_COMMAND}
-                -D BUGSPRAY_INPUT_VERSION_FILE=${BUGSPRAY_INPUT_VERSION_FILE}
-                -D BUGSPRAY_OUTPUT_VERSION_FILE=${BUGSPRAY_OUTPUT_VERSION_FILE}
-                -D BUGSPRAY_VERSION_MAJOR=${BUGSPRAY_VERSION_MAJOR}
-                -D BUGSPRAY_VERSION_MINOR=${BUGSPRAY_VERSION_MINOR}
-                -D BUGSPRAY_VERSION_PATCH=${BUGSPRAY_VERSION_PATCH}
-                -P ${PROJECT_SOURCE_DIR}/cmake/bs_configure_version_header.cmake
+        ${CMAKE_COMMAND}
+        -D BUGSPRAY_INPUT_VERSION_FILE=${BUGSPRAY_INPUT_VERSION_FILE}
+        -D BUGSPRAY_OUTPUT_VERSION_FILE=${BUGSPRAY_OUTPUT_VERSION_FILE}
+        -D BUGSPRAY_VERSION_MAJOR=${bugspray_VERSION_MAJOR}
+        -D BUGSPRAY_VERSION_MINOR=${bugspray_VERSION_MINOR}
+        -D BUGSPRAY_VERSION_PATCH=${bugspray_VERSION_PATCH}
+        -P ${PROJECT_SOURCE_DIR}/cmake/bs_configure_version_header.cmake
         WORKING_DIRECTORY
-            ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}
 )
 add_custom_target(
         generate_version_header
         ALL
         DEPENDS
-            ${BUGSPRAY_OUTPUT_VERSION_FILE}
+        ${BUGSPRAY_OUTPUT_VERSION_FILE}
 )
 add_dependencies(bugspray generate_version_header)
 
-message(STATUS "BUGSPRAY_VERSION_MAJOR: ${BUGSPRAY_VERSION_MAJOR}")
-message(STATUS "BUGSPRAY_VERSION_MINOR: ${BUGSPRAY_VERSION_MINOR}")
-message(STATUS "BUGSPRAY_VERSION_PATCH: ${BUGSPRAY_VERSION_PATCH}")
-message(STATUS "BUGSPRAY_DONT_USE_STD_VECTOR: ${BUGSPRAY_DONT_USE_STD_VECTOR}")
-message(STATUS "BUGSPRAY_DONT_USE_STD_STRING: ${BUGSPRAY_DONT_USE_STD_STRING}")
-message(STATUS "BUGSPRAY_BUILD_TESTS: ${BUGSPRAY_BUILD_TESTS}")
-
+#############################################################################################################
+# Tests
+#############################################################################################################
 if (${BUGSPRAY_BUILD_TESTS})
     enable_testing()
     add_subdirectory(test)

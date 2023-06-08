@@ -23,7 +23,7 @@
 #
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 include(CTest)
-include(Catch)
+include(${Catch2_SOURCE_DIR}/extras/Catch.cmake)
 
 add_executable(bugspray-unit-tests
         cli/test_argument_destination.cpp
