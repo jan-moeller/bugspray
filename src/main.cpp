@@ -58,7 +58,7 @@ auto main(int argc, char const** argv) -> int
     }
     if (c.version)
     {
-        std::cout << "Bugspray " << release_version << '\n';
+        std::cout << "Bugspray " << BUGSPRAY_VERSION << '\n';
         return EXIT_SUCCESS;
     }
 

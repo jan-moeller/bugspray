@@ -42,7 +42,7 @@ endif ()
 #############################################################################################################
 include(cmake/CPM.cmake)
 
-# None for now
+CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.11.0")
 
 #############################################################################################################
 # Build configuration
@@ -150,7 +150,11 @@ add_library(${PROJECT_NAME} STATIC
         src/reporter/xml_reporter.cpp
         src/utility/xml_writer.cpp
 )
-target_include_directories(${PROJECT_NAME} PUBLIC include/ ${CMAKE_CURRENT_BINARY_DIR}/generated)
+target_include_directories(
+        ${PROJECT_NAME} PUBLIC
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include/${PROJECT_NAME}-${PROJECT_VERSION}>
+)
 bs_target_setup(${PROJECT_NAME})
 
 add_library(${PROJECT_NAME}-with-main STATIC src/main.cpp)
@@ -160,30 +164,18 @@ bs_target_setup(${PROJECT_NAME}-with-main)
 #############################################################################################################
 # Make it installable
 #############################################################################################################
-set(BUGSPRAY_INPUT_VERSION_FILE ${CMAKE_CURRENT_LIST_DIR}/include/bugspray/version.hpp.in)
-set(BUGSPRAY_OUTPUT_VERSION_FILE ${CMAKE_CURRENT_BINARY_DIR}/generated/bugspray/version.hpp)
-add_custom_command(
-        OUTPUT
-        ${BUGSPRAY_OUTPUT_VERSION_FILE}
-        ALL
-        COMMAND
-        ${CMAKE_COMMAND}
-        -D BUGSPRAY_INPUT_VERSION_FILE=${BUGSPRAY_INPUT_VERSION_FILE}
-        -D BUGSPRAY_OUTPUT_VERSION_FILE=${BUGSPRAY_OUTPUT_VERSION_FILE}
-        -D BUGSPRAY_VERSION_MAJOR=${bugspray_VERSION_MAJOR}
-        -D BUGSPRAY_VERSION_MINOR=${bugspray_VERSION_MINOR}
-        -D BUGSPRAY_VERSION_PATCH=${bugspray_VERSION_PATCH}
-        -P ${PROJECT_SOURCE_DIR}/cmake/bs_configure_version_header.cmake
-        WORKING_DIRECTORY
-        ${CMAKE_CURRENT_SOURCE_DIR}
+string(TOLOWER ${PROJECT_NAME}/version.hpp VERSION_HEADER_LOCATION)
+packageProject(
+        NAME ${PROJECT_NAME}
+        VERSION ${PROJECT_VERSION}
+        NAMESPACE ${PROJECT_NAME}
+        BINARY_DIR ${PROJECT_BINARY_DIR}
+        INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include
+        INCLUDE_DESTINATION include/${PROJECT_NAME}-${PROJECT_VERSION}
+        VERSION_HEADER "${VERSION_HEADER_LOCATION}"
+        COMPATIBILITY SameMajorVersion
+        DEPENDENCIES ""
 )
-add_custom_target(
-        generate_version_header
-        ALL
-        DEPENDS
-        ${BUGSPRAY_OUTPUT_VERSION_FILE}
-)
-add_dependencies(bugspray generate_version_header)
 
 #############################################################################################################
 # Tests
