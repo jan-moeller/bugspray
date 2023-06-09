@@ -49,7 +49,6 @@ CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.11.0")
 #############################################################################################################
 option(BUGSPRAY_DONT_USE_STD_VECTOR "Forces bugspray to use its own vector implementation rather than std::vector" OFF)
 option(BUGSPRAY_DONT_USE_STD_STRING "Forces bugspray to use its own string implementation rather than std::string" OFF)
-option(BUGSPRAY_BUILD_TESTS "Build the bugspray test suite" OFF)
 
 message(STATUS "------------------------------------------------------------------------------")
 message(STATUS "    ${PROJECT_NAME} (${PROJECT_VERSION})")
@@ -57,7 +56,6 @@ message(STATUS "----------------------------------------------------------------
 message(STATUS "Build type:                ${CMAKE_BUILD_TYPE}")
 message(STATUS "DONT_USE_STD_VECTOR:       ${BUGSPRAY_DONT_USE_STD_VECTOR}")
 message(STATUS "DONT_USE_STD_STRING:       ${BUGSPRAY_DONT_USE_STD_STRING}")
-message(STATUS "BUILD_TESTS:               ${BUGSPRAY_BUILD_TESTS}")
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 #############################################################################################################
@@ -176,11 +174,3 @@ packageProject(
         COMPATIBILITY SameMajorVersion
         DEPENDENCIES ""
 )
-
-#############################################################################################################
-# Tests
-#############################################################################################################
-if (${BUGSPRAY_BUILD_TESTS})
-    enable_testing()
-    add_subdirectory(test)
-endif ()

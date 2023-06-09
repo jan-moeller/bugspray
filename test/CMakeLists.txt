@@ -21,9 +21,21 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-include(CTest)
+cmake_minimum_required(VERSION 3.14)
 
+project(bugspray-tests LANGUAGES CXX)
+
+include(CTest)
+enable_testing()
+
+include(../cmake/CPM.cmake)
+CPMAddPackage(
+        NAME bugspray
+        SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..
+)
 CPMAddPackage("gh:catchorg/Catch2@3.3.2")
+
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/../cmake" ${CMAKE_MODULE_PATH})
 
 function(add_build_test name)
     set(target all)
