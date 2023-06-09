@@ -36,7 +36,6 @@ function(add_build_test name)
             --build-target ${target}
             --build-generator ${CMAKE_GENERATOR}
             --build-options
-                -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
                 -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
                 -DBUGSPRAY_CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}
                 -DBUGSPRAY_LIB_DIR:STR=$<TARGET_PROPERTY:bugspray-with-main,BINARY_DIR>
