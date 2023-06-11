@@ -25,13 +25,17 @@
 #ifndef BUGSPRAY_MACRO_UNIQUE_IDENTIFIER_HPP
 #define BUGSPRAY_MACRO_UNIQUE_IDENTIFIER_HPP
 
+#include "bugspray/utility/macros/macro_concatenate.hpp"
+
 /*
  * BUGSPRAY_UNIQUE_IDENTIFIER(prefix) evaluates to something that starts with the argument followed by something that
  * makes it unique.
  */
 
+#define BUGSPRAY_UNIQUE_IDENTIFIER_ONLY                                                                                \
+    BUGSPRAY_CONCATENATE_EXPANSION(BUGSPRAY_CONCATENATE_EXPANSION(__COUNTER__, _), __LINE__)
 #define BUGSPRAY_UNIQUE_IDENTIFIER_IMPL2(prefix, arg) prefix##_##arg
 #define BUGSPRAY_UNIQUE_IDENTIFIER_IMPL(prefix, arg) BUGSPRAY_UNIQUE_IDENTIFIER_IMPL2(prefix, arg)
-#define BUGSPRAY_UNIQUE_IDENTIFIER(prefix) BUGSPRAY_UNIQUE_IDENTIFIER_IMPL(prefix, __COUNTER__)
+#define BUGSPRAY_UNIQUE_IDENTIFIER(...) BUGSPRAY_UNIQUE_IDENTIFIER_IMPL(__VA_ARGS__, BUGSPRAY_UNIQUE_IDENTIFIER_ONLY)
 
 #endif // BUGSPRAY_MACRO_UNIQUE_IDENTIFIER_HPP
