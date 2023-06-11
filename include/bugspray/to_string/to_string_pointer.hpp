@@ -39,6 +39,8 @@ template<typename T>
     requires(std::is_pointer_v<T>)
 constexpr auto to_string([[maybe_unused]] T ptr) -> bs::string
 {
+    if (ptr == nullptr)
+        return "nullptr";
     if (std::is_constant_evaluated())
         return "unknown pointer value";
     return to_string<16>(reinterpret_cast<std::uintptr_t>(ptr));
