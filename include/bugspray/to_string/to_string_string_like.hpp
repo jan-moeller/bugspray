@@ -47,6 +47,8 @@ constexpr auto to_string(T&& s) -> bs::string
 template<character CharT>
 constexpr auto to_string(CharT const* s) -> bs::string
 {
+    if (s == nullptr)
+        return "nullptr";
     return to_string(std::basic_string_view<CharT>{s});
 }
 } // namespace bs
