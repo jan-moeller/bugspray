@@ -8,8 +8,8 @@ on:
 
 jobs:
   build:
-    # 22.04 required for latest compiler versions
-    runs-on: ubuntu-22.04
+    runs-on: ${{matrix.runner}}
+
     strategy:
       matrix:
         compiler:
@@ -23,16 +23,17 @@ jobs:
             dont_use_std_string: OFF
         include:
           - compiler: clang++-17
-            required_pkgs: clang-17 g++-12
+            install: 17
+            runner: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Setup environment
-        run: wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - &&
-          sudo add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy main' &&
-          sudo apt update &&
-          sudo apt-get install -y ${{matrix.required_pkgs}}
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh ${{matrix.install}}
 
       - name: Configure CMake
         run: cmake -S test/ -B ${{github.workspace}}/build
