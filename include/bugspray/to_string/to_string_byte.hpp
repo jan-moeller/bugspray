@@ -24,9 +24,10 @@
 #ifndef BUGSPRAY_TO_STRING_BYTE_HPP
 #define BUGSPRAY_TO_STRING_BYTE_HPP
 
-#include "bugspray/utility/string.hpp"
 #include "bugspray/to_string/to_string_integral.hpp"
+#include "bugspray/utility/string.hpp"
 
+#include <bit>
 #include <type_traits>
 
 namespace bs
