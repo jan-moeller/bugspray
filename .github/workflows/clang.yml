@@ -14,6 +14,8 @@ jobs:
       matrix:
         compiler:
           - clang++-17
+          - clang++-18
+          - clang++-19
         build_type: [ Debug, Release ]
         dont_use_std_vector: [ ON, OFF ]
         dont_use_std_string: [ ON, OFF ]
@@ -24,6 +26,12 @@ jobs:
         include:
           - compiler: clang++-17
             install: 17
+            runner: ubuntu-24.04
+          - compiler: clang++-18
+            install: 18
+            runner: ubuntu-24.04
+          - compiler: clang++-19
+            install: 19
             runner: ubuntu-24.04
 
     steps:
