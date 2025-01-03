@@ -44,6 +44,7 @@ add_executable(bugspray-unit-tests
         to_string/test_char_to_printable_string.cpp
         to_string/test_stringify.cpp
         to_string/test_to_string_bool.cpp
+        to_string/test_to_string_byte.cpp
         to_string/test_to_string_char.cpp
         to_string/test_to_string_container.cpp
         to_string/test_to_string_floating_point.cpp

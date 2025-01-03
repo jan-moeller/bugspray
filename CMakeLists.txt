@@ -105,6 +105,7 @@ add_library(${PROJECT_NAME} STATIC
         include/bugspray/to_string/char_to_printable_string.hpp
         include/bugspray/to_string/stringify.hpp
         include/bugspray/to_string/to_string_bool.hpp
+        include/bugspray/to_string/to_string_byte.hpp
         include/bugspray/to_string/to_string_char.hpp
         include/bugspray/to_string/to_string_container.hpp
         include/bugspray/to_string/to_string_floating_point.hpp
