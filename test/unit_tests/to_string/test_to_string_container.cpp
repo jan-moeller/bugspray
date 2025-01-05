@@ -27,8 +27,12 @@
 
 #include <catch2/catch_all.hpp>
 
+#include <forward_list>
+
 TEST_CASE("to_string(container)", "[to_string]")
 {
+    CHECK(bs::to_string(std::forward_list<int>{1, 2, 3}) == R"({ 1, 2, 3 })");
+
 #define MAKE_TESTS(PREFIX)                                                                                             \
     PREFIX##CHECK(bs::to_string(bs::vector<int>{}) == R"({  })");                                                      \
     PREFIX##CHECK(bs::to_string(bs::vector<int>{1}) == R"({ 1 })");                                                    \

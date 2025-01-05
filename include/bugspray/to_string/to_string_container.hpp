@@ -38,7 +38,7 @@ template<std::ranges::forward_range T>
 constexpr auto to_string(T&& r) -> bs::string
 {
     bs::string result = "{ ";
-    if (std::ranges::size(r) > 0)
+    if (std::ranges::distance(r) > 0)
     {
         result += stringify(*std::begin(r));
         for (auto iter = std::next(std::begin(r)); iter != std::end(r); ++iter)
